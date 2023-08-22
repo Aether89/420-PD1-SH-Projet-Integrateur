@@ -1,0 +1,15 @@
+{
+  "name": "lescitronsdetoto-backend",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MRF",
+  "license": "ISC",
+  "dependencies": {
+    "passport-oauth2": "^1.7.0",
+    "pg": "^8.11.3"
+  }
+}
