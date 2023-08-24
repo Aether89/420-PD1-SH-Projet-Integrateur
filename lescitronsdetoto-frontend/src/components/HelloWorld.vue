@@ -3,7 +3,7 @@
     <v-responsive class="align-center text-center fill-height">
       <v-img height="300" src="@/assets/logo.svg" />
 
-      <div class="text-body-2 font-weight-light mb-n1">Welcome <br>Michaël Beauchamp</div>
+      <div class="text-body-2 font-weight-light mb-n1">Welcome les Citron de totot<br>Michaël Beauchamp, Real Deschamps</div>
 
       <h1 class="text-h2 font-weight-bold">Vuetify</h1>
 
