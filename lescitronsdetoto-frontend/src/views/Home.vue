@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+  import Les citrons de toto from '@/components/HelloWorld.vue'
 </script>
