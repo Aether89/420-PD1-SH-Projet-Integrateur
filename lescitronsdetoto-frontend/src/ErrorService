@@ -1,0 +1,19 @@
+class ServiceError extends Error {
+    constructor(status, message) {
+        super(message);
+        this.status = status;
+    }
+}
+
+async function getResponseMessage(response) {
+    try {
+        const obj = await response.json();
+        return obj.message ? obj.message : "Erreur inconnue";
+    } catch (err) {
+        return "" + err;
+    }
+}
+
+export async function createServiceError(response) {
+    return new ServiceError(response.status, await getResponseMessage(response));
+}

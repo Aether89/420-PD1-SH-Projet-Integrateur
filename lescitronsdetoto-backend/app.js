@@ -10,7 +10,7 @@ const crypto = require('crypto');
 
 const userAccountQueries = require("./queries/UserAccountQueries");
 
-const citronRouter = require('./routes/citrondetotoRouter');
+const citronRouter = require('./routes/citronsdetotoRouter');
 
 const app = express();
 
@@ -58,8 +58,6 @@ passport.use(new BasicStrategyModified((username, password, cb) => {
     return cb(err);
   });
 }));
-
-app.use('/recette', citronRouter);
 
 app.get('/login',
   passport.authenticate('basic', { session: false }),
