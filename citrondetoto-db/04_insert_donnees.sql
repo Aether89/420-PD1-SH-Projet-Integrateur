@@ -7,3 +7,8 @@ VALUES
 	('fmartin', 'Félix Martin', false, true, '+kO83Ef3p1h/tayEycPEweCSCmk7AiRPGVm3Z3wYuTlAA76+Pat+cU1aiSt7KXKCincnR/nVv5kBufs6WQnehAg==', 'rBpPyjYASr6l2ISaN+SRgA=='), -- mot de passe: 12345
 	('rdeschamps', 'Réal Deschamps', true, true, 'LzqpL1XBJu21LOlc3W16tFR28zkHI/kodATWW4SigT9Hig0zg6Vgy829Dzv2lp/Um6vS6jbyB7Mh40PErpjRkg==', '3R5CRzUpe5vpjqMjvKYQbQ==') -- mot de passe: 12345
 ;
+
+INSERT INTO employe (nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal_employe)
+VALUES
+	('Martin', 'Félix', 'patate', '819-123-4567', 'a1a1a1')
+;
