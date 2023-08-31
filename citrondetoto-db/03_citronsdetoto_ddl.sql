@@ -82,7 +82,6 @@ CREATE TABLE compte_employe (
 	courriel_compte_employe varchar(64) NOT NULL,
 	password_hash text NOT NULL,
 	password_salt text NOT NULL,
-	user_full_name text NOT NULL,
 	is_active boolean NOT NULL DEFAULT true,
 	is_admin boolean NOT NULL DEFAULT false
 );
