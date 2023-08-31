@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS etat;
+CREATE TABLE etat (
+	id_etat serial PRIMARY KEY NOT NULL,
+	nom_etat varchar(16) NOT NULL
+);
+
 DROP TABLE IF EXISTS vehicule;
 CREATE TABLE vehicule (
 	vin varchar(17) PRIMARY KEY NOT NULL,
@@ -8,12 +14,6 @@ CREATE TABLE vehicule (
 	promotion money, 
 	description_courte varchar(64),
 	description_longue varchar(512)
-);
-
-DROP TABLE IF EXISTS etat;
-CREATE TABLE etat (
-	id_etat serial PRIMARY KEY NOT NULL,
-	nom_etate varchar(16) NOT NULL
 );
 
 DROP TABLE IF EXISTS photo_chemin;
@@ -43,35 +43,6 @@ CREATE TABLE intervention (
 	etat_intervention boolean NOT NULL
 );
 
-DROP TABLE IF EXISTS vehicule_intervention;
-CREATE TABLE vehicule_intervention (
-	vin varchar(17) NOT NULL REFERENCES vehicule (vin),
-	id_accessoire serial NOT NULL REFERENCES intervention (id_intervention)
-);
-
-DROP TABLE IF EXISTS evenement;
-CREATE TABLE evenement (
-	id_evenement serial PRIMARY KEY NOT NULL,
-	id_type_evenement serial NOT NULL REFERENCES type_evenement (id_type_evenement),
-	id_client serial REFERENCES NOT NULL client (id_client),
-	id_employe serial REFERENCES NOT NULL employe (id_employe),
-	prix_evenement money,
-	date_heure_evenement timestamptz NOT NULL,
-	etat_vue_evenement boolean
-);
-
-DROP TABLE IF EXISTS vehicule_evenement;
-CREATE TABLE vehicule_evenement (
-	id_evenement serial NOT NULL REFERENCES evenement (id_evenement),
-	vin varchar(17) REFERENCES NOT NULL vehicule (vin)
-);
-
-DROP TABLE IF EXISTS type_evenement;
-CREATE TABLE type_evenement (
-	id_type_evenement serial PRIMARY KEY NOT NULL,
-	nom_evenement varchar(64) NOT NULL
-);
-
 DROP TABLE IF EXISTS client;
 CREATE TABLE client (
 	id_client serial PRIMARY KEY NOT NULL,
@@ -80,6 +51,18 @@ CREATE TABLE client (
 	telephone_client varchar(16),
 	courriel_client varchar (64),
 	code_postal_client varchar(6)
+);
+
+DROP TABLE IF EXISTS vehicule_intervention;
+CREATE TABLE vehicule_intervention (
+	vin varchar(17) NOT NULL REFERENCES vehicule (vin),
+	id_accessoire serial NOT NULL REFERENCES intervention (id_intervention)
+);
+
+DROP TABLE IF EXISTS type_evenement;
+CREATE TABLE type_evenement (
+	id_type_evenement serial PRIMARY KEY NOT NULL,
+	nom_evenement varchar(64) NOT NULL
 );
 
 DROP TABLE IF EXISTS employe;
@@ -102,6 +85,23 @@ CREATE TABLE compte_employe (
 	user_full_name text NOT NULL,
 	is_active boolean NOT NULL DEFAULT true,
 	is_admin boolean NOT NULL DEFAULT false
+);
+
+DROP TABLE IF EXISTS evenement;
+CREATE TABLE evenement (
+	id_evenement serial PRIMARY KEY NOT NULL,
+	id_type_evenement serial NOT NULL REFERENCES type_evenement (id_type_evenement),
+	id_client serial NOT NULL REFERENCES client (id_client),
+	id_employe serial NOT NULL REFERENCES employe (id_employe),
+	prix_evenement money,
+	date_heure_evenement timestamptz NOT NULL,
+	etat_vue_evenement boolean
+);
+
+DROP TABLE IF EXISTS vehicule_evenement;
+CREATE TABLE vehicule_evenement (
+	id_evenement serial NOT NULL REFERENCES evenement (id_evenement),
+	vin varchar(17) NOT NULL REFERENCES vehicule (vin)
 );
 
 DROP TABLE IF EXISTS message_chat;
