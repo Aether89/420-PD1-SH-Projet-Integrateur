@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiURL = 'https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvaluesextended/';
 
-export async function fetchVehicle(vin) {
+export async function fetchVIN(vin) {
 
     const options = {
         method: 'GET',
