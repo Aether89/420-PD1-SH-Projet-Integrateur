@@ -3,7 +3,7 @@ const pool = require('./DBPool');
 
 const getLoginByUserAccountId = async (userAccountId, client) => {
     const result = await (client || pool).query(
-        `SELECT user_account_id, password_hash, password_salt, user_full_name, is_active, is_admin
+        `SELECT user_account_id, id_employe, courriel_compte_employe, password_hash, password_salt, is_active, is_admin
          FROM user_account
          WHERE user_account_id = $1`,
         [userAccountId]
@@ -13,9 +13,10 @@ const getLoginByUserAccountId = async (userAccountId, client) => {
     if (row) {
         return {
             userAccountId: row.user_account_id,
+            idEmploye: row.id_employe,
+            courrielCompteEmploye: row.courriel_compte_employe,
             passwordHash: row.password_hash,
             passwordSalt: row.password_salt,
-            userFullName: row.user_full_name,
             isActive: row.is_active,
             isAdmin: row.is_admin
         };

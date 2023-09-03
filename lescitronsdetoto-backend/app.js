@@ -65,9 +65,12 @@ app.get('/login',
 
     if (req.user) {
 
+      
+
       const userDetails = {
         userAccountId: req.user.userAccountId,
-        userFullName: req.user.userFullName,
+        idEmploye: req.user.id_employe,
+        courrielCompteEmploye: req.user.courriel_compte_employe,
         isAdmin: req.user.isAdmin,
         isActive: req.user.isActive
       };
@@ -107,7 +110,8 @@ app.post('/login',
 
         const userDetails = {
           userAccountId: userAccountWithPasswordHash.userAccountId,
-          userFullName: userAccountWithPasswordHash.userFullName,
+          idEmploye: userAccountWithPasswordHash.idEmploye,
+          courrielCompteEmploye: userAccountWithPasswordHash.courrielCompteEmploye,
           isAdmin: userAccountWithPasswordHash.isAdmin,
           isActive: userAccountWithPasswordHash.isActive
         };
