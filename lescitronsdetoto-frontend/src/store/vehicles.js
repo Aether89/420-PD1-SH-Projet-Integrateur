@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { fetchMakes } from '../services/MakesAPI'
 import { fetchModels } from '../services/ModelsAPI'
 import { fetchVIN } from '../services/VINAPI'
-import { generateYear } from '../services/common'
+import { generateYears } from '../services/common'
 
 export const useVehiclesStore = defineStore('vehicles', {
   state: () => ({
