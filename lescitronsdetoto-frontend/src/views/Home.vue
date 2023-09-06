@@ -5,5 +5,5 @@
 
 <script setup>
   import HelloWorld from '@/components/HelloWorld.vue'
-  import SearchBar from '@/components/SearchBar.vue'
+  import SearchBar from '@/layouts/default/SearchBar.vue'
 </script>

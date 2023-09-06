@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height" color="transparent">
+  <v-container color="transparent">
     <v-responsive class="align-center text-center fill-height">
       <v-img height="300" src="@/assets/lemon.svg" />
 
