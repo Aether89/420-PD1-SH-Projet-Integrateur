@@ -6,3 +6,9 @@ VALUES
 	('Deschamps', 'Réal', 'patate', '819-123-4567', 'a1a1a1')
 ;
 
+insert into etat(id_etat, nom_etat)
+values
+	(1, 'Préparation'),
+	(2, 'Disponible'),
+	(3, 'Vendu')
+;

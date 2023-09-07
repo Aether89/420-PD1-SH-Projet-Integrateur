@@ -11,6 +11,7 @@ const crypto = require('crypto');
 const userAccountQueries = require("./queries/UserAccountQueries");
 
 const citronRouter = require('./routes/citronsdetotoRouter');
+const vehiculeRouter = require('./routes/vehiculeRouter');
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/vehicule', vehiculeRouter);
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {
