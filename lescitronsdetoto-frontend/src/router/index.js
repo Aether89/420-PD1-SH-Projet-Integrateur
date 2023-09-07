@@ -24,6 +24,11 @@ const routes = [
         name: 'Nouveau Compte',
         component: () => import(/* webpackChunkName: "home" */ '@/views/LoginNew.vue'),
       },
+      {
+      path: 'vehicle/:id',
+      name: 'Informations du Véhicule',
+      component: () => import(/* webpackChunkName: "home" */ '@/views/DetailldVehicle.vue'),
+      },
     ],
   },
 ]

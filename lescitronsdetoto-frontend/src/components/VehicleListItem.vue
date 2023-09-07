@@ -1,6 +1,6 @@
 <template>
   <v-card color="amber" class="pa-2">
-    <v-img aspect-ratio="1/1" :src="carImg"></v-img>
+    <v-img aspect-ratio="16/9" :src="carImg"></v-img>
     <div class="card-content">
       <p class="text-left two-line">{{ vehicleName }}</p>
       <p class="text-right">{{ formatedPrice }}</p>
@@ -26,7 +26,7 @@ export default {
       return this.make + " " + this.model + " " + this.year;
     },
     carImg() {
-      return (this.img !== null) ? this.img : "./src/assets/lemon.png";
+      return (this.img !== null) ? this.img : "./src/assets/logo.png";
     },
     formatedPrice() {
       return priceFormatting(this.price);

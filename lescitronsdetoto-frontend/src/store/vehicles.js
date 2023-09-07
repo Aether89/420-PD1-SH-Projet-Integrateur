@@ -4,6 +4,10 @@ import { fetchMakes } from '../services/MakesAPI'
 import { fetchModels } from '../services/ModelsAPI'
 import { fetchVIN } from '../services/VINAPI'
 import { generateYears } from '../services/common'
+import { fetchVehicle, fetchVehicles } from '@/services/VehicleDB';
+
+import { useAppStore } from './app';
+const debug = useAppStore().debug;
 
 export const useVehiclesStore = defineStore('vehicles', {
   state: () => ({
@@ -21,10 +25,9 @@ export const useVehiclesStore = defineStore('vehicles', {
       model: null,
       priceRange: [0,500000]
     },
-    vehicles: [],
+    vehicles:   [],
 
     vehicle: {
-      vin: null,
       local: null,
       api: null
     }
@@ -44,7 +47,17 @@ export const useVehiclesStore = defineStore('vehicles', {
       this.vehicle.api = await fetchVIN(vin);
     },
     async getVehiclesList() {
-      
+      this.vehicles = await fetchVehicles();
+
+      if (debug) {
+        console.log("Vehicles List")
+        console.log(JSON.stringify(this.vehicles,null,"  "));
+        };
+
+    },
+    async getVehicle(id) {      
+      this.vehicle.local = await fetchVehicle(id)
+      this.vehicle.api = await fetchVIN(this.vehicle.local.vin)
     },
     async reset() {
       this.selected.make = null;
