@@ -1,19 +1,80 @@
 const pool = require('./DBPool');
 
+const getAllVehicule = async () => {
+    const result = await pool.query(
+        `SELECT
+        vin,
+        marque,
+        modele,
+        annee,
+        couleur,
+        nombre_kilometre,
+        prix_annonce, 
+        promotion,
+        description_courte,
+        description_longue
+        FROM
+        vehicule`
+    );
+
+    if (result.rows && result.rows.length > 0) {
+        return result.rows.map(row => {
+            const vehicule = {
+                marque: row.marque,
+                modele: row.modele,
+                annee: row.annee,
+                prix_annonce: row.prix_annonce,
+                promotion: row.promotion
+            };
+            return vehicule;
+        });
+    } else {
+        return [];
+    }
+};
+exports.getAllVehicule = getAllVehicule;
+
 const getVehiculeByVin = async (vin) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
         const vehiculeResult = await pool.query(
-        `SELECT vin FROM vehicule
+        `SELECT 
+        vin,
+        marque,
+        modele,
+        annee,
+        couleur,
+        nombre_kilometre,
+        prix_annonce, 
+        promotion,
+        description_courte,
+        description_longue
+        FROM
+        vehicule
         WHERE
         vin = $1`,
         [vin]
         );
-        const vehiculeResponsePromises = vehiculeResult.rows.map(vehiculeRow => buildVehiculeResponseObject(vehiculeRow, client));
-        const vehicule = await Promise.all(vehiculeResponsePromises);
+        /*const vehiculeResponsePromises = vehiculeResult.rows.map(vehiculeRow => buildVehiculeResponseObject(vehiculeRow, client));
+        const vehicule = await Promise.all(vehiculeResponsePromises);*/
         await client.query("COMMIT");
-        return vehicule[0];
+        const row = vehiculeResult.rows[0];
+        if (row) {
+            return {
+                vin: row.vin,
+                marque: row.marque,
+                modele: row.modele,
+                annee: row.annee,
+                couleur: row.couleur,
+                nombre_kilometre: row.nombre_kilometre,
+                prix_annonce: row.prix_annonce,
+                promotion: row.promotion,
+                description_courte: row.description_courte,
+                description_longue: row.description_longue
+            };
+        }
+        return undefined;
     } catch (err) {
         await client.query("ROLLBACK");
         throw err;
@@ -54,3 +115,13 @@ const updateVehicule = async (vehicule) => {
     return getVehiculeByVin(vehicule.vin);
 };
 exports.updateVehicule = updateVehicule;
+
+const deleteVehicule = async (vin) => {
+    const result = await pool.query(
+        `DELETE FROM vehicule
+        WHERE vin = $1;`,
+        [vin]
+    );
+    return result;
+};
+exports.deleteVehicule = deleteVehicule;

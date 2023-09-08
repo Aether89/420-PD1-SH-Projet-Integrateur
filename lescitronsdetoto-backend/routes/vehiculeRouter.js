@@ -13,8 +13,31 @@ const fetchVIN = require("../vpic/VINAPI");
 
 module.exports = router;
 
+router.get('/', (req, res, next) => {
+    vehiculeQuerie.getAllVehicule().then(vehicules => {
+        res.json(vehicules);
+    }).catch(err => {
+        return next(err);
+    });
+});
+
+router.get('/:vin', (req, res, next) => {
+    const vin = req.params.vin;
+    console.log("vin:", vin);
+    vehiculeQuerie.getVehiculeByVin(vin).then(vehicule => {
+        if (vehicule) {
+            res.json(vehicule);
+        } else {
+            return next(new HttpError(404, `Le véhicule avec le VIN ${vin} est introuvable`));
+        }
+    }).catch(err => {
+        return next(err);
+    });
+});
+
 router.post('/', passport.authenticate('basic', { session: false }), async (req, res, next) => {
     try {
+        console.log("req.body : ",req.body);
         
         const user = req.user;
         if (!user || !user.isAdmin) {
@@ -30,18 +53,13 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if (fetchedVehicule.ErrorCode !== "0") {
           return next(new HttpError(404, `Veillez rentrer un vin existant!`));
         }
-        
-        /*const vehiculeExcite = vehiculeQuerie.getVehiculeByVin(vin);
-        if (vehiculeExcite) {
-          return next(new HttpError(409, `Le véhicule avec ce VIN ${vin} existe déjà.`));
-        } //A corrigé ici*/
 
         const marque = fetchedVehicule.Make;
         const modele = fetchedVehicule.Model;
         const annee = fetchedVehicule.ModelYear;
 
         const newVehicule = {
-            vin: "" + req.body.vin,
+            vin: req.body.vin,
             id_etat: req.body.id_etat,
             marque: marque,
             modele: modele,
@@ -53,13 +71,16 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
         };
+        
+        const vehiculeExcite = await vehiculeQuerie.getVehiculeByVin(vin);
+        if (vehiculeExcite) {
+          return next(new HttpError(409, `Le véhicule avec ce VIN ${vin} existe déjà.`));
+        } //A corrigé ici
   
         if (newVehicule.id_etat === null || newVehicule.id_etat < 1 || newVehicule.id_etat > 3) {
             newVehicule.id_etat = 1;
         }
-
         console.log("newVehicule", newVehicule);
-  
         vehiculeQuerie.addVehicule(newVehicule);
         res.json(newVehicule);
     } catch(err) {
@@ -121,3 +142,28 @@ passport.authenticate('basic', { session: false }),
         }
     }
 );
+
+router.delete('/:vin',passport.authenticate('basic', { session: false }), async (req, res, next) => {
+    try {
+        const user = req.user;
+        if (!user || !user.isAdmin) {
+            throw new HttpError(403, "Doit être authentifié en tant qu'Administrateur");
+        }
+        const vin = req.params.vin;
+        if (!vin || vin === '') {
+            throw new HttpError(400, 'Le champ id est requis');
+        }
+        
+        const vehicule = await vehiculeQuerie.getVehiculeByVin(vin);
+        console.log("vehicule du delete:", vehicule);
+        if (!vehicule) {
+            throw new HttpError(404, `Un véhicule avec le vin ${vin} n'existe pas`);
+        }
+
+        const vehiculeDelete = await vehiculeQuerie.deleteVehicule(vin);
+        
+        res.json(vehiculeDelete);
+    } catch (error) {
+        next(error);
+    }
+});
