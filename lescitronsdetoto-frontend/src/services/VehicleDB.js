@@ -4,13 +4,13 @@ const debug = useAppStore().debug;
 
 const debugVehicle = { 
     vin: "W1KWJ8HB0LG005616",
-    img: [ "./src/assets/lemon.png", "./src/assets/lemon.png", "./src/assets/lemon.png"],
+    img: [ "../src/assets/lemon.png", "../src/assets/race-car.png", "../src/assets/city-car.png"],
     shortDescription: "Très bien entretenu/ Un seul proprio",
     longDescription: "Découvrez l'ultime perfectionnement routier : un équilibre parfait entre élégance et performance. Des lignes fluides captivantes à un intérieur luxueux, ce véhicule est conçu pour impressionner. Profitez également d'accessoires haut de gamme tels que le système audio supérieur et les sièges chauffants pour une expérience de conduite inégalée. Prenez le volant et entrez dans une nouvelle dimension de sophistication automobile.",
     price: 35000.00,
-    promo: 400,
+    promo: 32500.99,
     km: 5000,
-    colour: "red"
+    colour: "Rouge"
 };
 
 const debugVehicles = [       {
@@ -20,6 +20,7 @@ const debugVehicles = [       {
     model: "Camry",
     year: 2020,
     price: 25000.00,
+    promo: null
   },
   {
     id: "2",
@@ -28,6 +29,8 @@ const debugVehicles = [       {
     model: "Civic",
     year: 2021,
     price: 22000.00,
+    promo: null
+
   },
   {
     id: "3",
@@ -36,6 +39,7 @@ const debugVehicles = [       {
     model: "F-150",
     year: 2019,
     price: 35000.00,
+    promo: null
   },
   {
     id: "4",
@@ -44,6 +48,8 @@ const debugVehicles = [       {
     model: "Malibu",
     year: 2022,
     price: 28000.00,
+    promo: null
+
   },
   {
     id: "5",
@@ -52,6 +58,7 @@ const debugVehicles = [       {
     model: "Altima",
     year: 2018,
     price: 20000.00,
+    promo: 19000.00
   },
   {
     id: "6",
@@ -60,6 +67,8 @@ const debugVehicles = [       {
     model: "Wrangler",
     year: 2021,
     price: 40000.00,
+    promo: null
+
   },
   {
     id: "7",
@@ -68,6 +77,8 @@ const debugVehicles = [       {
     model: "X5",
     year: 2020,
     price: 55000.00,
+    promo: null
+
   },
   {
     id: "8",
@@ -76,6 +87,8 @@ const debugVehicles = [       {
     model: "E-Class",
     year: 2019,
     price: 48000.00,
+    promo: null
+
   },
   {
     id: "9",
@@ -84,6 +97,8 @@ const debugVehicles = [       {
     model: "A4",
     year: 2022,
     price: 42000.00,
+    promo: null
+
   },
   {
     id: "10",
@@ -92,6 +107,7 @@ const debugVehicles = [       {
     model: "RX",
     year: 2023,
     price: 60000.00,
+    promo: 59000.00
   },
   {
     id: "11",
@@ -100,6 +116,7 @@ const debugVehicles = [       {
     model: "Outback",
     year: 2020,
     price: 28000.00,
+    promo: null
   },
   {
     id: "12",
@@ -108,6 +125,7 @@ const debugVehicles = [       {
     model: "Model 3",
     year: 2021,
     price: 45000.00,
+    promo: null
   },
   {
     id: "13",
@@ -116,6 +134,7 @@ const debugVehicles = [       {
     model: "Tucson",
     year: 2019,
     price: 23000.00,
+    promo: null
   },
   {
     id: "14",
@@ -124,6 +143,7 @@ const debugVehicles = [       {
     model: "Sportage",
     year: 2022,
     price: 26000.00,
+    promo: null
   },
   {
     id: "15",
@@ -132,6 +152,7 @@ const debugVehicles = [       {
     model: "CX-5",
     year: 2020,
     price: 29000.00,
+    promo: null
   },
   {
     id: "16",
@@ -140,6 +161,7 @@ const debugVehicles = [       {
     model: "Jetta",
     year: 2021,
     price: 24000.00,
+    promo: null
   },
   {
     id: "17",
@@ -148,6 +170,7 @@ const debugVehicles = [       {
     model: "XC90",
     year: 2022,
     price: 56000.00,
+    promo: null
   },
   {
     id: "18",
@@ -156,6 +179,7 @@ const debugVehicles = [       {
     model: "MDX",
     year: 2023,
     price: 52000.00,
+    promo: null
   },
   {
     id: "19",
@@ -164,6 +188,7 @@ const debugVehicles = [       {
     model: "Sierra",
     year: 2019,
     price: 38000.00,
+    promo: null
   },
   {
     id: "20",
@@ -172,6 +197,7 @@ const debugVehicles = [       {
     model: "Pacifica",
     year: 2020,
     price: 32000.00,
+    promo: null
   },
   {
     id: "21",
@@ -180,6 +206,7 @@ const debugVehicles = [       {
     model: "Huracan",
     year: 2022,
     price: 250000.00,
+    promo: null
   },
   {
     id: "22",
@@ -188,6 +215,7 @@ const debugVehicles = [       {
     model: "488 GTB",
     year: 2021,
     price: 300000.00,
+    promo: 289000.99
   },];
 
 export async function fetchVehicle(vehicleID) {

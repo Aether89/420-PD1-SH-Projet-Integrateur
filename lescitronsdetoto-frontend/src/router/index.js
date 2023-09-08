@@ -27,7 +27,14 @@ const routes = [
       {
       path: 'vehicle/:id',
       name: 'Informations du Véhicule',
-      component: () => import(/* webpackChunkName: "home" */ '@/views/DetailldVehicle.vue'),
+      component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
+      props: true,
+      },
+      {
+      path: 'newappointment/:id',
+      name: 'Prise de rendez-vous',
+      component: () => import(/* webpackChunkName: "home" */ '@/views/NewAppointment.vue'),
+      props: true,
       },
     ],
   },

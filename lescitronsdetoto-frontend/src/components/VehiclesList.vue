@@ -3,7 +3,7 @@
       <v-row class="flex d-flex">
         <v-col align-self-center cols="12" xs="4" sm="3" lg="2" v-for="vehicle in vehicles" class="flex d-flex flex-column">
           <VehicleListItem :img="vehicle.img" :id="vehicle.id" :make="vehicle.make" :model="vehicle.model"
-            :price="vehicle.price" :year="vehicle.year">
+            :price="vehicle.price" :promo="vehicle.promo" :year="vehicle.year">
           </VehicleListItem>
         </v-col>
       </v-row>

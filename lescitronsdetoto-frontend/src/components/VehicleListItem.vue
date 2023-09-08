@@ -3,17 +3,23 @@
     <v-img aspect-ratio="16/9" :src="carImg"></v-img>
     <div class="card-content">
       <p class="text-left two-line">{{ vehicleName }}</p>
-      <p class="text-right">{{ formatedPrice }}</p>
+      <div v-if="this.promo" class="my-2">
+        <p class="text-right font-weight-bold promo"><v-icon>mdi-seal</v-icon>{{ formatedPromo }}</p>
+        <p class="text-right text-decoration-line-through">{{ formatedPrice }}</p>
+        </div>
+          <div v-else class="my-2"> <br>
+          <p class=" text-right">{{ formatedPrice }}</p>
+      </div>
+      <router-link :to="carURL" aria-label="Voir plus" class="text-h6">Voir plus</router-link>
     </div>
-    <router-link :to="carURL" aria-label="Voir plus" class="text-h6">Voir plus</router-link>
   </v-card>
 </template>
 
 <script>
-import {priceFormatting} from '@/services/common';
+import { priceFormatting } from '@/services/common';
 
 export default {
-  props: ['img', 'make', 'model', 'year', 'price', 'id'],
+  props: ['img', 'make', 'model', 'year', 'price', 'promo', 'id'],
   data() {
     return {};
   },
@@ -30,6 +36,10 @@ export default {
     },
     formatedPrice() {
       return priceFormatting(this.price);
+    },
+    formatedPromo() {
+      console.log(this.promo);
+      return (this.promo) ? priceFormatting(this.promo) : null;
     }
   }
 }
@@ -37,7 +47,7 @@ export default {
   
 <style scoped>
 .card-content {
-  height: 3em;
+  height: 6em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -47,5 +57,9 @@ export default {
   line-height: 1.5em;
   overflow: hidden;
   white-space: normal;
+}
+
+.promo {
+  color: navy;
 }
 </style>
