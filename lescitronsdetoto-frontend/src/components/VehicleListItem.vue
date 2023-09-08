@@ -47,7 +47,7 @@ export default {
   
 <style scoped>
 .card-content {
-  height: 6em;
+  height: 9em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
