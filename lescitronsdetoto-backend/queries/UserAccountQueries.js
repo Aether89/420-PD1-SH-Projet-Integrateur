@@ -26,7 +26,7 @@ const getLoginByUserAccountId = async (userAccountId, client) => {
 exports.getLoginByUserAccountId = getLoginByUserAccountId;
 
 
-const createUserAccount = async (userAccountId, passwordHash, passwordSalt, name) => {
+const createUserAccount = async (userAccountId, idEmploye, courrielCompteEmploye, passwordHash, passwordSalt) => {
 
     const client = await pool.connect();
 
@@ -39,10 +39,11 @@ const createUserAccount = async (userAccountId, passwordHash, passwordSalt, name
             throw new HttpError(409, `Un compte avec l'identifiant ${userAccountId} existe déjà`);
         }
 
+
         const result = await (client || pool).query(
-            `INSERT INTO user_account (user_account_id, password_hash, password_salt, user_full_name) 
-             VALUES ($1, $2, $3, $4)`,
-            [userAccountId, passwordHash, passwordSalt, name]
+            `INSERT INTO user_account (user_account_id, id_employe, courriel_compte_employe, password_hash, password_salt, is_active, is_admin) 
+             VALUES ($1, $2, $3, $4, $5, true, false)`,
+            [userAccountId, idEmploye, courrielCompteEmploye, passwordHash, passwordSalt]
         );
 
         const userAccount = getLoginByUserAccountId(userAccountId, client);

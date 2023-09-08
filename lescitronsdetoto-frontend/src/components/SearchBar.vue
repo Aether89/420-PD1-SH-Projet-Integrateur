@@ -1,12 +1,12 @@
 <template>
-    <v-sheet color="amber" width="parent" class="pa-6">
+    <v-sheet color="amber" width="parent" class="px-6" >
         <v-row>
             <v-select style="width: 2em" label="Marque" v-model="this.store.selected.make"
-                :items="this.store.makes"></v-select>
+                :items="this.store.makes" density="compact"></v-select>
             <v-select style="width: 2em" label="Modéle" v-model="this.store.selected.model"
-                :items="this.store.models"></v-select>
+                :items="this.store.models" density="compact"></v-select>
             <v-select style="width: 2em" label="Année" v-model="this.store.selected.year"
-                :items="this.store.years"></v-select>
+                :items="this.store.years" density="compact"></v-select>
         </v-row><v-row>
             <v-range-slider v-model="this.store.selected.priceRange" :step="this.store.priceIncrement"
                 :min="this.store.minPrice" :max="this.store.maxPrice">

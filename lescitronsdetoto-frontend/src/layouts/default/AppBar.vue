@@ -7,8 +7,11 @@
               </div>
           </v-app-bar-title>
           <template v-slot:append>
-              <v-btn to="/">
-                  ACCUEIL
+                        <v-btn to="/listeEmployes">
+                                 Liste Employes
+                              </v-btn>
+                          <v-btn to="/NewEmploye">
+                             Nouvelle Employe
               </v-btn>
               <v-spacer vertical class="ma-2"></v-spacer>
               <div>

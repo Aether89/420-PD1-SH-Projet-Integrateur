@@ -24,6 +24,16 @@ const routes = [
         name: 'Nouveau Compte',
         component: () => import(/* webpackChunkName: "home" */ '@/views/LoginNew.vue'),
       },
+       {
+        path: 'newEmploye',
+        name: 'Nouvelle Employe',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/NewEmploye.vue'),
+      },
+         {
+        path: 'listeEmployes',
+        name: 'Liste des Employés',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeEmployes.vue'),
+      },
     ],
   },
 ]

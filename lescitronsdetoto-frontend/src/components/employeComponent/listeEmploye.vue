@@ -1,0 +1,104 @@
+<template>
+  <v-card class="mx-auto" max-width="400">
+    <v-card-item class="bg-orange-darken-4">
+      <v-card-title>
+        Liste des employés
+      </v-card-title>
+
+      <template v-slot:append>
+        <v-btn color="white" icon="mdi-plus" size="small"></v-btn>
+      </template>
+    </v-card-item>
+    <v-divider></v-divider>
+
+    <v-virtual-scroll :items="items" height="300" item-height="50">
+      <template v-slot:default="{ item }">
+        <v-list-item>
+          <template v-slot:prepend>
+            <v-avatar :color="item.color" class="text-white" size="40">
+              {{ item.initials }}
+            </v-avatar>
+          </template>
+
+          <v-list-item-title>{{ item.fullName }}</v-list-item-title>
+
+          <template v-slot:append>
+            <v-btn @click="getThisUser(item.id)" size="small" variant="tonal">
+              View User
+
+              <v-icon color="orange-darken-4" end>
+                mdi-open-in-new
+              </v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
+      </template>
+    </v-virtual-scroll>
+  </v-card>
+</template>
+
+<script>
+
+import EmployeVue from './Employe.vue';
+import { fetchEmploye } from '../../services/EmployeService.js';
+import { computed } from 'vue';
+
+export default {
+  components: {
+    EmployeVue: EmployeVue
+  },
+  data() {
+    return {
+      employes: [],
+      colors: ['#2196F3', '#90CAF9', '#64B5F6', '#42A5F5', '#1E88E5', '#1976D2', '#1565C0', '#0D47A1', '#82B1FF', '#448AFF', '#2979FF', '#2962FF'],
+      loading: true,
+      loadError: false
+    };
+  },
+  methods: {
+    genRandomIndex(length) {
+      return Math.ceil(Math.random() * (length - 1))
+    },
+  },
+  computed: {
+    items() {
+
+      const colorsLength = this.colors.length
+      let num = 0
+
+      return Array.from({ length: this.employes.length }, () => {
+
+
+        const name = this.employes[num].nomEmploye
+        const surname = this.employes[num].prenomEmploye
+        const id = this.employes[num].idEmploye
+        num++
+
+        return {
+          color: this.colors[this.genRandomIndex(colorsLength)],
+          fullName: `${name} ${surname}`,
+          initials: `${name[0]} ${surname[0]}`,
+          idEmploye: `${id}`
+
+        }
+      });
+    }
+  },
+  mounted() {
+
+    fetchEmploye().then(employes => {
+      this.employes = employes;
+      this.loading = false;
+      this.loadError = false;
+    }).catch(err => {
+
+      this.loading = false;
+      this.loadError = true;
+    });
+    console.log(this.employes);
+  },
+
+
+}
+</script>
+

@@ -9,6 +9,7 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
 const userAccountQueries = require("./queries/UserAccountQueries");
+const EmployeRouter = require('./routes/EmployeRouter');
 
 const citronRouter = require('./routes/citronsdetotoRouter');
 
@@ -18,6 +19,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use('/employes',EmployeRouter);
 app.use(express.static(path.join(__dirname, 'public')));
 
 
