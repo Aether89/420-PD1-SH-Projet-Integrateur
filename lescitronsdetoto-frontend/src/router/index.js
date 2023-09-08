@@ -47,6 +47,16 @@ const routes = [
       component: () => import(/* webpackChunkName: "home" */ '@/views/NewAppointment.vue'),
       props: true,
       },
+      {
+        path: 'admin/nouveau-vehicule',
+        name: 'Nouveau véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/NewVehicule.vue')
+      },
+      {
+        path: '/vehicule/:vin/édition',
+        name: 'Édition véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/NewVehicule.vue')
+      }
     ],
   },
 ]

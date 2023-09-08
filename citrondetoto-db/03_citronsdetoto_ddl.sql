@@ -22,6 +22,9 @@ CREATE TABLE etat (
 
 CREATE TABLE vehicule (
 	vin varchar(17) PRIMARY KEY NOT NULL,
+	marque text,
+	modele text,
+	annee integer,
 	id_etat integer NOT NULL REFERENCES etat (id_etat),
 	couleur varchar(32) NOT NULL,
 	nombre_kilometre integer NOT NULL,
