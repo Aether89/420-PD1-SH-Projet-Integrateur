@@ -1,12 +1,12 @@
 <template>
-    <v-sheet color="amber" width="parent" class="px-6" >
+    <v-sheet color="amber" width="parent" class="px-6">
         <v-row>
-            <v-select style="width: 2em" label="Marque" v-model="this.store.selected.make"
-                :items="this.store.makes" density="compact"></v-select>
-            <v-select style="width: 2em" label="Modéle" v-model="this.store.selected.model"
-                :items="this.store.models" density="compact"></v-select>
-            <v-select style="width: 2em" label="Année" v-model="this.store.selected.year"
-                :items="this.store.years" density="compact"></v-select>
+            <v-select style="width: 2em" label="Marque" v-model="this.store.selected.make" :items="this.store.makes"
+                density="compact"></v-select>
+            <v-select style="width: 2em" label="Modéle" v-model="this.store.selected.model" :items="this.store.models"
+                density="compact"></v-select>
+            <v-select style="width: 2em" label="Année" v-model="this.store.selected.year" :items="this.store.years"
+                density="compact"></v-select>
         </v-row><v-row>
             <v-range-slider v-model="this.store.selected.priceRange" :step="this.store.priceIncrement"
                 :min="this.store.minPrice" :max="this.store.maxPrice">
@@ -22,8 +22,8 @@
                 </template>
             </v-range-slider>
 
-            <v-btn prepend-icon="mdi-car-search" class="mx-2" aria-label="confirmer"
-                color="green-lighten-2" @click="this.searchVehicles()">Confirmer</v-btn>
+            <v-btn prepend-icon="mdi-car-search" class="mx-2" aria-label="confirmer" color="green-lighten-2"
+                @click="this.searchVehicles()">Confirmer</v-btn>
             <v-btn prepend-icon="mdi-cancel" class="mx-2" aria-label="annuler" color="red-lighten-2"
                 @click="this.cancel()">Annuler</v-btn>
 

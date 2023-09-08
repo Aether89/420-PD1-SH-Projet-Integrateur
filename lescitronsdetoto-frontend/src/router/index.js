@@ -29,10 +29,23 @@ const routes = [
         name: 'Nouvelle Employe',
         component: () => import(/* webpackChunkName: "home" */ '@/views/NewEmploye.vue'),
       },
-         {
+      {
         path: 'listeEmployes',
         name: 'Liste des Employés',
         component: () => import(/* webpackChunkName: "home" */ '@/views/ListeEmployes.vue'),
+      
+      },
+      {
+      path: 'vehicle/:id',
+      name: 'Informations du Véhicule',
+      component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
+      props: true,
+      },
+      {
+      path: 'newappointment/:id',
+      name: 'Prise de rendez-vous',
+      component: () => import(/* webpackChunkName: "home" */ '@/views/NewAppointment.vue'),
+      props: true,
       },
     ],
   },

@@ -1,9 +1,9 @@
 <template>
   <SearchBar />
-  <HelloWorld />
+  <VehiclesList />
 </template>
 
 <script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
-  import SearchBar from '@/components/SearchBar.vue'
+  import VehiclesList from '@/components/VehiclesList.vue'
+  import SearchBar from '@/layouts/default/SearchBar.vue'
 </script>

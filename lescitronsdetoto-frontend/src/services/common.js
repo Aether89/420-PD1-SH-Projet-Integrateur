@@ -21,10 +21,24 @@ export async function generateYears() {
     const startingYear = d.getFullYear() + 1;
     let years = [];
     let year;
-    for (let i = 0; i <= pastYears; i++ ) {
+    for (let i = 0; i <= pastYears; i++) {
         year = startingYear - i;
         years.push(year);
     }
 
     return years;
 }
+
+export function priceFormatting(price) {
+    const formattedPrice = new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: 'CAD',
+      minimumFractionDigits: 2,
+    }).format(price);
+  
+    // Remove the currency symbol
+    const priceWithoutCurrency = formattedPrice.replace(/^.*?\s/, '');
+  
+    return priceWithoutCurrency;
+  }
+  
