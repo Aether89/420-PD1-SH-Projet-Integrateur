@@ -1,6 +1,6 @@
 <template>
     <v-sheet class="ma-2" max-width="40rem">
-        <div class="text-h5">Nouvelle Employe</div>
+        <div class="text-h5">Nouvel Employé</div>
         <v-form @submit.prevent="submitNewEmploye" validate-on="submit lazy" ref="employeform">
             <v-text-field v-model="nomEmploye" label="Nom employé"
                 :rules="[rules.required]" density="compact"></v-text-field>

@@ -1,5 +1,14 @@
 <template>
-    <v-sheet color="transparent" class="ma-8">
+    <v-toolbar dark color="lime">
+        <v-toolbar-title>Les citrons de Toto</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-toolbar-items > <v-btn bg-color="error" icon dark @click="$emit('closeDialog')">
+            <v-icon>mdi-close</v-icon>
+        </v-btn></v-toolbar-items>
+    </v-toolbar>
+
+    <v-sheet color="blue-lighten-1">
+        <div class="ma-4 mb-16">
         <v-row v-if="!this.load" class="flex d-flex">
             <v-col cols="12" sm="4">
                 <v-carousel height="250" width="350" hide-delimiter-background show-arrows="hover">
@@ -27,16 +36,16 @@
                     </div>
                 </v-card>
 
-                            <v-card v-if="session.user" color="lime-lighten-1" class="pa-2 text-center mt-4">
-                                <v-btn class="ma-2" type="button" prepend-icon="mdi-file-edit-outline" color="amber-lighten-3"
-                                    aria-label="Éditer" :to="editionURL" router-link>Éditer</v-btn>
-                                <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression" aria-label="Supprimer"
-                                    color="red-lighten-3">Supprimer</v-btn>
-                    </v-card>
+                <v-card v-if="session.user" color="lime-lighten-1" class="pa-2 text-center mt-4">
+                    <v-btn class="ma-2" type="button" prepend-icon="mdi-file-edit-outline" color="amber-lighten-3"
+                        aria-label="Éditer" :to="editionURL" router-link>Éditer</v-btn>
+                    <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression" aria-label="Supprimer"
+                        color="red-lighten-3">Supprimer</v-btn>
+                </v-card>
 
-                    <v-card :color="this.colourSecondary" class="pb-6 text-center mt-4">
-                            <v-card-title>Ce véhicule m'interesse</v-card-title>
-                            <v-btn :to="appointmentURL" size="large">Prendre un<br>rendez-vous</v-btn>
+                <v-card :color="this.colourSecondary" class="pb-6 text-center mt-4">
+                    <v-card-title>Ce véhicule m'interesse</v-card-title>
+                    <v-btn :to="appointmentURL" size="large">Prendre un<br>rendez-vous</v-btn>
                 </v-card>
 
             </v-col>
@@ -106,11 +115,11 @@
 
             <v-col cols="12" sm="8">
 
-                <v-card class="pa-8" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
+                <v-card class="pa-8 mb-16" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
 
             </v-col>
         </v-row>
-
+    </div>
     </v-sheet>
 </template>
   

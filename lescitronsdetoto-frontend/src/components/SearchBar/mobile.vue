@@ -22,18 +22,18 @@
             <v-list>
                 <v-list-item>
                     <v-select label="Marque" v-model="this.store.selected.make" :items="this.store.makes"
-                        density="compact"></v-select>
+                        density="compact" clearable></v-select>
                 </v-list-item>
 
                 <v-list-item>
 
                     <v-select label="Année" v-model="this.store.selected.year" :items="this.store.years"
-                        density="compact"></v-select>
+                        density="compact" clearable></v-select>
                 </v-list-item>
 
                 <v-list-item>
                     <v-select label="Modéle" v-model="this.store.selected.model" :items="this.store.models"
-                        density="compact"></v-select>
+                        density="compact" clearable></v-select>
                 </v-list-item>
                 <v-list-subheader>Prix entre </v-list-subheader>
                 <v-list-item>
