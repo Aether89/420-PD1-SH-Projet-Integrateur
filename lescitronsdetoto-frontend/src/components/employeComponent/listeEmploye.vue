@@ -23,7 +23,7 @@
           <v-list-item-title>{{ item.fullName }}</v-list-item-title>
 
           <template v-slot:append>
-            <v-btn @click="getThisUser(item.id)" size="small" variant="tonal">
+                                    <v-btn @click="employes.rafraichirEmployes()"  size="small" variant="tonal">
               View User
 
               <v-icon color="orange-darken-4" end>
@@ -40,8 +40,9 @@
 <script>
 
 import EmployeVue from './Employe.vue';
-import { fetchEmploye } from '../../services/EmployeService.js';
 import { computed } from 'vue';
+
+
 
 export default {
   components: {

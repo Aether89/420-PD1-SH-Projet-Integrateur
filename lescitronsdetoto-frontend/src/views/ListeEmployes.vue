@@ -2,7 +2,7 @@
     <v-sheet class="d-flex">
         <listeEmploye />
         <v-sheet>
-            <Employe />
+                <!-- <Employe /> -->
             <v-divider vertical></v-divider>
             <EmployeVueDetail div v-if="employeExiste" :key="idEmploye" :employeKey="key" :nomEmploye="nomEmploye"
                 :prenomEmploye="prenomEmploye" :posteEmploye="posteEmploye" :telephoneEmploye="telephoneEmploye"

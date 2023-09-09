@@ -64,12 +64,7 @@ export async function fetchEmploye() {
     }
 }
 
-/**
- * Récupère depuis l'API back-end un produit individuel du catalogue
- * 
- * @param {String} idEmploye L'identifiant du produit à récupérer
- * @returns Promesse permettant d'obtenir le produit demandé
- */
+
 export async function fetchemploye(idEmploye) {
     const response = await fetch(`/api/employes/${idEmploye}`);
 

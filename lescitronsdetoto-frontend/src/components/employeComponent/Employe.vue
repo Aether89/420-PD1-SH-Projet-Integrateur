@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <v-card class="ma-2">
         <v-sheet class="d-flex flex-no-wrap">
 
@@ -65,4 +65,4 @@ export default {
         this.rafraichirEmployes();
     }
 };
-</script>
+</script> -->

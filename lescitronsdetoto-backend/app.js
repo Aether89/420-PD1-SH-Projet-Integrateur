@@ -20,9 +20,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/employes',EmployeRouter);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/vehicule', vehiculeRouter);
+app.use('/employes', EmployeRouter);
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {
