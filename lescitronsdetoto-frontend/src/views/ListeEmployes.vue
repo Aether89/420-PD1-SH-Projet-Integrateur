@@ -1,33 +1,32 @@
 <template>
-    <v-sheet class="d-flex">
-        <listeEmploye />
-        <v-sheet>
-                <!-- <Employe /> -->
-            <v-divider vertical></v-divider>
-            <EmployeVueDetail div v-if="employeExiste" :key="idEmploye" :employeKey="key" :nomEmploye="nomEmploye"
-                :prenomEmploye="prenomEmploye" :posteEmploye="posteEmploye" :telephoneEmploye="telephoneEmploye"
-                :codePostalEmploye="codePostalEmploye" />
-            <div v-else>Employe introuvable!</div>
-        </v-sheet>
-    </v-sheet>
+    <v-container class="d-flex" justify="center">
+        <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="4">
+                <listeEmploye @emitThisId="receiveEmit" />
+            </v-col><v-col cols="4">
+                <EmployeVue :isNew="EmployeExiste" :idEmploye="idEmploye" :nomEmploye="nomEmploye"
+                    :prenomEmploye="prenomEmploye" :posteEmploye="posteEmploye" :telephoneEmploye="telephoneEmploye"
+                    :codePostalEmploye="codePostalEmploye" />
+            </v-col><v-col cols="2"></v-col>
+        </v-row>
+    </v-container>
 </template>
 <script>
 import listeEmploye from '@/components/employeComponent/listeEmploye.vue';
 import EmployeVue from '@/components/employeComponent/Employe.vue';
-import EmployeVueDetail from '@/components/employeComponent/EmployeVueDetail.vue';
+import { fetchEmploye, fetchemploye } from '../services/EmployeService.js';
+import { computed } from 'vue';
+
 
 
 export default {
     components: {
         listeEmploye: listeEmploye,
         EmployeVue: EmployeVue,
-        EmployeVueDetail: EmployeVueDetail,
+    },
 
-    },
-    inject: ['employes'],
-    props: {
-        idEmploye: Number
-    },
+
     data() {
         return {
             employeExiste: false,
@@ -40,38 +39,32 @@ export default {
         };
     },
     methods: {
+        receiveEmit(emitId) {
+            this.idEmploye = emitId;
+            this.isNew = false;
+        },
         chargerEmploye(idEmploye) {
-            fetch("/api/employes/" + idEmploye)
-                .then((response) => {
-                    if (response.ok) {
+            fetchemploye(idEmploye);
 
-                        return response.json();
-                    } else {
-                        if (response.status === 404) {
-                            throw new Error("Contact introuvable");
-                        }
-                        throw new Error("Erreur HTTP " + response.status);
-                    }
-                })
-                .then((respEmploye) => {
-                    this.idEmploye = respEmploye.idEmploye;
-                    this.nomEmploye = respEmploye.nomEmploye;
-                    this.prenomEmploye = respEmploye.prenomEmploye;
-                    this.posteEmploye = respEmploye.posteEmploye;
-                    this.telephoneEmploye = respEmploye.telephoneEmploye;
-                    this.codePostalEmploye = respEmploye.codePostalEmploye;
-                    this.employeExiste = true;
-                }).catch((error) => {
-                    console.log("Erreur", error);
-                    this.employeExiste = false;
-                });
+        },
+
+        rafraichirEmployes() {
+            fetchEmploye();
         }
     },
+    provide() {
+        return {
+            employes: computed(() => this.employes),
+            rafraichirEmployes: this.rafraichirEmployes
+        };
+    },
     mounted() {
-        this.chargerEmploye(this.idEmploye);
+        this.rafraichirEmployes();
+
     },
     watch: {
         idEmploye(NewEmploye) {
+            console.log(this.nomEmploye);
             this.chargerEmploye(NewEmploye);
         }
     }

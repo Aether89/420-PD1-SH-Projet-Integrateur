@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-width="400">
+  <v-card max-width="400" min-width="400">
     <v-card-item class="bg-orange-darken-4">
       <v-card-title>
         Liste des employés
@@ -23,7 +23,7 @@
           <v-list-item-title>{{ item.fullName }}</v-list-item-title>
 
           <template v-slot:append>
-                                    <v-btn @click="employes.rafraichirEmployes()"  size="small" variant="tonal">
+            <v-btn @click="$emit('emitThisId', item.id)" size="small" variant="tonal">
               View User
 
               <v-icon color="orange-darken-4" end>
@@ -39,15 +39,14 @@
 
 <script>
 
-import EmployeVue from './Employe.vue';
+
 import { computed } from 'vue';
+import { fetchEmploye } from '../../services/EmployeService.js'
 
 
 
 export default {
-  components: {
-    EmployeVue: EmployeVue
-  },
+
   data() {
     return {
       employes: [],
@@ -60,7 +59,17 @@ export default {
     genRandomIndex(length) {
       return Math.ceil(Math.random() * (length - 1))
     },
+    rafraichirEmployes() {
+      fetchEmploye();
+    }
   },
+  provide() {
+    return {
+      employes: computed(() => this.employes),
+      rafraichirEmployes: this.rafraichirEmployes
+    };
+  },
+
   computed: {
     items() {
 

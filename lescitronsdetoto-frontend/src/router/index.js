@@ -24,28 +24,30 @@ const routes = [
         name: 'Nouveau Compte',
         component: () => import(/* webpackChunkName: "home" */ '@/views/LoginNew.vue'),
       },
-       {
-        path: 'newEmploye',
-        name: 'Nouvelle Employe',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/NewEmploye.vue'),
+      {
+        path: 'NouvelEmployes',
+        name: 'Liste des Employés',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeEmployes.vue'),
+
       },
+
       {
         path: 'listeEmployes',
         name: 'Liste des Employés',
         component: () => import(/* webpackChunkName: "home" */ '@/views/ListeEmployes.vue'),
-      
+
       },
       {
-      path: 'vehicle/:id',
-      name: 'Informations du Véhicule',
-      component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
-      props: true,
+        path: 'vehicle/:id',
+        name: 'Informations du Véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
+        props: true,
       },
       {
-      path: 'newappointment/:id',
-      name: 'Prise de rendez-vous',
-      component: () => import(/* webpackChunkName: "home" */ '@/views/NewAppointment.vue'),
-      props: true,
+        path: 'newappointment/:id',
+        name: 'Prise de rendez-vous',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/NewAppointment.vue'),
+        props: true,
       },
       {
         path: 'admin/nouveau-vehicule',
