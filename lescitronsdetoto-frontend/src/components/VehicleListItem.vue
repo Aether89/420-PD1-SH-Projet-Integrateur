@@ -1,28 +1,32 @@
 <template>
   <v-card :color="colourPrimary" class="pa-2">
     <v-card-title class="headColour">{{ vehicleName }}</v-card-title>
-    <v-img color="grey-lighten-3" :width="200" :height="100" aspect-ratio="16/9" cover :src="carImg">
-    </v-img>
-    <div class="card-content">
-      <div v-if="this.promo" class="my-2">
+    <v-row class="mt-1">
+      <v-img color="grey-lighten-3" :width="200" :height="163" aspect-ratio="16/9" cover :src="carImg">
+        <div class="overlay-text mx-4">
+      <div v-if="this.promo">
         <p class="text-right font-weight-bold promo"><v-icon color="red">mdi-seal</v-icon>{{ formatedPromo }}</p>
-        <p class="text-right text-decoration-line-through">{{ formatedPrice }}</p>
+        <p class="text-right text-decoration-line-through reg">{{ formatedPrice }}</p>
       </div>
-      <div v-else class="my-2">
+      <div v-else>
         <p class=" text-right font-weight-bold">{{ formatedPrice }}</p>
       </div>
+      </div></v-img>
+    
+      <v-col cols="12"></v-col>
+    </v-row>
+
       <v-dialog v-model="dialog" fullscreen
       :scrim="true"
       transition="dialog-bottom-transition">
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">
+          <v-btn block color="primary" v-bind="props">
             Voir plus
           </v-btn>
         </template>
-        <detailled-vehicle :id="this.id" @close-dialog="this.dialog = !this.dialog"></detailled-vehicle>
+        <detailled-vehicle class="mb-8" :id="this.id" :isDialog="true" @close-dialog="this.dialog = !this.dialog"></detailled-vehicle>
       </v-dialog>
       
-    </div>
   </v-card>
 </template>
 
@@ -82,10 +86,27 @@ export default {
 }
 
 .promo {
-  color: navy;
+  color: white;
 }
 
+.reg {
+  color: #ECEFF1;
+}
 .headColour {
   background-color: gold;
 }
+
+.overlay-text {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  border-top-left-radius: 25px;
+}
+
 </style>

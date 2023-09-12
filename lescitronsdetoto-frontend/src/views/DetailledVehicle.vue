@@ -1,14 +1,16 @@
 <template>
-    <v-toolbar dark color="lime">
-        <v-toolbar-title>Les citrons de Toto</v-toolbar-title>
+    <v-sheet color="light-blue">
+    <v-toolbar v-if="isDialog" dark color="lime">
+        <v-toolbar-title @click="$emit('closeDialog')">Les citrons de Toto</v-toolbar-title>
         <v-spacer></v-spacer>
+        <v-btn variant="text" aria-label="partager" icon="mdi-share-variant"></v-btn>
         <v-toolbar-items > <v-btn bg-color="error" icon dark @click="$emit('closeDialog')">
             <v-icon>mdi-close</v-icon>
         </v-btn></v-toolbar-items>
     </v-toolbar>
 
-    <v-sheet color="blue-lighten-1">
-        <div class="ma-4 mb-16">
+    <v-container color="blue-lighten-1">
+        <div class="ma-4">
         <v-row v-if="!this.load" class="flex d-flex">
             <v-col cols="12" sm="4">
                 <v-carousel height="250" width="350" hide-delimiter-background show-arrows="hover">
@@ -53,7 +55,7 @@
 
         <v-row v-if="!this.load">
             <v-col cols="12" sm="4">
-                <v-table>
+                <v-table  class="mb-8">
                     <thead>
                         <tr>
                             <th class="text-left">
@@ -82,7 +84,7 @@
                             <td>{{ this.api.EngineCylinders }}</td>
                         </tr>
                         <tr v-if="this.local.km !== null">
-                            <td>KM/H</td>
+                            <td>KM</td>
                             <td>{{ this.local.km }}</td>
                         </tr>
                         <tr v-if="this.api.TractionControl !== ''">
@@ -115,12 +117,14 @@
 
             <v-col cols="12" sm="8">
 
-                <v-card class="pa-8 mb-16" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
+                <v-card class="pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
 
             </v-col>
         </v-row>
     </div>
-    </v-sheet>
+    </v-container>
+    <v-btn v-if="!this.loading && isDialog" size="x-large" aria-label="fermer dialogue véhicule" color="red-lighten-3" block @click="$emit('closeDialog')"><v-icon size="x-large" icon="mdi-menu-down" ></v-icon></v-btn>
+</v-sheet>
 </template>
   
 <script>
@@ -128,12 +132,17 @@ import { useVehiclesStore } from '@/store/vehicles';
 import { useAppStore } from '@/store/app';
 import { priceFormatting } from '@/services/common';
 import session from '@/session';
+import FooterBar from '@/layouts/default/FooterBar.vue';
 
 const appStore = useAppStore();
 const store = useVehiclesStore();
 export default {
+    components: {
+FooterBar: FooterBar
+    },
     props: {
         id: String,
+        isDialog: Boolean
     },
     data: function () {
         return {
@@ -156,6 +165,9 @@ export default {
         },
         appointmentURL() {
             return "/newappointment/" + this.id;
+        },
+        shareURL() {
+            return "/vehicles/" + this.id;
         },
         colourPrimary() {
             return appStore.colourPrimary;
