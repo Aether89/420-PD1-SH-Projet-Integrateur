@@ -14,6 +14,12 @@ export const useVehiclesStore = defineStore('vehicles', {
     makes: [],
     years: [],
     models: [],
+    
+    loading: {
+      makes: true,
+      models: true,
+      years: true
+    },
 
     minPrice: 0,
     maxPrice: 500000,
@@ -35,13 +41,21 @@ export const useVehiclesStore = defineStore('vehicles', {
   }),
   actions: {
     async loadMakes() {
+      this.loading.makes = true;
       this.makes = await fetchMakes();
+      this.loading.makes = false;
+
     },
     async loadYears() {
+      this.loading.years = true;
       this.years = await generateYears();
+      this.loading.years = false;
+
     },
     async loadModels() {
-      this.models = await fetchModels(this.selected.make,this.selected.year);
+      this.loading.models = true;
+      this.models = (this.selected)? await fetchModels(this.selected.make,this.selected.year) : null;
+      this.loading.models = false;
     },
     async loadVIN(vin) {
       this.vehicle.api = await fetchVIN(vin);

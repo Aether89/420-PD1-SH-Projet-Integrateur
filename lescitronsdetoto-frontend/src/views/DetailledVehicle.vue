@@ -1,5 +1,16 @@
 <template>
-    <v-sheet color="transparent" class="ma-8">
+    <v-sheet color="light-blue">
+    <v-toolbar v-if="isDialog" dark color="lime">
+        <v-toolbar-title @click="$emit('closeDialog')">Les citrons de Toto</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn variant="text" aria-label="partager" icon="mdi-share-variant"></v-btn>
+        <v-toolbar-items > <v-btn bg-color="error" icon dark @click="$emit('closeDialog')">
+            <v-icon>mdi-close</v-icon>
+        </v-btn></v-toolbar-items>
+    </v-toolbar>
+
+    <v-container color="blue-lighten-1">
+        <div class="ma-4">
         <v-row v-if="!this.load" class="flex d-flex">
             <v-col cols="12" sm="4">
                 <v-carousel height="250" width="350" hide-delimiter-background show-arrows="hover">
@@ -27,16 +38,16 @@
                     </div>
                 </v-card>
 
-                            <v-card v-if="session.user" color="lime-lighten-1" class="pa-2 text-center mt-4">
-                                <v-btn class="ma-2" type="button" prepend-icon="mdi-file-edit-outline" color="amber-lighten-3"
-                                    aria-label="Éditer" :to="editionURL" router-link>Éditer</v-btn>
-                                <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression" aria-label="Supprimer"
-                                    color="red-lighten-3">Supprimer</v-btn>
-                    </v-card>
+                <v-card v-if="session.user" color="lime-lighten-1" class="pa-2 text-center mt-4">
+                    <v-btn class="ma-2" type="button" prepend-icon="mdi-file-edit-outline" color="amber-lighten-3"
+                        aria-label="Éditer" :to="editionURL" router-link>Éditer</v-btn>
+                    <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression" aria-label="Supprimer"
+                        color="red-lighten-3">Supprimer</v-btn>
+                </v-card>
 
-                    <v-card :color="this.colourSecondary" class="pb-6 text-center mt-4">
-                            <v-card-title>Ce véhicule m'interesse</v-card-title>
-                            <v-btn :to="appointmentURL" size="large">Prendre un<br>rendez-vous</v-btn>
+                <v-card :color="this.colourSecondary" class="pb-6 text-center mt-4">
+                    <v-card-title>Ce véhicule m'interesse</v-card-title>
+                    <v-btn :to="appointmentURL" size="large">Prendre un<br>rendez-vous</v-btn>
                 </v-card>
 
             </v-col>
@@ -44,7 +55,7 @@
 
         <v-row v-if="!this.load">
             <v-col cols="12" sm="4">
-                <v-table>
+                <v-table  class="mb-8">
                     <thead>
                         <tr>
                             <th class="text-left">
@@ -73,7 +84,7 @@
                             <td>{{ this.api.EngineCylinders }}</td>
                         </tr>
                         <tr v-if="this.local.km !== null">
-                            <td>KM/H</td>
+                            <td>KM</td>
                             <td>{{ this.local.km }}</td>
                         </tr>
                         <tr v-if="this.api.TractionControl !== ''">
@@ -106,12 +117,14 @@
 
             <v-col cols="12" sm="8">
 
-                <v-card class="pa-8" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
+                <v-card class="pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
 
             </v-col>
         </v-row>
-
-    </v-sheet>
+    </div>
+    </v-container>
+    <v-btn v-if="!this.loading && isDialog" size="x-large" aria-label="fermer dialogue véhicule" color="red-lighten-3" block @click="$emit('closeDialog')"><v-icon size="x-large" icon="mdi-menu-down" ></v-icon></v-btn>
+</v-sheet>
 </template>
   
 <script>
@@ -119,12 +132,17 @@ import { useVehiclesStore } from '@/store/vehicles';
 import { useAppStore } from '@/store/app';
 import { priceFormatting } from '@/services/common';
 import session from '@/session';
+import FooterBar from '@/layouts/default/FooterBar.vue';
 
 const appStore = useAppStore();
 const store = useVehiclesStore();
 export default {
+    components: {
+FooterBar: FooterBar
+    },
     props: {
         id: String,
+        isDialog: Boolean
     },
     data: function () {
         return {
@@ -147,6 +165,9 @@ export default {
         },
         appointmentURL() {
             return "/newappointment/" + this.id;
+        },
+        shareURL() {
+            return "/vehicles/" + this.id;
         },
         colourPrimary() {
             return appStore.colourPrimary;

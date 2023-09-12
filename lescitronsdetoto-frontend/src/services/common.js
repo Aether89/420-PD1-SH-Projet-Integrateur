@@ -6,14 +6,14 @@ export async function prune(objects, value) {
     });
 
     let pruneValues = Array.from(pruneValuesSet);
-
+    pruneValues.sort();
     return pruneValues;
 }
 
 export async function generateYears() {
 
     // nombre d'année à retourner dans le passé 
-    const pastYears = 26
+    const pastYears = 35
 
     const d = new Date();
 
