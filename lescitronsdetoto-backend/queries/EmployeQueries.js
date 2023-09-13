@@ -45,7 +45,7 @@ const getEmploye = async (idEmploye, clientParam) => {
                 nomEmploye: row.nom_employe,
                 prenomEmploye: row.prenom_employe,
                 posteEmploye: row.poste_employe,
-                telephoneEmploye: row.telephon_employe,
+                telephoneEmploye: row.telephone_employe,
                 codePostalEmploye: row.code_postal_employe
             }
 

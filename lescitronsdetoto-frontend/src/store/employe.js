@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { fetchemploye } from '@/services/EmployeService'
 
-export const useEmployeStore = defineStore('app', {
+export const useEmployeStore = defineStore('employe', {
   state: () => ({
     isNew: false,
     idEmploye: "",

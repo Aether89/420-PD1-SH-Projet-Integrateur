@@ -6,7 +6,7 @@
       </v-card-title>
 
       <template v-slot:append>
-        <v-btn v-if="session.isAdmin" color="white" icon="mdi-plus" size="small" @click="employeStore.newEmploye()"></v-btn>
+        <v-btn v-if="session.user.isAdmin" color="white" icon="mdi-plus" size="small" @click="employeStore.newEmploye()"></v-btn>
       </template>
     </v-card-item>
     <v-divider></v-divider>

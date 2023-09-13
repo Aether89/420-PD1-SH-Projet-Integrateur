@@ -1,12 +1,13 @@
 <template>
     <v-card class="ml-6" max-width="40rem" min-width="600">
         <div v-if="this.store.isNew" class="text-h5">Nouvelle Employe</div>
+        <div v-else class="text-h5">Employe</div>
         <v-form @submit.prevent="submitNewEmploye" validate-on="submit lazy" ref="employeform">
             <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.required]"
                 density="compact"></v-text-field>
             <v-text-field v-model="this.store.prenomEmploye" label="Prenom employé" :rules="[rules.required]"
                 density="compact"></v-text-field>
-            <v-text-field :disabled="!session.isAdmin" v-model="this.store.posteEmploye" label="Poste de l'employé"
+            <v-text-field :disabled="!session.user.isAdmin" v-model="this.store.posteEmploye" label="Poste de l'employé"
                 :rules="[rules.required]" density="compact"></v-text-field>
             <v-text-field v-model="this.store.telephoneEmploye" label="Téléphone de l'employé" :rules="[rules.required]"
                 density="compact"></v-text-field>
@@ -24,7 +25,7 @@
 
 import session from '../../session.js';
 import { useEmployeStore } from '@/store/employe';
-
+import { createEmploye } from '@/services/EmployeService.js'
 export default {
     data() {
         return {
@@ -52,7 +53,7 @@ export default {
             };
             try {
                 await createEmploye(Employe);
-
+                this.store.chargerEmploye();
             } catch (err) {
                 console.error(err);
                 alert(err.message);
