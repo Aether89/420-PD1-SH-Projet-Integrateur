@@ -52,7 +52,7 @@
             </v-row>
             <br>
             
-            <v-btn v-if="nouveauvehicule" prepend-icon="mdi-car-search" color="green-lighten-2" 
+            <v-btn v-if="!nouveauvehicule" prepend-icon="mdi-car-search" color="green-lighten-2" 
                 text-align="right" class="mx-2" type="submit" @click="updateVehicule">Editer</v-btn>
             <v-btn v-else prepend-icon="mdi-car-search" color="green-lighten-2" 
                 text-align="right" class="mx-2" type="submit" @click="submitNewVehicule">Ajouter</v-btn>
