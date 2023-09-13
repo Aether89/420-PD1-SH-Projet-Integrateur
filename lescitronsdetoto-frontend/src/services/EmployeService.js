@@ -1,4 +1,5 @@
 import session from '../session';
+import axios from 'axios';
 
 class ServiceError extends Error {
     constructor(status, message) {
@@ -35,9 +36,9 @@ export async function createEmploye(Employe) {
     } else {
         throw await createServiceError(response);
     }
-}
+};
 
-const convertToEmploye = jsonEmploye => {
+async function convertToEmploye(jsonEmploye) {
     return {
         idEmploye: jsonEmploye.idEmploye,
         nomEmploye: jsonEmploye.nomEmploye,
@@ -55,7 +56,6 @@ const convertToEmploye = jsonEmploye => {
  */
 export async function fetchEmploye() {
     const response = await fetch('/api/employes');
-
     if (response.ok) {
         const respJson = await response.json();
         return respJson;
@@ -66,10 +66,9 @@ export async function fetchEmploye() {
 
 
 export async function fetchemploye(idEmploye) {
-    const response = await fetch(`/api/employes/${idEmploye}`);
-
-    if (response.ok) {
-        return  response.json();
+    const response = await axios(`/api/employes/${idEmploye}`);
+    if (response.status === 200) {
+        return convertToEmploye(response.data);
     } else {
         throw await createServiceError(response);
     }

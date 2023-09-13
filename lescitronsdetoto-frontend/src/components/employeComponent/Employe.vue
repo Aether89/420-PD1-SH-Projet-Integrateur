@@ -1,19 +1,19 @@
 <template>
     <v-card class="ml-6" max-width="40rem" min-width="600">
-        <div v-if="isNew" class="text-h5">Nouvelle Employe</div>
+        <div v-if="this.store.isNew" class="text-h5">Nouvelle Employe</div>
         <v-form @submit.prevent="submitNewEmploye" validate-on="submit lazy" ref="employeform">
-            <v-text-field v-bind="nomEmploye" label="Nom employé" :rules="[rules.required]"
+            <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.required]"
                 density="compact"></v-text-field>
-            <v-text-field v-bind="prenomEmploye" label="Prenom employé" :rules="[rules.required]"
+            <v-text-field v-model="this.store.prenomEmploye" label="Prenom employé" :rules="[rules.required]"
                 density="compact"></v-text-field>
-            <v-text-field :disabled="!isNew || !session.isAdmin" v-bind="posteEmploye" label="Poste de l'employé"
+            <v-text-field :disabled="!session.isAdmin" v-model="this.store.posteEmploye" label="Poste de l'employé"
                 :rules="[rules.required]" density="compact"></v-text-field>
-            <v-text-field v-bind="telephoneEmploye" label="Téléphone de l'employé" :rules="[rules.required]"
+            <v-text-field v-model="this.store.telephoneEmploye" label="Téléphone de l'employé" :rules="[rules.required]"
                 density="compact"></v-text-field>
-            <v-text-field v-bind="codePostalEmploye" label="Code postal de l'employe" :rules="[rules.required]"
+            <v-text-field v-model="this.store.codePostalEmploye" label="Code postal de l'employe" :rules="[rules.required]"
                 density="compact"></v-text-field>
             <v-btn type="submit"
-                :disabled="!nomEmploye || !prenomEmploye || !posteEmploye || !telephoneEmploye || !codePostalEmploye">Créer
+                :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye || !this.store.codePostalEmploye">Créer
                 un nouveau compte</v-btn>
         </v-form>
     </v-card>
@@ -23,14 +23,13 @@
 <script>
 
 import session from '../../session.js';
-import { fetchemploye } from '@/services/EmployeService';
+import { useEmployeStore } from '@/store/employe';
 
 export default {
-    props: ['idEmploye', 'isNew', 'nomEmploye', 'prenomEmploye', 'posteEmploye', 'telephoneEmploye', 'codePostalEmploye'],
     data() {
         return {
             session: session,
-
+            store: useEmployeStore(),
             rules: {
                 required: value => !!value || "Le champ est requis",
 
@@ -45,11 +44,11 @@ export default {
                 return;
             }
             const Employe = {
-                nomEmploye: this.nomEmploye,
-                prenomEmploye: this.prenomEmploye,
-                posteEmploye: this.posteEmploye,
-                telephoneEmploye: this.telephoneEmploye,
-                codePostalEmploye: this.codePostalEmploye,
+                nomEmploye: this.store.nomEmploye,
+                prenomEmploye: this.store.prenomEmploye,
+                posteEmploye: this.store.posteEmploye,
+                telephoneEmploye: this.store.telephoneEmploye,
+                codePostalEmploye: this.store.codePostalEmploye,
             };
             try {
                 await createEmploye(Employe);
@@ -62,15 +61,6 @@ export default {
                 }
             }
         },
-        chargerEmploye(idEmploye) {
-            fetchemploye(idEmploye);
-        }
     },
-    watch: {
-        idEmploye(newId, oldId) {
-            console.log(newId);
-            this.chargerEmploye(newId);
-        }
-    }
 }
 </script> 
