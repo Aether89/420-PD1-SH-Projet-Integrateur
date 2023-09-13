@@ -1,14 +1,21 @@
 <template>
-    <v-card class="ma-2">
-        <v-sheet class="d-flex flex-no-wrap">
-
-            <div class="text-h5">{{ nomEmploye }}</div>
-            <div class="text-h5">{{ prenomEmploye }}</div>
-            <div class="text-h5">{{ posteEmploye }}</div>
-            <div class="text-h5">{{ telephoneEmploye }}</div>
-            <div class="text-h5">{{ codePostalEmploye }}</div>
-
-        </v-sheet>
+    <v-card class="ml-6" max-width="40rem" min-width="600">
+        <div v-if="this.store.isNew" class="text-h5">Nouvelle Employe</div>
+        <v-form @submit.prevent="submitNewEmploye" validate-on="submit lazy" ref="employeform">
+            <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.required]"
+                density="compact"></v-text-field>
+            <v-text-field v-model="this.store.prenomEmploye" label="Prenom employé" :rules="[rules.required]"
+                density="compact"></v-text-field>
+            <v-text-field :disabled="!session.isAdmin" v-model="this.store.posteEmploye" label="Poste de l'employé"
+                :rules="[rules.required]" density="compact"></v-text-field>
+            <v-text-field v-model="this.store.telephoneEmploye" label="Téléphone de l'employé" :rules="[rules.required]"
+                density="compact"></v-text-field>
+            <v-text-field v-model="this.store.codePostalEmploye" label="Code postal de l'employe" :rules="[rules.required]"
+                density="compact"></v-text-field>
+            <v-btn type="submit"
+                :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye || !this.store.codePostalEmploye">Créer
+                un nouveau compte</v-btn>
+        </v-form>
     </v-card>
 </template>
 
@@ -16,53 +23,44 @@
 <script>
 
 import session from '../../session.js';
+import { useEmployeStore } from '@/store/employe';
 
 export default {
     data() {
         return {
             session: session,
-            employes: []
+            store: useEmployeStore(),
+            rules: {
+                required: value => !!value || "Le champ est requis",
+
+            },
         };
     },
     methods: {
-        rafraichirEmployes() {
-            fetch("/api/employes/" + this.idEmploye)
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error("Erreur HTTP " + response.status);
-                    }
-                })
-                .then((respEmployes) => {
+        async submitNewEmploye() {
+            const formValid = await this.$refs.employeform.validate();
 
-                    const nouvEmployes = [];
-                    respEmployes.forEach((respEmploye) => {
-                        const nouvEmploye = {
-                            idEmploye: Number,
-                            nomEmploye: String,
-                            prenomEmploye: String,
-                            posteEmploye: String,
-                            telephoneEmploye: String,
-                            codePostalEmploye: String,
-                        };
-                        nouvEmployes.push(nouvEmploye);
-                    });
+            if (!formValid.valid) {
+                return;
+            }
+            const Employe = {
+                nomEmploye: this.store.nomEmploye,
+                prenomEmploye: this.store.prenomEmploye,
+                posteEmploye: this.store.posteEmploye,
+                telephoneEmploye: this.store.telephoneEmploye,
+                codePostalEmploye: this.store.codePostalEmploye,
+            };
+            try {
+                await createEmploye(Employe);
 
-                    this.employe = nouvEmployes;
-                }).catch((error) => {
-                    console.err("Erreur", error);
-                });
-        }
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+                if (err.status === 409) {
+                    this.$refs.employeform.validate();
+                }
+            }
+        },
     },
-    provide() {
-        return {
-            employes: computed(() => this.employes),
-            rafraichirEmployes: this.rafraichirEmployes
-        };
-    },
-    mounted() {
-        this.rafraichirEmployes();
-    }
-};
-</script>
+}
+</script> 
