@@ -218,38 +218,67 @@ const debugVehicles = [       {
     promo: 289000.99
   },];
 
-export async function fetchVehicle(vehicleID) {
+export const convertToVehicule = jsonVehicule => {
+  return {
+    id: jsonVehicule.vin,
+    img: [ "../src/assets/lemon.png", "../src/assets/race-car.png", "../src/assets/city-car.png"],
+    shortDescription: jsonVehicule.description_courte,
+    longDescription: jsonVehicule.description_longue,
+    price: jsonVehicule.prix_annonce,
+    promo: jsonVehicule.promotion,
+    km: jsonVehicule.nombre_kilometre,
+    colour: jsonVehicule.couleur
+  }
+};
 
-    return debug ? debugVehicle : async () => {
-        const response = await axios(`/api/vehicle/${vehiculeID}`, {
-          method: "GET",
-          headers: {
-            ...session.getAuthHeaders()
-          }
-        });
-  
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Failed to fetch vehicle data");
-        }
-      };
+export async function fetchVehicle(vehiculeID) {
+  // return debug ? debugVehicle : async () => {
+  //   const response = await axios(`/api/vehicule/${vehiculeID}`, {
+  //       method: "GET",
+  //       headers: {
+  //         ...session.getAuthHeaders()
+  //       }
+  //     });
+      const response = await fetch(`/api/vehicule/${vehiculeID}`);
+
+      console.log("respone un vehicule", response);
+      if (response.ok) {
+        return convertToVehicule(await response.json());
+      } else {
+        throw new Error("Failed to fetch vehicle data");
+      }
+};
+
+
+const convertToVehiculeList = jsonVehicules => {
+  return {
+    vin: jsonVehicules.vin,
+    img: "./src/assets/lemon.png",
+    make: jsonVehicules.marque,
+    model: jsonVehicules.modele,
+    year: jsonVehicules.annee,
+    price: jsonVehicules.prix_annonce,
+    promo: jsonVehicules.promotion
+  }
 };
 
 export async function fetchVehicles() {
 
-    return debug ? debugVehicles : async () => {
+    /*return debug ? debugVehicles : async () => {
         const response = await axios(`/api/vehicle/`, {
           method: "GET",
           headers: {
             ...session.getAuthHeaders()
           }
-        });
-  
+        });*/
+        const response = await fetch('/api/vehicule');
+        
         if (response.ok) {
-          return response.json();
+          
+          const respJson = await response.json();
+          console.log("respone", respJson.map(p => convertToVehiculeList(p)));
+          return respJson.map(p => convertToVehiculeList(p));
         } else {
           throw new Error("Failed to fetch vehicles data");
         }
       };
-};

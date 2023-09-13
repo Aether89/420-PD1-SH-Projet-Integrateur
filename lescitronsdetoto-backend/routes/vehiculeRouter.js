@@ -75,14 +75,29 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         const vehiculeExcite = await vehiculeQuerie.getVehiculeByVin(vin);
         if (vehiculeExcite) {
           return next(new HttpError(409, `Le véhicule avec ce VIN ${vin} existe déjà.`));
-        } //A corrigé ici
-  
+        }
+        
+        if(newVehicule.couleur.length > 32 || newVehicule.description_courte.length > 64 || newVehicule.description_longue.length > 512)
+        {
+            return next(new HttpError(400, `Un champ n'est pas valide`));
+        }
+
         if (newVehicule.id_etat === null || newVehicule.id_etat < 1 || newVehicule.id_etat > 3) {
             newVehicule.id_etat = 1;
+        }
+
+        /*if (newVehicule.prix_annonce <= 0){
+            newVehicule.prix_annonce = null;
+        } */ //a voir avec la bd
+
+        if(newVehicule.promotion <= 0) {
+            newVehicule.promotion = null;
         }
         console.log("newVehicule", newVehicule);
         vehiculeQuerie.addVehicule(newVehicule);
         res.json(newVehicule);
+
+        return vehiculeQuerie.getVehiculeByVin(vin);
     } catch(err) {
         next(err);
     }

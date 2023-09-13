@@ -14,7 +14,7 @@
                              Nouvelle Employe
               </v-btn>
               <div>
-                <v-btn v-if="session.user && session.user.isAdmin" to="/admin/nouveau-vehicule" >
+                <v-btn v-if="session.user && session.user.isAdmin" to="/admin/newvehicle" >
                     Nouveau véhicule
                 </v-btn>
                </div>
