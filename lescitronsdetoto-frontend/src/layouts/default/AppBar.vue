@@ -26,7 +26,7 @@
           </v-btn>
         </div>
         <div class="text-body-2 text-center" v-if="session.user">
-          Bienvenue, {{ session.user.userFullName }}
+          Bienvenue, {{ this.session.user.userAccountId }}
         </div>
       </template>
     </v-app-bar>
@@ -43,6 +43,7 @@ export default {
   data: function () {
     return {
       session: session
+
     };
   },
 }
