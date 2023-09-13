@@ -20,6 +20,7 @@ const getAllVehicule = async () => {
     if (result.rows && result.rows.length > 0) {
         return result.rows.map(row => {
             const vehicule = {
+                vin: row.vin,
                 marque: row.marque,
                 modele: row.modele,
                 annee: row.annee,

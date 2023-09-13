@@ -24,7 +24,7 @@
                     <h3>{{ this.api.Make }} {{ this.api.Model }} {{ this.api.ModelYear }}</h3>
                     <h4 v-if="this.api.Series !== ''">{{ this.api.Series }}</h4>
                     <p>{{ this.local.shortDescription }}</p>
-                    <p><strong>VIN:</strong> {{ this.local.vin }}</p>
+                    <p><strong>VIN:</strong> {{ this.id }}</p>
                 </div>
             </v-col>
             <v-col cols="12" sm="4">
@@ -104,7 +104,7 @@
                             <td>{{ this.api.FuelTypeSecondary }}</td>
                         </tr>
                         <tr v-if="this.api.FuelTypeSecondary !== ''">
-                            <td>Categorie</td>
+                            <td>Catégorie</td>
                             <td>{{ this.api.FuelTypeSecondary }}</td>
                         </tr>
                         <tr v-if="this.api.BodyClass !== ''">
@@ -131,6 +131,7 @@
 import { useVehiclesStore } from '@/store/vehicles';
 import { useAppStore } from '@/store/app';
 import { priceFormatting } from '@/services/common';
+import { deleteVehicule } from '@/services/vehicule';
 import session from '@/session';
 import FooterBar from '@/layouts/default/FooterBar.vue';
 
@@ -158,10 +159,10 @@ FooterBar: FooterBar
             return store.vehicle.api;
         },
         regPrice() {
-            return priceFormatting(this.local.price);
+            return this.local.price;
         },
         promoPrice() {
-            return priceFormatting(this.local.promo);
+            return this.local.promo;
         },
         appointmentURL() {
             return "/newappointment/" + this.id;
@@ -174,6 +175,9 @@ FooterBar: FooterBar
         },
         colourSecondary() {
             return appStore.colourSecondary;
+        },
+        editionURL() {
+            return "/admin/vehicle/" + this.id + "/edition";
         }
     },
     methods: {
@@ -181,6 +185,12 @@ FooterBar: FooterBar
             this.load = true;
             await store.getVehicle(this.id);
             this.load = false;
+            console.log(JSON.stringify(this.local.price,null,"  "));
+
+        },
+        async suppression() {
+            await deleteVehicule(this.id);
+            this.$router.push('/');
         }
     },
     mounted() {

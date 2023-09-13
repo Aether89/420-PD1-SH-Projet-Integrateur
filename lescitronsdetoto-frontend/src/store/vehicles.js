@@ -71,7 +71,7 @@ export const useVehiclesStore = defineStore('vehicles', {
     },
     async getVehicle(id) {   
       this.vehicle.local = await fetchVehicle(id);
-      this.vehicle.api = await fetchVIN(this.vehicle.local.vin);
+      this.vehicle.api = await fetchVIN(id);
 
       if (debug) {
         console.log("Vehicle Info")

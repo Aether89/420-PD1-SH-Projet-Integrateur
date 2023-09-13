@@ -5,11 +5,11 @@
       <v-img color="grey-lighten-3" :width="200" :height="163" aspect-ratio="16/9" cover :src="carImg">
         <div class="overlay-text mx-4">
       <div v-if="this.promo">
-        <p class="text-right font-weight-bold promo"><v-icon color="red">mdi-seal</v-icon>{{ formatedPromo }}</p>
-        <p class="text-right text-decoration-line-through reg">{{ formatedPrice }}</p>
+        <p class="text-right font-weight-bold promo"><v-icon color="red">mdi-seal</v-icon>{{ this.promo }}</p>
+        <p class="text-right text-decoration-line-through reg">{{ this.price }}</p>
       </div>
       <div v-else>
-        <p class=" text-right font-weight-bold">{{ formatedPrice }}</p>
+        <p class=" text-right font-weight-bold">{{ this.price }}</p>
       </div>
       </div></v-img>
     
@@ -24,7 +24,7 @@
             Voir plus
           </v-btn>
         </template>
-        <detailled-vehicle class="mb-8" :id="this.id" :isDialog="true" @close-dialog="this.dialog = !this.dialog"></detailled-vehicle>
+        <detailled-vehicle class="mb-8" :id="this.vin" :isDialog="true" @close-dialog="this.dialog = !this.dialog"></detailled-vehicle>
       </v-dialog>
       
   </v-card>
@@ -37,7 +37,7 @@ import DetailledVehicle from '@/views/DetailledVehicle.vue';
 
 const appStore = useAppStore();
 export default {
-  props: ['img', 'make', 'model', 'year', 'price', 'promo', 'id'],
+  props: ['img', 'make', 'model', 'year', 'price', 'promo', 'id', 'vin'],
   components: {
     DetailledVehicle
   },
@@ -49,7 +49,7 @@ export default {
   computed: {
 
     carURL() {
-      return "/vehicle/" + this.id;
+      return "/vehicle/" + this.vin;
     },
     vehicleName() {
       return this.make + " " + this.model + " " + this.year;
