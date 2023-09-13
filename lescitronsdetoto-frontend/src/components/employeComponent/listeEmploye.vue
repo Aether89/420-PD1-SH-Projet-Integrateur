@@ -6,35 +6,36 @@
       </v-card-title>
 
       <template v-slot:append>
-        <v-btn v-if="session.user.isAdmin" color="white" icon="mdi-plus" size="small" @click="employeStore.newEmploye()"></v-btn>
+        <v-btn :disabled="!(this.session.user.isAdmin)" color="white" icon="mdi-plus" size="small"
+          @click="employeStore.newEmploye()"></v-btn>
       </template>
     </v-card-item>
     <v-divider></v-divider>
     <div v-if="!this.loading">
-    <v-virtual-scroll :items="items" height="300" item-height="50">
-      <template v-slot:default="{ item }">
-        <v-list-item>
-          <template v-slot:prepend>
-            <v-avatar :color="item.color" class="text-white" size="40">
-              {{ item.initials }}
-            </v-avatar>
-          </template>
+      <v-virtual-scroll :items="items" height="300" item-height="50">
+        <template v-slot:default="{ item }">
+          <v-list-item>
+            <template v-slot:prepend>
+              <v-avatar :color="item.color" class="text-white" size="40">
+                {{ item.initials }}
+              </v-avatar>
+            </template>
 
-          <v-list-item-title>{{ item.fullName }}</v-list-item-title>
+            <v-list-item-title>{{ item.fullName }}</v-list-item-title>
 
-          <template v-slot:append>
-            <v-btn @click="(this.employeStore.chargerEmploye(item.idEmploye))" size="small" variant="tonal">
-              View User
+            <template v-slot:append>
+              <v-btn @click="(this.employeStore.chargerEmploye(item.idEmploye))" size="small" variant="tonal">
+                View User
 
-              <v-icon color="orange-darken-4" end>
-                mdi-open-in-new
-              </v-icon>
-            </v-btn>
-          </template>
-        </v-list-item>
-      </template>
-    </v-virtual-scroll>
-  </div>
+                <v-icon color="orange-darken-4" end>
+                  mdi-open-in-new
+                </v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+        </template>
+      </v-virtual-scroll>
+    </div>
   </v-card>
 </template>
 
@@ -63,13 +64,8 @@ export default {
     },
     rafraichirEmployes() {
       fetchEmploye();
+      console.log(user);
     }
-  },
-  provide() {
-    return {
-      employes: computed(() => this.employes),
-      rafraichirEmployes: this.rafraichirEmployes
-    };
   },
 
   computed: {

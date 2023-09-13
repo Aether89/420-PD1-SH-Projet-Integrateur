@@ -24,12 +24,12 @@ router.get("/", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
     const id = req.params.id;
     EmployeQueries.getEmploye(id).then((employe) => {
-            if (employe) {
-                res.json(employe);
-            } else {
-                return next(new HttpError(404, `Employe ${id} introuvable`));
-            }
-        })
+        if (employe) {
+            res.json(employe);
+        } else {
+            return next(new HttpError(404, `Employe ${id} introuvable`));
+        }
+    })
         .catch((err) => {
             return next(err);
         });
@@ -44,10 +44,6 @@ router.post('/',
             return next(new HttpError(403, "Droit administrateur requis"));
         }
 
-        const id = req.body.id;
-        if (!id || id === '') {
-            return next(new HttpError(400, 'Le champ id est requis'));
-        }
 
         const Employe = {
             nomEmploye: "" + req.body.nomEmploye,
@@ -59,14 +55,6 @@ router.post('/',
 
 
         try {
-
-            EmployeQueries.getEmploye(id).then(employe => {
-                if (employe) {
-                    throw new HttpError(409, `Un recette avec l'id ${id} existe déjà`);
-                }
-            }).catch(err => {
-                return next(err);
-            });
 
             EmployeQueries.createEmploye(Employe).then(result => {
                 if (!result) {
@@ -105,11 +93,11 @@ router.put('/:id',
         try {
             const employe = {
                 idEmploye: "" + req.body.idEmploye,
-                nomEmploye:""+ req.body.nomEmploye,
-                prenomEmploye:""+ req.body.prenomEmploye,
-                posteEmploye:""+ req.body.posteEmploye,
-                telephoneEmploye:""+ req.body.telephoneEmploye,
-                codePostalEmploye:""+ req.body.codePostalEmploye
+                nomEmploye: "" + req.body.nomEmploye,
+                prenomEmploye: "" + req.body.prenomEmploye,
+                posteEmploye: "" + req.body.posteEmploye,
+                telephoneEmploye: "" + req.body.telephoneEmploye,
+                codePostalEmploye: "" + req.body.codePostalEmploye
             }
 
 
@@ -117,7 +105,7 @@ router.put('/:id',
                 if (!result) {
                     return next(new HttpError(404, `Employe ${id} introuvable`));
                 }
-            
+
             }).catch(err => {
                 return next(err);
             });
