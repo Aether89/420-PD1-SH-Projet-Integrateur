@@ -66,8 +66,8 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             annee: annee,
             couleur: "" + req.body.couleur,
             nombre_kilometre: req.body.nombre_kilometre,
-            prix_annonce: req.body.prix_annonce,
-            promotion: req.body.promotion,
+            prix_annonce: req.body.prix_annonce.replace(/\s/g, ''),
+            promotion: req.body.promotion.replace(/\s/g, ''),
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
         };
@@ -93,6 +93,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if(newVehicule.promotion <= 0) {
             newVehicule.promotion = null;
         }
+
         console.log("newVehicule", newVehicule);
         vehiculeQuerie.addVehicule(newVehicule);
         res.json(newVehicule);
@@ -123,20 +124,32 @@ passport.authenticate('basic', { session: false }),
                 throw new HttpError(404, `Un vehicule avec le vin ${vin} n'existe pas`);
             }
 
-            const updateVehicule = req.body;/*{
-                vin: "" + req.body.vin,
+            const updateVehicule = {
+                vin: req.body.vin,
                 id_etat: req.body.id_etat,
                 couleur: "" + req.body.couleur,
                 nombre_kilometre: req.body.nombre_kilometre,
-                prix_annonce: req.body.prix_annonce,
-                promotion: req.body.promotion,
+                prix_annonce: (req.body.prix_annonce && typeof req.body.prix_annonce === 'string')
+                    ? req.body.prix_annonce.replace(/\s/g, '')
+                    : req.body.prix_annonce,
+                promotion: (req.body.promotion && typeof req.body.promotion === 'string')
+                    ? req.body.promotion.replace(/\s/g, '')
+                    : req.body.promotion,
                 description_courte: "" + req.body.description_courte,
-                description_longue: "" + req.body.description_longue
-            };*/
+                description_longue: "" + req.body.description_longue,
+            };
+            console.log("updated Vehicule : ", updateVehicule);
 
-
-            if(updateVehicule.id_etat === null || updateVehicule.id_etat < 1 || updateVehicule.id_etat > 3){
+            if (updateVehicule.id_etat === undefined || updateVehicule.id_etat === null || updateVehicule.id_etat < 1 || updateVehicule.id_etat > 3) {
                 updateVehicule.id_etat = 1;
+            }
+            
+            if(updateVehicule.nombre_kilometre === undefined) {
+                updateVehicule.nombre_kilometre = 0;
+            }
+
+            if(updateVehicule.prix_annonce === undefined || updateVehicule.prix_annonce === null) {
+                updateVehicule.prix_annonce = '0,00'
             }
 
             if(updateVehicule.id_etat === 2){

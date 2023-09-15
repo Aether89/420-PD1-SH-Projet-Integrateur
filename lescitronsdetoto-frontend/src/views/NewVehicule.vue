@@ -1,11 +1,12 @@
 <template>
     <v-container>
     <v-sheet v-if="session.user && session.user.isAdmin" class="ma-2">
-        <v-form @submit.prevent="submitNewVehicule" validate-on="submit lazy" ref="vehiculform">
+        <v-form @submit.prevent validate-on="submit lazy" ref="vehiculform">
             <v-row>
                 <v-col cols="6">
-                    <v-text-field v-model="vin" label="Identifiant unique du véhicule" density="compact"  @blur="autoVin" @keyup.enter="autoVin"
+                    <v-text-field v-if="nouveauvehicule" v-model="vin" label="Identifiant unique du véhicule" density="compact"  @blur="autoVin" @keyup.enter="autoVin"
                         :rules="[rules.required]"></v-text-field>
+                    <p v-else >  VIN :{{ id }}</p>
                     <v-text-field v-model="couleur" label="Couleur du véhicule" density="compact" maxlength="32"
                     ></v-text-field>
                     <v-text-field v-model="nombre_kilometre" label="Nombre de kilomètre" density="compact" type="number" step="1" min = 0
@@ -52,10 +53,9 @@
             </v-row>
             <br>
             
-            <v-btn v-if="!nouveauvehicule" prepend-icon="mdi-car-search" color="green-lighten-2" 
-                text-align="right" class="mx-2" type="submit" @click="updateVehicule">Editer</v-btn>
-            <v-btn v-else prepend-icon="mdi-car-search" color="green-lighten-2" 
-                text-align="right" class="mx-2" type="submit" @click="submitNewVehicule">Ajouter</v-btn>
+            <v-btn prepend-icon="mdi-car-search" color="green-lighten-2" 
+                text-align="right" class="mx-2" type="submit" @click="validateVehicule" :disabled="this.loading"> {{ boutonText }}
+            </v-btn>
 
             <router-link :to="{path: '/' }">
                 <v-btn prepend-icon="mdi-cancel" class="mx-2" aria-label="annuler" color="red-lighten-2"
@@ -69,15 +69,15 @@
 
 <script>
 import session from '../session';
-import { createVehicule } from '../services/vehicule';
+import { createVehicule, udpateVoiture } from '../services/vehicule';
 import { fetchVIN } from'../services/VINAPI';
 
 export default {
-    props: ['mode'],
+    props: ['mode', 'id'],
     data() {
         return {
             session: session,
-            loading: true,
+            loading: false,
             loadError: false,
             errorMessage: null,
             vin: '',
@@ -103,9 +103,20 @@ export default {
     },
     methods: {
         async autoVin() {
-            this.donneesApi = await fetchVIN(this.vin);
+            if(this.vehiculeVin !== ''){
+                console.log(this.vehiculeVin);
+                this.donneesApi = await fetchVIN(this.vehiculeVin);
+            }
+        },
+        async validateVehicule() {
+            if(this.nouveauvehicule) {
+                this.submitNewVehicule();
+            } else {
+                this.mettreAJourVehicule();
+            }
         },
         async submitNewVehicule() {
+            this.loading = true;
             this.vinIdUnique = true;
             const formatter = new Intl.NumberFormat('fr-FR');
             const prix = this.prix_annonce;
@@ -143,12 +154,53 @@ export default {
                 }
                 await this.$refs.vehiculform.validate();
             }
+            this.loading = false;
+        },
+        async mettreAJourVehicule() {
+            const formatter = new Intl.NumberFormat('fr-FR');
+            const prix = this.prix_annonce;
+            const promo = this.promotion;
+            const prixFormate = formatter.format(prix);
+            const promoFormate = formatter.format(promo);
+
+            const vehicule = {
+                vin: this.id,
+                id_etat: this.id_etat,
+                couleur: this.couleur,
+                nombre_kilometre: this.nombre_kilometre,
+                prix_annonce: prixFormate,
+                promotion: promoFormate,
+                description_courte: this.description_courte,
+                description_longue: this.description_longue
+            };
+            console.log("cest lequel", this.id);
+            console.log("couleur", vehicule.couleur);
+            
+            try {
+                await udpateVoiture(vehicule);
+                this.$router.push(`/vehicle/${vehicule.vin}`);
+            } catch(err) {
+                console.error(err);
+                alert(err.message);
+            }
         }
     },
     computed: {
         nouveauvehicule() {
             return this.mode === 'newvehicle';
-        }
+        },
+        boutonText() {
+            return this.nouveauvehicule? "Ajouter" : "Éditer";
+        },
+        afficherVin() {
+            return this.vin;
+        },
+        vehiculeVin() {
+            return this.nouveauvehicule? this.vin : this.id;
+        }  
+    },
+    mounted() {
+        this.autoVin();
     }
 }
 </script>

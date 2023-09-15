@@ -231,6 +231,18 @@ export const convertToVehicule = jsonVehicule => {
   }
 };
 
+export const convertToVehiculeUpdate = jsonVehicule => {
+  return {
+    vin: jsonVehicule.vin,
+    couleur: jsonVehicule.couleur,
+    nombre_kilometre: jsonVehicule.nombre_kilometre,
+    prix_annonce: jsonVehicule.prix_annonce,
+    promotion: jsonVehicule.promotion,
+    description_courte: jsonVehicule.description_courte,
+    description_longue: jsonVehicule.description_longue
+  };
+};
+
 export async function fetchVehicle(vehiculeID) {
   // return debug ? debugVehicle : async () => {
   //   const response = await axios(`/api/vehicule/${vehiculeID}`, {

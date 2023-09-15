@@ -177,7 +177,7 @@ FooterBar: FooterBar
             return appStore.colourSecondary;
         },
         editionURL() {
-            return "/admin/vehicle/" + this.id + "/edition";
+            return "/vehicle/" + this.id + "/edition";
         }
     },
     methods: {
