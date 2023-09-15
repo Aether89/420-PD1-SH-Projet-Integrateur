@@ -32,12 +32,14 @@ const session = reactive({
         sessionStorage.username = username;
         this.password = password;
         sessionStorage.password = password;
+
     },
     clearCredentials() {
         this.username = null;
         sessionStorage.removeItem('username');
         this.password = null;
         sessionStorage.removeItem('password');
+
     },
     disconnect() {
         this.user = null;
@@ -74,7 +76,7 @@ const session = reactive({
             return {};
         }
     },
-    async createNewAccount(userAccountId, password, userFullName) {
+    async createNewAccount(userAccountId, password, idEmploye) {
         const response = await fetch("/api/login", {
             method: "POST",
             headers: {
@@ -83,7 +85,7 @@ const session = reactive({
             body: JSON.stringify({
                 userAccountId: userAccountId,
                 password: password,
-                userFullName: userFullName
+                idEmploye: idEmploye
             })
         });
 
@@ -95,7 +97,7 @@ const session = reactive({
             if (response.status === 409) {
                 const respBody = await response.json();
                 if (respBody && respBody.message) {
-                    throw new AuthError(response.status, respBody.message);    
+                    throw new AuthError(response.status, respBody.message);
                 }
                 throw new AuthError(response.status, "Erreur lors de la création du compte");
             } else {

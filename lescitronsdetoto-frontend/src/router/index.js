@@ -24,6 +24,48 @@ const routes = [
         name: 'Nouveau Compte',
         component: () => import(/* webpackChunkName: "home" */ '@/views/LoginNew.vue'),
       },
+      {
+        path: 'NouvelEmployes',
+        name: 'Liste des Employés',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeEmployes.vue'),
+
+      },
+
+      {
+        path: 'listeEmployes',
+        name: 'Liste des Employés',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeEmployes.vue'),
+
+      },
+      {
+        path: 'vehicle/:id',
+        name: 'Informations du Véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
+        props: true,
+      },
+      {
+        path: 'newappointment/:id',
+        name: 'Prise de rendez-vous',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/NewAppointment.vue'),
+        props: true,
+      },
+      {
+        path: 'admin/:mode',
+        name: 'Nouveau véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/NewVehicule.vue'),
+        props: true,
+      },
+      {
+        path: 'vehicle/:id/edition',
+        name: 'Édition véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/NewVehicule.vue'),
+        props: true,
+      },
+      {
+        path: 'EditerEmploye',
+        name: 'Édition Employe',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/InfoEmploye.vue'),
+      }
     ],
   },
 ]

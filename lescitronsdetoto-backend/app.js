@@ -9,8 +9,10 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
 const userAccountQueries = require("./queries/UserAccountQueries");
+const EmployeRouter = require('./routes/EmployeRouter');
 
 const citronRouter = require('./routes/citronsdetotoRouter');
+const vehiculeRouter = require('./routes/vehiculeRouter');
 
 const app = express();
 
@@ -19,7 +21,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/vehicule', vehiculeRouter);
+app.use('/employes', EmployeRouter);
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {
@@ -65,9 +68,12 @@ app.get('/login',
 
     if (req.user) {
 
+
+
       const userDetails = {
         userAccountId: req.user.userAccountId,
-        userFullName: req.user.userFullName,
+        idEmploye: req.user.idEmploye,
+        courrielCompteEmploye: req.user.courrielCompteEmploye,
         isAdmin: req.user.isAdmin,
         isActive: req.user.isActive
       };
@@ -107,7 +113,8 @@ app.post('/login',
 
         const userDetails = {
           userAccountId: userAccountWithPasswordHash.userAccountId,
-          userFullName: userAccountWithPasswordHash.userFullName,
+          idEmploye: userAccountWithPasswordHash.idEmploye,
+          courrielCompteEmploye: userAccountWithPasswordHash.courrielCompteEmploye,
           isAdmin: userAccountWithPasswordHash.isAdmin,
           isActive: userAccountWithPasswordHash.isActive
         };

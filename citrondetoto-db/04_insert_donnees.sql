@@ -1,9 +1,14 @@
-DELETE FROM user_account;
-
-INSERT INTO user_account (user_account_id, user_full_name, is_admin, is_active, password_hash, password_salt)
+INSERT INTO employe (nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal_employe)
 VALUES
-	('admin', 'Administrateur', true, true, 'UeexcyA2hWKIZejQoV2ajaqhdvxqyZHXGmfRzg3TwJLhhmiBVGzYh8bUkKCsWJZ4E9oFmuQwEHYBI63pQK47Vw==', 'HLq2XxQQdDT/Fj0pRI3JNA=='), -- mot de passe: topsecret
-	('mbeauchamp', 'Michaël Beauchamp', false, true, 'awWtuonrel/c/0RQUWwtpGImwxXbc3UdHdeA5zxPEGYqSaUkSI7BVBtackat/Sl8fbfLQT+l1GnpuEnYrrahrQ==', '0LGCgCjpPkVtnSdoxAR+lA=='), -- mot de passe: 12345
-	('fmartin', 'Félix Martin', false, true, '+kO83Ef3p1h/tayEycPEweCSCmk7AiRPGVm3Z3wYuTlAA76+Pat+cU1aiSt7KXKCincnR/nVv5kBufs6WQnehAg==', 'rBpPyjYASr6l2ISaN+SRgA=='), -- mot de passe: 12345
-	('rdeschamps', 'Réal Deschamps', true, true, 'LzqpL1XBJu21LOlc3W16tFR28zkHI/kodATWW4SigT9Hig0zg6Vgy829Dzv2lp/Um6vS6jbyB7Mh40PErpjRkg==', '3R5CRzUpe5vpjqMjvKYQbQ==') -- mot de passe: 12345
+	('Admin', 'AD', 'patate', '819-123-4567', 'a1a1a1'),
+	('Martin', 'Félix', 'patate', '819-123-4567', 'a1a1a1'),
+	('Beauchamp', 'Michaël', 'patate', '819-123-4567', 'a1a1a1'),
+	('Deschamps', 'Réal', 'patate', '819-123-4567', 'a1a1a1')
+;
+
+insert into etat(id_etat, nom_etat)
+values
+	(1, 'Préparation'),
+	(2, 'Disponible'),
+	(3, 'Vendu')
 ;
