@@ -1,7 +1,6 @@
 <template>
     <v-card class="ml-6" max-width="40rem" min-width="600">
-        <div v-if="this.store.isNew" class="text-h5">Nouvelle Employe</div>
-        <div v-else class="text-h5">Employe</div>
+        <div class="text-h5">{{ txt.title }}</div>
         <v-form @submit.prevent="submit" validate-on="submit lazy" ref="employeform">
             <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.required]"
                 density="compact"></v-text-field>
@@ -14,11 +13,11 @@
             <v-text-field v-model="this.store.codePostalEmploye" label="Code postal de l'employe" :rules="[rules.required]"
                 density="compact"></v-text-field>
             <v-btn type="submit"
-                :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye || !this.store.codePostalEmploye || !this.store.isNew">Créer
-                un nouveau compte</v-btn>
-            <v-btn type="submit"
-                :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye || !this.store.codePostalEmploye || !this.session.user.isAdmin && (this.session.user.id_employe !== id) || this.store.isNew">
-                Modifier</v-btn>
+                :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye || !this.store.codePostalEmploye">{{
+                    txt.btn }}</v-btn>
+            <v-btn type="button" @click="(this.store.chargerEmploye(this.store.idEmploye))">Annuler</v-btn>
+            <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+
         </v-form>
     </v-card>
 </template>
@@ -28,7 +27,7 @@
 
 import session from '../../session.js';
 import { useEmployeStore } from '@/store/employe';
-import { createEmploye, updateEmploye } from '@/services/EmployeService';
+import { createEmploye, deleteEmploye, updateEmploye } from '@/services/EmployeService';
 
 export default {
     data() {
@@ -57,18 +56,12 @@ export default {
                 telephoneEmploye: this.store.telephoneEmploye,
                 codePostalEmploye: this.store.codePostalEmploye,
             };
-            if (this.store.isNew) { Employe.idEmploye = this.store.idEmploye };
+            if (!this.store.isNew) { Employe.idEmploye = this.store.idEmploye };
 
             try {
-                if (this.store.isNew) {
-                    await createEmploye(Employe);
-                    console.log("create");
-                }
-                else {
-                    await updateEmploye(Employe);
-                    console.log("modifier");
 
-                }
+                if (this.store.isNew) { await createEmploye(Employe); } else { await updateEmploye(Employe); }
+
             } catch (err) {
                 console.error(err);
                 alert(err.message);
@@ -76,7 +69,24 @@ export default {
                     this.$refs.employeform.validate();
                 }
             }
+            this.store.getEmployes();
         },
+        supprimer() {
+            try {
+                deleteEmploye(this.store.idEmploye);
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
+            this.store.getEmployes();
+        }
+        
     },
+    computed: {
+        txt() {
+            return (this.store.isNew) ? { title: "Nouvel Employé", btn: "Créer" } : { title: "Employé", btn: "Modifier" };
+        }
+    }
 }
+
 </script> 
