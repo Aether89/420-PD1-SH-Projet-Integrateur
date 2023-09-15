@@ -1,9 +1,10 @@
 // Utilities
 import { defineStore } from 'pinia'
-import { fetchemploye } from '@/services/EmployeService'
+import { fetchemploye , fetchEmploye} from '@/services/EmployeService'
 
 export const useEmployeStore = defineStore('employe', {
   state: () => ({
+    employes: [],
     isNew: false,
     idEmploye: "",
     nomEmploye: "",
@@ -11,6 +12,8 @@ export const useEmployeStore = defineStore('employe', {
     posteEmploye: "",
     telephoneEmploye: "",
     codePostalEmploye: "",
+    loading: false,
+    loadingerror: false,
   }),
   actions: {
     async chargerEmploye(idEmploye) {
@@ -33,6 +36,18 @@ export const useEmployeStore = defineStore('employe', {
       this.posteEmploye = "";
       this.telephoneEmploye = "";
       this.codePostalEmploye = "";
-    }
+    },
+    getEmployes() {
+      this.employes = [];
+      fetchEmploye().then(employes => {
+        this.employes = employes;
+        this.loading = false;
+        this.loadError = false;
+      }).catch(err => {
+        this.loading = false;
+        this.loadError = true;
+      });
+  },
+
   },
 })

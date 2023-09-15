@@ -11,7 +11,7 @@
       </template>
     </v-card-item>
     <v-divider></v-divider>
-    <div v-if="!this.loading">
+    <div v-if="!this.employeStore.loading">
       <v-virtual-scroll :items="items" height="300" item-height="50">
         <template v-slot:default="{ item }">
           <v-list-item>
@@ -41,20 +41,14 @@
 
 <script>
 
-
-import { computed } from 'vue';
-import { fetchEmploye } from '../../services/EmployeService.js'
 import { useEmployeStore } from '@/store/employe';
 import session from '@/session';
-
-
 
 export default {
 
   data() {
     return {
       employeStore: useEmployeStore(),
-      employes: [],
       colors: ['#2196F3', '#90CAF9', '#64B5F6', '#42A5F5', '#1E88E5', '#1976D2', '#1565C0', '#0D47A1', '#82B1FF', '#448AFF', '#2979FF', '#2962FF'],
       loading: true,
       loadError: false,
@@ -66,8 +60,7 @@ export default {
       return Math.ceil(Math.random() * (length - 1))
     },
     rafraichirEmployes() {
-      fetchEmploye();
-
+      this.employeStore.getEmployes();
     }
 
   },
@@ -94,19 +87,14 @@ export default {
 
         }
       });
+    },
+    employes() {
+      return this.employeStore.employes;
     }
   },
   mounted() {
 
-    fetchEmploye().then(employes => {
-      this.employes = employes;
-      this.loading = false;
-      this.loadError = false;
-    }).catch(err => {
-
-      this.loading = false;
-      this.loadError = true;
-    });
+    this.employeStore.getEmployes();
 
   },
 

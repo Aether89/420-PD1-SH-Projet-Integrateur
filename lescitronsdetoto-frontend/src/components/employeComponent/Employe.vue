@@ -15,7 +15,7 @@
             <v-btn type="submit"
                 :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye || !this.store.codePostalEmploye">{{
                     txt.btn }}</v-btn>
-            <v-btn type="button" @click="(this.employeStore.chargerEmploye(this.store.idEmploye))">Annuler</v-btn>
+            <v-btn type="button" @click="(this.store.chargerEmploye(this.store.idEmploye))">Annuler</v-btn>
             <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
 
         </v-form>
@@ -44,7 +44,6 @@ export default {
         async submit() {
 
             const formValid = await this.$refs.employeform.validate();
-            const txt = this.txt.fnt;
 
             if (!formValid.valid) {
                 return;
@@ -63,8 +62,6 @@ export default {
 
                 if (this.store.isNew) { await createEmploye(Employe); } else { await updateEmploye(Employe); }
 
-
-
             } catch (err) {
                 console.error(err);
                 alert(err.message);
@@ -72,6 +69,7 @@ export default {
                     this.$refs.employeform.validate();
                 }
             }
+            this.store.getEmployes();
         },
         supprimer() {
             try {
@@ -80,12 +78,13 @@ export default {
                 console.error(err);
                 alert(err.message);
             }
+            this.store.getEmployes();
         }
+        
     },
     computed: {
         txt() {
             return (this.store.isNew) ? { title: "Nouvel Employé", btn: "Créer" } : { title: "Employé", btn: "Modifier" };
-
         }
     }
 }
