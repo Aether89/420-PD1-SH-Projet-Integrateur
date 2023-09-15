@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="400" min-width="400">
+  <v-card max-width="400" min-width="400" height="auto">
     <v-card-item class="bg-orange-darken-4">
       <v-card-title>
         Liste des employés
@@ -46,6 +46,9 @@ import { computed } from 'vue';
 import { fetchEmploye } from '../../services/EmployeService.js'
 import { useEmployeStore } from '@/store/employe';
 import session from '@/session';
+
+
+
 export default {
 
   data() {
@@ -64,11 +67,13 @@ export default {
     },
     rafraichirEmployes() {
       fetchEmploye();
-      console.log(user);
+
     }
+
   },
 
   computed: {
+
     items() {
 
       const colorsLength = this.colors.length
@@ -102,6 +107,7 @@ export default {
       this.loading = false;
       this.loadError = true;
     });
+
   },
 
 

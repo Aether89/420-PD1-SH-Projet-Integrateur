@@ -68,12 +68,12 @@ app.get('/login',
 
     if (req.user) {
 
-      
+
 
       const userDetails = {
         userAccountId: req.user.userAccountId,
-        idEmploye: req.user.id_employe,
-        courrielCompteEmploye: req.user.courriel_compte_employe,
+        idEmploye: req.user.idEmploye,
+        courrielCompteEmploye: req.user.courrielCompteEmploye,
         isAdmin: req.user.isAdmin,
         isActive: req.user.isActive
       };

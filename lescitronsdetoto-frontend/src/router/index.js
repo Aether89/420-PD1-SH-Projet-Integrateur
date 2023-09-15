@@ -60,6 +60,11 @@ const routes = [
         name: 'Édition véhicule',
         component: () => import(/* webpackChunkName: "home" */ '@/views/NewVehicule.vue'),
         props: true,
+      },
+      {
+        path: 'EditerEmploye',
+        name: 'Édition Employe',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/InfoEmploye.vue'),
       }
     ],
   },
