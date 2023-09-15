@@ -71,16 +71,18 @@ export default {
             }
             this.store.getEmployes();
         },
-        supprimer() {
+        async supprimer() {
             try {
-                deleteEmploye(this.store.idEmploye);
+                await deleteEmploye(this.store.idEmploye);
+                this.store.getEmployes();
+                this.store.newEmploye();
             } catch (err) {
                 console.error(err);
                 alert(err.message);
             }
-            this.store.getEmployes();
         }
-        
+
+
     },
     computed: {
         txt() {

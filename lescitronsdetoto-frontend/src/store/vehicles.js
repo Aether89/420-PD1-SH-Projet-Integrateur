@@ -72,12 +72,7 @@ export const useVehiclesStore = defineStore('vehicles', {
     async getVehicle(id) {   
       this.vehicle.local = await fetchVehicle(id);
       this.vehicle.api = await fetchVIN(id);
-
-      if (debug) {
-        console.log("Vehicle Info")
-        console.log(JSON.stringify(this.vehicle,null,"  "));
-        };
-
+      (this.vehicle.local.promo === "$0.00")? this.vehicle.local.promo = null : this.vehicle.local.promo = this.vehicle.local.promo;
     },
     async reset() {
       this.selected.make = null;

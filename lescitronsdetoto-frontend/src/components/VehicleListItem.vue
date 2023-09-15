@@ -4,8 +4,8 @@
     <v-row class="mt-1">
       <v-img color="grey-lighten-3" :width="200" :height="163" aspect-ratio="16/9" cover :src="carImg">
         <div class="overlay-text mx-4">
-      <div v-if="this.promo">
-        <p class="text-right font-weight-bold promo"><v-icon color="red">mdi-seal</v-icon>{{ this.promo }}</p>
+      <div v-if="hasPromo">
+        <p class="text-right font-weight-bold promo"><v-icon color="red">mdi-seal</v-icon>{{ formatedPromo }}</p>
         <p class="text-right text-decoration-line-through reg">{{ this.price }}</p>
       </div>
       <div v-else>
@@ -61,7 +61,10 @@ export default {
       return priceFormatting(this.price);
     },
     formatedPromo() {
-      return (this.promo) ? priceFormatting(this.promo) : null;
+      return (this.promo === "$0.00") ? null : this.promo;
+    },
+    hasPromo() {
+      return (this.promo === "$0.00") ? false : true;
     },
     colourPrimary() {
       return (!this.promo) ? appStore.colourPrimary : appStore.colourTernary;
