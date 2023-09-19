@@ -101,7 +101,6 @@ CREATE TABLE employe (
 	code_postal varchar(6),
 	is_archive boolean NOT NULL
 );
-);
 
 
 CREATE TABLE user_account (
