@@ -61,7 +61,7 @@ CREATE TABLE intervention (
 
 CREATE TABLE client (
 	id_client serial PRIMARY KEY NOT NULL,
-	nom_client varchar(64),
+	nom_client varchar(64) NOT NULL,
 	prenom_client varchar(64) NOT NULL,
 	telephone_client varchar(16),
 	courriel_client varchar (64),
