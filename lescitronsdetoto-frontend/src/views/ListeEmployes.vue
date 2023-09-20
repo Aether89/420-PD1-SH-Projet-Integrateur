@@ -1,4 +1,4 @@
-<template>
+<template v-if="this.session.isAdmin">
     <v-container class="d-flex block" justify="center">
 
         <listeEmploye />

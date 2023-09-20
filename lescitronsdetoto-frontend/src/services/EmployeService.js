@@ -45,7 +45,13 @@ async function convertToEmploye(jsonEmploye) {
         prenomEmploye: jsonEmploye.prenomEmploye,
         posteEmploye: jsonEmploye.posteEmploye,
         telephoneEmploye: jsonEmploye.telephoneEmploye,
-        codePostalEmploye: jsonEmploye.codePostalEmploye,
+        numeroCivic: jsonInfoClient.numeroCivic,
+        numeroAppartement: jsonInfoClient.numeroAppartement,
+        nomRue: jsonInfoClient.nomRue,
+        nomVille: jsonInfoClient.nomVille,
+        nomProvince: jsonInfoClient.nomProvince,
+        codePostal: jsonInfoClient.codePostal,
+        isArchive: jsonInfoClient.isArchive
     };
 };
 

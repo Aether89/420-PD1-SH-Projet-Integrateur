@@ -1,6 +1,6 @@
 <template>
     <v-card class="mx-auto" max-width="600">
-        <v-toolbar color="primary" dark>
+        <v-toolbar class="bg-orange-darken-4">
             <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
         </v-toolbar>
 
@@ -123,6 +123,9 @@ export default {
         txt() {
             return (this.store.isNew) ? { title: "Nouveau Client", btn: "Créer" } : { title: "Client Existant", btn: "Modifier" };
         }
+    },
+    mounted() {
+        this.store.newClient();
     }
 }
 

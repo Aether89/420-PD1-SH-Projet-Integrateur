@@ -88,20 +88,17 @@ const createInfoClient = async (infoClient, clientParam) => {
         }
         const result = await client.query(
             `INSERT INTO client (nom_client, prenom_client, telephone_client, numero_civic, numero_appartement, nom_rue,
-                nom_ville, nom_province, code_postal ) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9 )
+                nom_ville, nom_province, code_postal, is_archive ) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,false )
              RETURNING id_client`,
             [infoClient.nomClient, infoClient.prenomClient, infoClient.telephoneClient, infoClient.numeroCivic, infoClient.numeroAppartement,
             infoClient.nomRue, infoClient.nomVile, infoClient.nomProvince, infoClient.codePostal]
         );
 
-        const NewInfoClient = getInfoClient(result.rows[0].id_client, client);
-        const user = infoClient.prenom_client[0] + "." + infoClient.nom_client;
-        const pass = infoClient.prenomClient[0] + client.nomClient;
 
-        createUserAccount(user, infoClient.id_client, NewInfoClient.code_postal, pass, pass);
 
         client.query('COMMIT');
+        const NewInfoClient = getInfoClient(result.rows[0].id_client, client);
 
         return NewInfoClient;
     } catch (err) {
@@ -120,7 +117,7 @@ const updateInfoClient = async (infoClient) => {
         await client.query('BEGIN');
 
         const result = await client.query(
-            `UPDATE client SET nom_client = $2, prenom_client = $3, telephone_client = $4 ,numero_civic = $5, numero_appartement $=6, nom_rue = $7,
+            `UPDATE client SET nom_client = $2, prenom_client = $3, telephone_client = $4 ,numero_civic = $5, numero_appartement = $6, nom_rue = $7,
              nom_ville = $8, nom_province = $9, code_postal = $10, is_archive = $11
             WHERE id_client = $1`,
             [infoClient.idClient, infoClient.nomClient, infoClient.prenomClient, infoClient.telephoneClient, infoClient.numeroCivic, infoClient.numeroAppartement,
@@ -150,21 +147,21 @@ const deleteInfoClient = async (idInfoClient, clientParam) => {
             await client.query('BEGIN');
         }
         // Vérifier d'abord si l'employé est lié à message_chat ou evenement
-        const checkQuery = `
-            SELECT id_client 
-            FROM client
-            WHERE id_client NOT IN (
-                SELECT id_client FROM message_chat
-            )
-        `;
+        // const checkQuery = `
+        //     SELECT id_client 
+        //     FROM client
+        //     WHERE id_client = $1 NOT IN (
+        //         SELECT id_client FROM message_chat
+        //     )
+        // `;
+        // [idInfoClient]
 
-        const checkResult = await pool.query(checkQuery);
+        // const row = result.rows[0];
+        // if (row) {
 
-        if (checkResult.rows.find(row => row.id_client === idInfoClient)) {
+        //     throw new error("L'employé est lier a une autre table");
 
-            throw new error("L'employé est lier a une autre table");
-
-        }
+        // }
 
 
         // Supprimer de la table client
@@ -173,7 +170,7 @@ const deleteInfoClient = async (idInfoClient, clientParam) => {
             WHERE id_client = $1
         `;
 
-        await pool.query(deleteClientQuery, [idInfoClient]);
+        [idInfoClient]
 
         if (!clientParam) {
             await client.query('COMMIT');

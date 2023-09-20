@@ -81,6 +81,7 @@ const getEmploye = async (idEmploye, clientParam) => {
 exports.getEmploye = getEmploye;
 
 
+
 const createEmploye = async (employe, clientParam) => {
     const client = clientParam || (await pool.connect());
 
@@ -90,30 +91,47 @@ const createEmploye = async (employe, clientParam) => {
         }
         const result = await client.query(
             `INSERT INTO employe (nom_employe, prenom_employe, poste_employe, telephone_employe, numero_civic, numero_appartement, nom_rue,
-                nom_ville, nom_province, code_postal ) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )
-             RETURNING id_employe`,
-            [employe.nomEmploye, employe.prenomEmploye, employe.posteEmploye, employe.telephoneEmploye, employe.numeroCivic, employe.numeroAppartement,
-            employe.nomRue, employe.nomVile, employe.nomProvince, employe.codePostal]
+                                nom_ville, nom_province, code_postal,is_archive ) 
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,false )
+                         RETURNING id_employe`,
+            [
+                employe.nomEmploye,
+                employe.prenomEmploye,
+                employe.posteEmploye,
+                employe.telephoneEmploye,
+                employe.numeroCivic,
+                employe.numeroAppartement,
+                employe.nomRue,
+                employe.nomVille,
+                employe.nomProvince,
+                employe.codePostal,
+            ]
         );
 
-        const NewEmploye = getEmploye(result.rows[0].id_employe, client);
-        const user = employe.prenom_employe[0] + "." + employe.nom_employe;
+        const newEmploye = await getEmploye(result.rows[0].id_employe, client);
+        const user = employe.prenomEmploye[0] + '.' + employe.nomEmploye;
         const pass = employe.prenomEmploye[0] + employe.nomEmploye;
 
-        createUserAccount(user, employe.id_employe, NewEmploye.code_postal, pass, pass);
+        await createUserAccount(user, result.rows[0].id_employe, newEmploye.codePostal, pass, pass);
 
-        client.query('COMMIT');
+        if (!clientParam) {
+            await client.query('COMMIT');
+        }
 
-        return NewEmploye;
+        return newEmploye;
     } catch (err) {
-        await client.query("ROLLBACK");
-        throw err;
+        if (!clientParam) {
+            await client.query('ROLLBACK');
+        }
+        throw new HttpError("Une erreur est survenue lors de la création de l'employé", 500);
     } finally {
-        client.release();
+        if (!clientParam) {
+            client.release();
+        }
     }
 };
 exports.createEmploye = createEmploye;
+
 
 const updateEmploye = async (employe) => {
     const client = await pool.connect();
@@ -122,27 +140,28 @@ const updateEmploye = async (employe) => {
         await client.query('BEGIN');
 
         const result = await client.query(
-            `UPDATE employe SET nom_employe = $2, prenom_employe = $3, poste_employe = $4, telephone_employe = $5 ,numero_civic = $6, numero_appartement $=7, nom_rue = $8,
+            `UPDATE employe SET nom_employe = $2, prenom_employe = $3, poste_employe = $4, telephone_employe = $5 ,numero_civic = $6, numero_appartement = $7, nom_rue = $8,
              nom_ville = $9, nom_province = $10, code_postal = $11, is_archive = $12
             WHERE id_employe = $1`,
             [employe.idEmploye, employe.nomEmploye, employe.prenomEmploye, employe.posteEmploye, employe.telephoneEmploye, employe.numeroCivic, employe.numeroAppartement,
             employe.nomRue, employe.nomVile, employe.nomProvince, employe.codePostal, employe.isArchive]
         );
         if (result.rowCount === 0) {
-            throw new Error(`Impossible de trouver l'employe avec id_employe ${employe.idEmploye}`);
+            throw new HttpError(`Impossible de trouver l'employé avec id_employe ${employe.idEmploye}`, 404);
         }
-
 
         await client.query("COMMIT");
         return employe;
     } catch (err) {
         await client.query("ROLLBACK");
-        throw err;
+        throw new HttpError(`Une erreur est survenue lors de la mise à jour de l'employé avec id_employe ${employe.idEmploye}`, 500);
     } finally {
         client.release();
     }
 };
 exports.updateEmploye = updateEmploye;
+
+
 
 const deleteEmploye = async (idEmploye, clientParam) => {
     const client = clientParam || (await pool.connect());

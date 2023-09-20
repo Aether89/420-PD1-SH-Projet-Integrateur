@@ -46,16 +46,16 @@ router.post('/',
 
 
         const InfoClient = {
-            nomInfoClient: "" + req.body.nomClient,
-            prenomInfoClient: "" + req.body.prenomClient,
-            telephoneInfoClient: "" + req.body.telephoneClient,
+            nomClient: "" + req.body.nomClient,
+            prenomClient: "" + req.body.prenomClient,
+            telephoneClient: "" + req.body.telephoneClient,
             numeroCivic: "" + req.body.numeroCivic,
             numeroAppartement: "" + req.body.numeroAppartement,
             nomRue: "" + req.body.nomRue,
             nomVille: "" + req.body.nomVille,
             nomProvince: "" + req.body.nomProvince,
             codePostal: "" + req.body.codePostal,
-            isArchive: "" + req.body.isArchive,
+
         }
 
 
@@ -77,64 +77,56 @@ router.post('/',
 
 router.put('/:id',
     passport.authenticate('basic', { session: false }),
-    (req, res, next) => {
-
-        const id = req.params.id
-        const user = req.user;
-        console.log(user);
-        if (!user || !user.isAdmin && user.id_Client !== id) {
-            return next(new HttpError(403, "Droit administrateur requis ou être titulaire du compte"));
-        }
-
-        if (!id || id === '') {
-            return next(new HttpError(400, 'Le paramètre id est requis'));
-        }
-
-        if (id != req.body.idInfoClient) {
-            return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que l'utilisateur fourni a l'id ${req.body.idClient}`));
-        }
-
+    async (req, res, next) => {
+        const idClient = req.params.id; // Utilisation d'une dénomination constante
 
         try {
-            const infoClient = {
-                idClient: "" + req.body.idClient,
-                nomClient: "" + req.body.nomClient,
-                prenomClient: "" + req.body.prenomClient,
-                posteClient: "" + req.body.posteClient,
-                telephoneClient: "" + req.body.telephoneClient,
-                numeroCivic: "" + req.body.numeroCivic,
-                numeroAppartement: "" + req.body.numeroAppartement,
-                nomRue: "" + req.body.nomRue,
-                nomVille: "" + req.body.nomVille,
-                nomProvince: "" + req.body.nomProvince,
-                codePostal: "" + req.body.codePostal,
-                isArchive: "" + req.body.isArchive,
+            // Data validation - Vérification de la présence des champs requis et de leurs types
+            if (!idClient || idClient === '') {
+                throw new HttpError(400, 'Le paramètre id est requis');
             }
 
+            if (idClient !== req.body.idClient) {
+                throw new HttpError(400, `Le paramètre spécifie l'id ${idClient} alors que l'utilisateur fourni a l'id ${req.body.idClient}`);
+            }
 
-            InfoClientQueries.updateInfoClient(infoClient).then(result => {
-                if (!result) {
-                    return next(new HttpError(404, `InfoClient ${id} introuvable`));
-                }
+            // Préparation des informations mises à jour du client
+            const infoClient = {
+                idClient: req.body.idClient,
+                nomClient: req.body.nomClient,
+                prenomClient: req.body.prenomClient,
+                posteClient: req.body.posteClient,
+                telephoneClient: req.body.telephoneClient,
+                numeroCivic: req.body.numeroCivic,
+                numeroAppartement: req.body.numeroAppartement,
+                nomRue: req.body.nomRue,
+                nomVille: req.body.nomVille,
+                nomProvince: req.body.nomProvince,
+                codePostal: req.body.codePostal,
+                isArchive: req.body.isArchive,
+            };
 
-            }).catch(err => {
-                return next(err);
-            });
+            // Mettre à jour les informations du client
+            const result = await InfoClientQueries.updateInfoClient(infoClient);
 
-            InfoClientQueries.getInfoClient(id).then(infoClient => {
-                if (infoClient) {
-                    res.json(infoClient);
-                } else {
-                    return next(new HttpError(404, `InfoClient ${id} introuvable`));
-                }
-            }).catch(err => {
-                return next(err);
-            });
+            if (!result) {
+                throw new HttpError(404, `InfoClient ${idClient} introuvable`);
+            }
+
+            // Récupérer et renvoyer les informations mises à jour du client
+            const updatedInfoClient = await InfoClientQueries.getInfoClient(idClient);
+
+            if (updatedInfoClient) {
+                res.json(updatedInfoClient);
+            } else {
+                throw new HttpError(404, `InfoClient ${idClient} introuvable`);
+            }
         } catch (error) {
             return next(error);
         }
     }
 );
+
 
 router.delete(
     "/:id",

@@ -54,7 +54,7 @@ export const useEmployeStore = defineStore('employe', {
       this.nomVille = "";
       this.nomProvince = "";
       this.codePostal = "";
-      this.isArchive = false;
+
     },
     getEmployes() {
       this.employes = [];
