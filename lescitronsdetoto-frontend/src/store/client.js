@@ -1,16 +1,16 @@
 // Utilities
 import { defineStore } from 'pinia'
-import { fetchemploye, fetchEmploye } from '@/services/EmployeService'
+import { fetchClient, fetchClientById } from '@/services/ClientService'
 
-export const useEmployeStore = defineStore('employe', {
+export const useClientStore = defineStore('client', {
   state: () => ({
-    employes: [],
+    clients: [],
     isNew: false,
-    idEmploye: "",
-    nomEmploye: "",
-    prenomEmploye: "",
-    posteEmploye: "",
-    telephoneEmploye: "",
+    idClient: "",
+    nomClient: "",
+    prenomClient: "",
+    posteClient: "",
+    telephoneClient: "",
     numeroCivic: "",
     numeroAppartement: "",
     nomRue: "",
@@ -22,15 +22,15 @@ export const useEmployeStore = defineStore('employe', {
     loadingerror: false,
   }),
   actions: {
-    async chargerEmploye(idEmploye) {
-      this.idEmploye = idEmploye;
-      fetchemploye(idEmploye)
+    async chargerClient(idClient) {
+      this.idClient = idClient;
+      fetchClientById(idClient)
         .then((result) => {
           this.isNew = false;
-          this.nomEmploye = result.nomEmploye;
-          this.prenomEmploye = result.prenomEmploye;
-          this.posteEmploye = result.posteEmploye;
-          this.telephoneEmploye = result.telephoneEmploye;
+          this.nomClient = result.nomClient;
+          this.prenomClient = result.prenomClient;
+          this.posteClient = result.posteClient;
+          this.telephoneClient = result.telephoneClient;
           this.numeroCivic = result.numeroCivic;
           this.numeroAppartement = result.numeroAppartement;
           this.nomRue = result.nomRue;
@@ -41,25 +41,27 @@ export const useEmployeStore = defineStore('employe', {
 
         })
     },
-    newEmploye() {
+
+    newClient() {
       this.isNew = true;
-      this.idEmploye = "";
-      this.nomEmploye = "";
-      this.prenomEmploye = "";
-      this.posteEmploye = "";
-      this.telephoneEmploye = "";
+      this.idClient = "";
+      this.nomClient = "";
+      this.prenomClient = "";
+      this.posteClient = "";
+      this.telephoneClient = "";
       this.numeroCivic = "";
       this.numeroAppartement = "";
       this.nomRue = "";
       this.nomVille = "";
       this.nomProvince = "";
       this.codePostal = "";
-      this.isArchive = false;
+      this.isArchive = "";
+
     },
-    getEmployes() {
-      this.employes = [];
-      fetchEmploye().then(employes => {
-        this.employes = employes;
+    getClients() {
+      this.clients = [];
+      fetchClient().then(clients => {
+        this.clients = clients;
         this.loading = false;
         this.loadError = false;
       }).catch(err => {

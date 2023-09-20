@@ -38,6 +38,12 @@ const routes = [
 
       },
       {
+        path: 'listeClients',
+        name: 'Liste des Clients',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeClients.vue'),
+
+      },
+      {
         path: 'vehicle/:id',
         name: 'Informations du Véhicule',
         component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),

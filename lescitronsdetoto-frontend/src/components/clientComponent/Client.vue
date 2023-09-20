@@ -5,23 +5,20 @@
         </v-toolbar>
 
         <v-card-text>
-            <v-form @submit.prevent="submit" validate-on="submit lazy" ref="employeform">
+            <v-form @submit.prevent="submit" validate-on="submit lazy" ref="clientform">
                 <v-row>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.required]"
+                        <v-text-field v-model="this.store.nomClient" label="Nom" :rules="[rules.required]"
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.prenomEmploye" label="Prenom employé" :rules="[rules.required]"
+                        <v-text-field v-model="this.store.prenomClient" label="Prénom" :rules="[rules.required]"
                             dense></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field :disabled="!(session.user.isAdmin)" v-model="this.store.posteEmploye"
-                            label="Poste de l'employé" :rules="[rules.required]" dense></v-text-field>
+                    <v-col cols="12">
+                        <v-text-field v-model="this.store.telephoneClient" label="Téléphone de l'employé"
+                            :rules="[rules.required]" dense></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.telephoneEmploye" label="Téléphone de l'employé"
-                            :rules="[rules.required]" dense></v-text-field></v-col>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="this.store.numeroCivic" label="# Civic" dense></v-text-field>
                     </v-col>
@@ -29,7 +26,7 @@
                         <v-text-field v-model="this.store.numeroAppartement" label="Appt." dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomRue" label="Nom rue" dense></v-text-field>
+                        <v-text-field v-model="this.store.nomRue" label="Nom de la rue" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field v-model="this.store.nomVille" label="Ville" dense></v-text-field>
@@ -37,34 +34,34 @@
                     <v-col cols="12" md="6">
                         <v-text-field v-model="this.store.nomProvince" label="Province" dense></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.codePostal" label="Code postal de l'employe" dense></v-text-field>
+                    <v-col cols="12">
+                        <v-text-field v-model="this.store.codePostal" label="Code postal du client" dense></v-text-field>
                     </v-col>
                 </v-row>
 
-
                 <v-btn type="submit"
-                    :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye">{{
+                    :disabled="!this.store.nomClient || !this.store.prenomClient || !this.store.telephoneClient">{{
                         txt.btn }}</v-btn>
-                <v-btn type="button" @click="(this.store.chargerEmploye(this.store.idEmploye))">Annuler</v-btn>
+                <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
                 <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
             </v-form>
         </v-card-text>
     </v-card>
 </template>
+  
 
   
 <script>
 
 import session from '../../session.js';
-import { useEmployeStore } from '@/store/employe';
-import { createEmploye, deleteEmploye, updateEmploye } from '@/services/EmployeService';
+import { useClientStore } from '@/store/client';
+import { createClient, deleteClient, updateClient } from '@/services/ClientService';
 
 export default {
     data() {
         return {
             session: session,
-            store: useEmployeStore(),
+            store: useClientStore(),
             rules: {
                 required: value => !!value || "Le champ est requis",
 
@@ -74,17 +71,17 @@ export default {
     methods: {
         async submit() {
 
-            const formValid = await this.$refs.employeform.validate();
+            const formValid = await this.$refs.clientform.validate();
 
             if (!formValid.valid) {
                 return;
             }
 
-            const Employe = {
-                nomEmploye: this.store.nomEmploye,
-                prenomEmploye: this.store.prenomEmploye,
-                posteEmploye: this.store.posteEmploye,
-                telephoneEmploye: this.store.telephoneEmploye,
+            const Client = {
+                nomClient: this.store.nomClient,
+                prenomClient: this.store.prenomClient,
+                posteClient: this.store.posteClient,
+                telephoneClient: this.store.telephoneClient,
                 numeroCivic: this.store.numeroCivic,
                 numeroAppartement: this.store.numeroAppartement,
                 nomRue: this.store.nomRue,
@@ -94,26 +91,26 @@ export default {
                 isArchive: this.store.isArchive
 
             };
-            if (!this.store.isNew) { Employe.idEmploye = this.store.idEmploye };
+            if (!this.store.isNew) { Client.idClient = this.store.idClient };
 
             try {
 
-                if (this.store.isNew) { await createEmploye(Employe); } else { await updateEmploye(Employe); }
+                if (this.store.isNew) { await createClient(Client); } else { await updateClient(Client); }
 
             } catch (err) {
                 console.error(err);
                 alert(err.message);
                 if (err.status === 409) {
-                    this.$refs.employeform.validate();
+                    this.$refs.clientform.validate();
                 }
             }
-            this.store.getEmployes();
+            this.store.getClients();
         },
         async supprimer() {
             try {
-                await deleteEmploye(this.store.idEmploye);
-                this.store.getEmployes();
-                this.store.newEmploye();
+                await deleteClient(this.store.idClient);
+                this.store.getClients();
+                this.store.newClient();
             } catch (err) {
                 console.error(err);
                 alert(err.message);
@@ -124,7 +121,7 @@ export default {
     },
     computed: {
         txt() {
-            return (this.store.isNew) ? { title: "Nouvel Employé", btn: "Créer" } : { title: "Employé", btn: "Modifier" };
+            return (this.store.isNew) ? { title: "Nouveau Client", btn: "Créer" } : { title: "Client Existant", btn: "Modifier" };
         }
     }
 }

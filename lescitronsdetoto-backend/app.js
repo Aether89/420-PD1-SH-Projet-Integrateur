@@ -10,7 +10,7 @@ const crypto = require('crypto');
 
 const userAccountQueries = require("./queries/UserAccountQueries");
 const EmployeRouter = require('./routes/EmployeRouter');
-
+const ClientRouter = require('./routes/ClientRouter');
 const citronRouter = require('./routes/citronsdetotoRouter');
 const vehiculeRouter = require('./routes/vehiculeRouter');
 
@@ -23,6 +23,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/vehicule', vehiculeRouter);
 app.use('/employes', EmployeRouter);
+app.use('/clients', ClientRouter);
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {

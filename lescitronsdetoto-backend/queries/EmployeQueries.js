@@ -81,7 +81,7 @@ const getEmploye = async (idEmploye, clientParam) => {
 exports.getEmploye = getEmploye;
 
 
-const createEmploye = async (Employe, clientParam) => {
+const createEmploye = async (employe, clientParam) => {
     const client = clientParam || (await pool.connect());
 
     try {

@@ -7,14 +7,14 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const HttpError = require("../HttpError");
-const EmployeQueries = require("../queries/EmployeQueries");
+const InfoClientQueries = require("../queries/InfoClientQueries");
 
 
 router.get("/", (req, res, next) => {
-    EmployeQueries
-        .getAllEmployes()
-        .then((employes) => {
-            res.json(employes);
+    InfoClientQueries
+        .getAllInfoClients()
+        .then((infoClients) => {
+            res.json(infoClients);
         })
         .catch((err) => {
             return next(err);
@@ -23,11 +23,11 @@ router.get("/", (req, res, next) => {
 
 router.get("/:id", (req, res, next) => {
     const id = req.params.id;
-    EmployeQueries.getEmploye(id).then((employe) => {
-        if (employe) {
-            res.json(employe);
+    InfoClientQueries.getInfoClient(id).then((infoClient) => {
+        if (infoClient) {
+            res.json(infoClient);
         } else {
-            return next(new HttpError(404, `Employe ${id} introuvable`));
+            return next(new HttpError(404, `InfoClient ${id} introuvable`));
         }
     })
         .catch((err) => {
@@ -45,11 +45,10 @@ router.post('/',
         }
 
 
-        const Employe = {
-            nomEmploye: "" + req.body.nomEmploye,
-            prenomEmploye: "" + req.body.prenomEmploye,
-            posteEmploye: "" + req.body.posteEmploye,
-            telephoneEmploye: "" + req.body.telephoneEmploye,
+        const InfoClient = {
+            nomInfoClient: "" + req.body.nomClient,
+            prenomInfoClient: "" + req.body.prenomClient,
+            telephoneInfoClient: "" + req.body.telephoneClient,
             numeroCivic: "" + req.body.numeroCivic,
             numeroAppartement: "" + req.body.numeroAppartement,
             nomRue: "" + req.body.nomRue,
@@ -62,9 +61,9 @@ router.post('/',
 
         try {
 
-            EmployeQueries.createEmploye(Employe).then(result => {
+            InfoClientQueries.createInfoClient(InfoClient).then(result => {
                 if (!result) {
-                    return next(new HttpError(404, `Employe ${id} introuvable`));
+                    return next(new HttpError(404, `InfoClient ${id} introuvable`));
                 }
                 res.json(result);
             }).catch(err => {
@@ -83,7 +82,7 @@ router.put('/:id',
         const id = req.params.id
         const user = req.user;
         console.log(user);
-        if (!user || !user.isAdmin && user.id_employe !== id) {
+        if (!user || !user.isAdmin && user.id_Client !== id) {
             return next(new HttpError(403, "Droit administrateur requis ou être titulaire du compte"));
         }
 
@@ -91,18 +90,18 @@ router.put('/:id',
             return next(new HttpError(400, 'Le paramètre id est requis'));
         }
 
-        if (id != req.body.idEmploye) {
-            return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que l'utilisateur fourni a l'id ${req.body.idEmploye}`));
+        if (id != req.body.idInfoClient) {
+            return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que l'utilisateur fourni a l'id ${req.body.idClient}`));
         }
 
 
         try {
-            const employe = {
-                idEmploye: "" + req.body.idEmploye,
-                nomEmploye: "" + req.body.nomEmploye,
-                prenomEmploye: "" + req.body.prenomEmploye,
-                posteEmploye: "" + req.body.posteEmploye,
-                telephoneEmploye: "" + req.body.telephoneEmploye,
+            const infoClient = {
+                idClient: "" + req.body.idClient,
+                nomClient: "" + req.body.nomClient,
+                prenomClient: "" + req.body.prenomClient,
+                posteClient: "" + req.body.posteClient,
+                telephoneClient: "" + req.body.telephoneClient,
                 numeroCivic: "" + req.body.numeroCivic,
                 numeroAppartement: "" + req.body.numeroAppartement,
                 nomRue: "" + req.body.nomRue,
@@ -113,20 +112,20 @@ router.put('/:id',
             }
 
 
-            EmployeQueries.updateEmploye(employe).then(result => {
+            InfoClientQueries.updateInfoClient(infoClient).then(result => {
                 if (!result) {
-                    return next(new HttpError(404, `Employe ${id} introuvable`));
+                    return next(new HttpError(404, `InfoClient ${id} introuvable`));
                 }
 
             }).catch(err => {
                 return next(err);
             });
 
-            EmployeQueries.getEmploye(id).then(employe => {
-                if (employe) {
-                    res.json(employe);
+            InfoClientQueries.getInfoClient(id).then(infoClient => {
+                if (infoClient) {
+                    res.json(infoClient);
                 } else {
-                    return next(new HttpError(404, `Employe ${id} introuvable`));
+                    return next(new HttpError(404, `InfoClient ${id} introuvable`));
                 }
             }).catch(err => {
                 return next(err);
@@ -152,11 +151,11 @@ router.delete(
             return next(new HttpError(400, "Le paramètre id est requis"));
         }
 
-        EmployeQueries
-            .deleteEmploye(id)
+        InfoClientQueries
+            .deleteInfoClient(id)
             .then((result) => {
                 if (!result) {
-                    return next(new HttpError(404, `employe ${id} introuvable`));
+                    return next(new HttpError(404, `infoClient ${id} introuvable`));
                 }
 
                 res.json(result);
