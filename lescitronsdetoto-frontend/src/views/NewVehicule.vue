@@ -136,11 +136,12 @@ export default {
                 this.donneesApi.annee = vehicule.annee;
                 this.couleur = vehicule.couleur;
                 this.nombre_kilometre = vehicule.nombre_kilometre;
-                this.prix_annonce = parseFloat(vehicule.prix_annonce.replace(',', '.'));
-                this.promotion = parseFloat(vehicule.promotion.replace(',', '.'));
+                this.prix_annonce = parseFloat(vehicule.prix_annonce.replace(/\s+/g, '').replace(',', '.'));
+                this.promotion = parseFloat(vehicule.promotion.replace(/\s+/g, '').replace(',', '.'));
                 this.description_courte = vehicule.description_courte;
                 this.description_longue = vehicule.description_longue;
                 this.loading = false;
+                console.log("this.prix_annonce", this.prix_annonce)
             } else {
                 this.vehicule = {
                     vin: null,
