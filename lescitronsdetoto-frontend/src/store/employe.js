@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia'
-import { fetchemploye , fetchEmploye} from '@/services/EmployeService'
+import { fetchemploye, fetchEmploye } from '@/services/EmployeService'
 
 export const useEmployeStore = defineStore('employe', {
   state: () => ({
@@ -11,7 +11,13 @@ export const useEmployeStore = defineStore('employe', {
     prenomEmploye: "",
     posteEmploye: "",
     telephoneEmploye: "",
-    codePostalEmploye: "",
+    numeroCivic: "",
+    numeroAppartement: "",
+    nomRue: "",
+    nomVille: "",
+    nomProvince: "",
+    codePostal: "",
+    isArchive: "",
     loading: false,
     loadingerror: false,
   }),
@@ -25,7 +31,14 @@ export const useEmployeStore = defineStore('employe', {
           this.prenomEmploye = result.prenomEmploye;
           this.posteEmploye = result.posteEmploye;
           this.telephoneEmploye = result.telephoneEmploye;
-          this.codePostalEmploye = result.codePostalEmploye;
+          this.numeroCivic = result.numeroCivic;
+          this.numeroAppartement = result.numeroAppartement;
+          this.nomRue = result.nomRue;
+          this.nomVille = result.nomVille;
+          this.nomProvince = result.nomProvince;
+          this.codePostal = result.codePostal;
+          this.isArchive = result.isArchive;
+
         })
     },
     newEmploye() {
@@ -35,7 +48,13 @@ export const useEmployeStore = defineStore('employe', {
       this.prenomEmploye = "";
       this.posteEmploye = "";
       this.telephoneEmploye = "";
-      this.codePostalEmploye = "";
+      this.numeroCivic = "";
+      this.numeroAppartement = "";
+      this.nomRue = "";
+      this.nomVille = "";
+      this.nomProvince = "";
+      this.codePostal = "";
+      this.isArchive = "";
     },
     getEmployes() {
       this.employes = [];
@@ -47,7 +66,7 @@ export const useEmployeStore = defineStore('employe', {
         this.loading = false;
         this.loadError = true;
       });
-  },
+    },
 
   },
 })

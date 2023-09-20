@@ -10,8 +10,13 @@
                 :rules="[rules.required]" density="compact"></v-text-field>
             <v-text-field v-model="this.store.telephoneEmploye" label="Téléphone de l'employé" :rules="[rules.required]"
                 density="compact"></v-text-field>
-            <v-text-field v-model="this.store.codePostalEmploye" label="Code postal de l'employe" :rules="[rules.required]"
-                density="compact"></v-text-field>
+            <v-text-field v-model="this.store.numeroCivic" label="Numéro Civic" density="compact"></v-text-field>
+            <v-text-field v-model="this.store.numeroAppartement" label="Appt." density="compact"></v-text-field>
+            <v-text-field v-model="this.store.nomRue" label="Prenom employé" density="compact"></v-text-field>
+            <v-text-field v-model="this.store.nomVille" label="Ville" density="compact"></v-text-field>
+            <v-text-field v-model="this.store.nomProvince" label="Province" density="compact"></v-text-field>
+            <v-text-field v-model="this.store.codePostal" label="Code postal de l'employe" density="compact"></v-text-field>
+
             <v-btn type="submit"
                 :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye || !this.store.codePostalEmploye">{{
                     txt.btn }}</v-btn>
@@ -54,7 +59,14 @@ export default {
                 prenomEmploye: this.store.prenomEmploye,
                 posteEmploye: this.store.posteEmploye,
                 telephoneEmploye: this.store.telephoneEmploye,
-                codePostalEmploye: this.store.codePostalEmploye,
+                numeroCivic: this.store.numeroCivic,
+                numeroAppartement: this.store.numeroAppartement,
+                nomRue: this.store.nomRue,
+                nomVille: this.store.nomVille,
+                nomProvince: this.store.nomProvince,
+                codePostal: this.store.codePostal,
+                isArchive: this.store.isArchive
+
             };
             if (!this.store.isNew) { Employe.idEmploye = this.store.idEmploye };
 

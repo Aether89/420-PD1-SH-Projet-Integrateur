@@ -3,7 +3,8 @@ const pool = require('./DBPool');
 
 const getAllEmployes = async () => {
     const result = await pool.query(
-        `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal_employe
+        `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, numero_civic, numero_appartement, nom_rue,
+        nom_ville, nom_province, code_postal, is_archive
          FROM employe
          ORDER BY id_employe`,
     );
@@ -15,7 +16,13 @@ const getAllEmployes = async () => {
             prenomEmploye: row.prenom_employe,
             posteEmploye: row.poste_employe,
             telephoneEmploye: row.telephone_employe,
-            codePostalEmploye: row.code_postal_employe
+            numero_civic: row.numero_civic,
+            numeroAppartement: row.numero_appartement,
+            nomRue: row.nom_rue,
+            nomVille: row.nom_ville,
+            nomProvince: row.nom_province,
+            codePostal: row.code_postal,
+            isArchive: row.is_archive
         };
 
         return employe;
@@ -32,7 +39,8 @@ const getEmploye = async (idEmploye, clientParam) => {
         }
 
         const result = await client.query(
-            `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal_employe
+            `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, numero_civic, numero_appartement, nom_rue,
+            nom_ville, nom_province, code_postal, is_archive
          FROM employe
          WHERE id_employe = $1`,
             [idEmploye]
@@ -46,7 +54,13 @@ const getEmploye = async (idEmploye, clientParam) => {
                 prenomEmploye: row.prenom_employe,
                 posteEmploye: row.poste_employe,
                 telephoneEmploye: row.telephone_employe,
-                codePostalEmploye: row.code_postal_employe
+                numero_civic: row.numero_civic,
+                numeroAppartement: row.numero_appartement,
+                nomRue: row.nom_rue,
+                nomVille: row.nom_ville,
+                nomProvince: row.nom_province,
+                codePostal: row.code_postal,
+                isArchive: row.is_archive
             }
 
 
@@ -74,14 +88,20 @@ const createEmploye = async (Employe, clientParam) => {
         if (!clientParam) {
             await client.query('BEGIN');
         }
-        const result = await pool.query(
-            `INSERT INTO employe (nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal_employe) 
-             VALUES ($1, $2, $3, $4, $5)
+        const result = await client.query(
+            `INSERT INTO employe (nom_employe, prenom_employe, poste_employe, telephone_employe, numero_civic, numero_appartement, nom_rue,
+                nom_ville, nom_province, code_postal ) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )
              RETURNING id_employe`,
-            [Employe.nomEmploye, Employe.prenomEmploye, Employe.posteEmploye, Employe.telephoneEmploye, Employe.codePostalEmploye]
+            [employe.nomEmploye, employe.prenomEmploye, employe.posteEmploye, employe.telephoneEmploye, employe.numeroCivic, employe.numeroAppartement,
+            employe.nomRue, employe.nomVile, employe.nomProvince, employe.codePostal]
         );
 
         const NewEmploye = getEmploye(result.rows[0].id_employe, client);
+        const user = employe.prenom_employe[0] + "." + employe.nom_employe;
+        const pass = employe.prenomEmploye[0] + employe.nomEmploye;
+
+        createUserAccount(user, employe.id_employe, NewEmploye.code_postal, pass, pass);
 
         client.query('COMMIT');
 
@@ -102,9 +122,11 @@ const updateEmploye = async (employe) => {
         await client.query('BEGIN');
 
         const result = await client.query(
-            `UPDATE employe SET nom_employe = $2, prenom_employe = $3, poste_employe = $4, telephone_employe = $5, code_postal_employe = $6
+            `UPDATE employe SET nom_employe = $2, prenom_employe = $3, poste_employe = $4, telephone_employe = $5 ,numero_civic = $6, numero_appartement $=7, nom_rue = $8,
+             nom_ville = $9, nom_province = $10, code_postal = $11, is_archive = $12
             WHERE id_employe = $1`,
-            [employe.idEmploye, employe.nomEmploye, employe.prenomEmploye, employe.posteEmploye, employe.telephoneEmploye, employe.codePostalEmploye]
+            [employe.idEmploye, employe.nomEmploye, employe.prenomEmploye, employe.posteEmploye, employe.telephoneEmploye, employe.numeroCivic, employe.numeroAppartement,
+            employe.nomRue, employe.nomVile, employe.nomProvince, employe.codePostal, employe.isArchive]
         );
         if (result.rowCount === 0) {
             throw new Error(`Impossible de trouver l'employe avec id_employe ${employe.idEmploye}`);
@@ -122,14 +144,66 @@ const updateEmploye = async (employe) => {
 };
 exports.updateEmploye = updateEmploye;
 
-const deleteEmploye = async (idEmploye) => {
-    const result = await pool.query(
-        `DELETE FROM employe WHERE id_employe = $1`,
-        [idEmploye]
-    );
-    if (result.rowCount === 0) {
-        return undefined;
+const deleteEmploye = async (idEmploye, clientParam) => {
+    const client = clientParam || (await pool.connect());
+
+    try {
+        if (!clientParam) {
+            await client.query('BEGIN');
+        }
+        // Vérifier d'abord si l'employé est lié à message_chat ou evenement
+        const checkQuery = `
+            SELECT id_employe 
+            FROM employe
+            WHERE id_employe NOT IN (
+                SELECT id_employe FROM message_chat
+                UNION
+                SELECT id_employe FROM evenement
+            )
+        `;
+
+        const checkResult = await pool.query(checkQuery);
+
+        if (checkResult.rows.find(row => row.id_employe === idEmploye)) {
+
+
+            // Si l'employé est lié, retourner une réponse vide
+            throw new error("L'employé est lier a une autre table");
+
+        }
+
+        // Supprimer de user_account
+        const deleteQuery = `
+            DELETE FROM user_account
+            WHERE id_employe = $1
+        `;
+
+        await pool.query(deleteQuery, [idEmploye]);
+
+        // Supprimer de la table employe
+        const deleteEmployeQuery = `
+            DELETE FROM employe
+            WHERE id_employe = $1
+        `;
+
+        await pool.query(deleteEmployeQuery, [idEmploye]);
+
+        if (!clientParam) {
+            await client.query('COMMIT');
+        }
+
+        return {};
+
+
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        if (!clientParam) {
+            client.release();
+        }
     }
-    return {};
 };
-exports.deleteEmploye = deleteEmploye
+
+exports.deleteEmploye = deleteEmploye;
+
