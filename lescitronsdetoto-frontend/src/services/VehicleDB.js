@@ -231,6 +231,19 @@ export const convertToVehicule = jsonVehicule => {
   }
 };
 
+export const convertToVehiculefr = jsonVehicule => {
+  return {
+    vin: jsonVehicule.vin,
+    img: [ "../src/assets/lemon.png", "../src/assets/race-car.png", "../src/assets/city-car.png"],
+    description_courte: jsonVehicule.description_courte,
+    description_longue: jsonVehicule.description_longue,
+    prix_annonce: jsonVehicule.prix_annonce,
+    promotion: jsonVehicule.promotion,
+    nombre_kilometre: jsonVehicule.nombre_kilometre,
+    couleur: jsonVehicule.couleur
+  }
+};
+
 export const convertToVehiculeUpdate = jsonVehicule => {
   return {
     vin: jsonVehicule.vin,

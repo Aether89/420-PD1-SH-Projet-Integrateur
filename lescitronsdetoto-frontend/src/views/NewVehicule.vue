@@ -69,15 +69,17 @@
 
 <script>
 import session from '../session';
-import { createVehicule, udpateVoiture } from '../services/vehicule';
+import { useVehiclesStore } from '@/store/vehicles';
+import { createVehicule, udpateVoiture, getVehiculefr } from '../services/vehicule';
 import { fetchVIN } from'../services/VINAPI';
 
+const store = useVehiclesStore();
 export default {
     props: ['mode', 'id'],
     data() {
         return {
             session: session,
-            loading: false,
+            loading: true,
             loadError: false,
             errorMessage: null,
             vin: '',
@@ -102,6 +104,62 @@ export default {
         };
     },
     methods: {
+        async refreshVehicule() {
+            this.loadError = false;
+            this.loading = true;
+            this.errorMessage = null;
+            this.recette = null;
+
+            if(!this.nouveauvehicule) {
+                /*console.log("refresh vehiculeVin", this.vehiculeVin)
+                //const vehiculepatate = await getVehiculefr(this.vehiculeVin);
+                //console.log("vehiculepatate", vehiculepatate)
+                getVehiculefr(this.vehiculeVin).then(vehicule => {
+                    this.vehicule = vehicule;
+                    this.loading = false;
+                    console.log("refresh", this.vehicule)
+                }).catch(err => {
+                    this.recette = null;
+                    this.loadError = true;
+                    this.loading = false;
+                    this.errorMessage = err.message;
+                });*/
+
+                const formatter = new Intl.NumberFormat('en-US');
+
+                const vehicule = await getVehiculefr(this.id); 
+                console.log("refresh vehicule", vehicule)
+                this.vin = vehicule.vin;
+                this.id_etat = vehicule.id_etat;
+                this.donneesApi.marque = vehicule.marque;
+                this.donneesApi.modele = vehicule.modele;
+                this.donneesApi.annee = vehicule.annee;
+                this.couleur = vehicule.couleur;
+                this.nombre_kilometre = vehicule.nombre_kilometre;
+                this.prix_annonce = parseFloat(vehicule.prix_annonce.replace(',', '.'));
+                this.promotion = parseFloat(vehicule.promotion.replace(',', '.'));
+                this.description_courte = vehicule.description_courte;
+                this.description_longue = vehicule.description_longue;
+                this.loading = false;
+            } else {
+                this.vehicule = {
+                    vin: null,
+                    id_etat: null,
+                    donneesApi: {
+                        marque: null,
+                        modele: null,
+                        annee: null
+                    },
+                    couleur: null,
+                    nombre_kilometre: 0,
+                    prix_annonce: 0,
+                    promotion: 0,
+                    description_courte: null,
+                    description_longue: null
+                }
+                this.loading=false;
+            }
+        },
         async autoVin() {
             if(this.vehiculeVin !== ''){
                 console.log(this.vehiculeVin);
@@ -201,6 +259,7 @@ export default {
     },
     mounted() {
         this.autoVin();
+        this.refreshVehicule(this.vehiculeVin);
     }
 }
 </script>
