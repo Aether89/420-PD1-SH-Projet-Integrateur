@@ -12,3 +12,10 @@ values
 	(2, 'Disponible'),
 	(3, 'Vendu')
 ;
+
+insert into type_evenement(nom_evenement)
+values
+	('reservation'),
+	('pending'),
+	('done')
+;
