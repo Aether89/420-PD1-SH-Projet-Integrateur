@@ -22,6 +22,7 @@ export default {
 
     data() {
         return {
+            isNew: false,
             employeStore: useEmployeStore(),
             session: session
         };

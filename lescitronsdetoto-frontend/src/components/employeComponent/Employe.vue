@@ -41,8 +41,8 @@
                         <v-text-field v-model="this.store.codePostal" label="Code postal de l'employe" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-checkbox disabled="isNew" v-model="this.store.isArchive" label="Archiver l'employé"
-                            dense></v-checkbox>
+                        <v-checkbox v-if="this.store.isNew || session.user.isAdmin" v-model="this.store.isArchive"
+                            label="Archiver l'employé" dense></v-checkbox>
                     </v-col>
                 </v-row>
 

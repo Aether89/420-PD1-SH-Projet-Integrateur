@@ -38,6 +38,7 @@ export const useEmployeStore = defineStore('employe', {
           this.nomProvince = result.nomProvince;
           this.codePostal = result.codePostal;
           this.isArchive = result.isArchive;
+          console.log(this.nomEmploye);
 
         })
     },
