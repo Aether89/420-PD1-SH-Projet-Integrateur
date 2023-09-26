@@ -48,7 +48,13 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if (!vin || vin === '') {
             return next(new HttpError(400, 'Le champ vin est requis'));
         }
+        
+        /*const prixDAchat = req.body.prixEvenement;
+        if(!prixDAchat || prixDAchat <= 0) {
+            return next(new HttpError(400, 'Le champ prix d\'achat est requis'));
+        }*/
 
+        console.log("user", user.userAccountId);
         const fetchedVehicule = await fetchVIN(vin);
         if (fetchedVehicule.ErrorCode !== "0") {
           return next(new HttpError(404, `Veillez rentrer un vin existant!`));
@@ -93,6 +99,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if(newVehicule.promotion <= 0) {
             newVehicule.promotion = null;
         }
+        
 
         console.log("newVehicule", newVehicule);
         vehiculeQuerie.addVehicule(newVehicule);

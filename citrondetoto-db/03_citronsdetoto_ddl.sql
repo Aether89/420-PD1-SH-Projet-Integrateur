@@ -64,11 +64,11 @@ CREATE TABLE intervention (
 
 CREATE TABLE client (
 	id_client serial PRIMARY KEY NOT NULL,
-	nom_client varchar(64),
+	nom_client varchar(64) NOT NULL,
 	prenom_client varchar(64) NOT NULL,
 	telephone_client varchar(16),
 	courriel_client varchar (64),
-		numero_civic integer,
+	numero_civic integer,
 	numero_appartement varchar(6),
 	nom_rue varchar(64),
 	nom_ville varchar(64),
@@ -96,7 +96,7 @@ CREATE TABLE employe (
 	prenom_employe varchar(64) NOT NULL,
 	poste_employe varchar(64) NOT NULL,
 	telephone_employe varchar(16) NOT NULL,
-		numero_civic integer,
+	numero_civic integer,
 	numero_appartement varchar(6),
 	nom_rue varchar(64),
 	nom_ville varchar(64),
@@ -113,14 +113,15 @@ CREATE TABLE user_account (
 	password_hash text NOT NULL,
 	password_salt text NOT NULL,
 	is_active boolean NOT NULL DEFAULT true,
-	is_admin boolean NOT NULL DEFAULT false
+	is_admin boolean NOT NULL DEFAULT false,
+	a_change boolean NOT NULL DEFAULT true
 );
 
 CREATE TABLE evenement (
 	id_evenement serial PRIMARY KEY NOT NULL,
 	id_type_evenement serial NOT NULL REFERENCES type_evenement (id_type_evenement),
 	id_client serial NOT NULL REFERENCES client (id_client),
-	id_employe serial NOT NULL REFERENCES employe (id_employe),
+	user_account_id text NOT NULL REFERENCES user_account (user_account_id),
 	prix_evenement money,
 	date_heure_evenement timestamptz NOT NULL,
 	etat_vue_evenement boolean
