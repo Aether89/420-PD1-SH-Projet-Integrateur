@@ -21,19 +21,20 @@
             </v-toolbar>
             <v-list>
                 <v-list-item>
-                    <v-select label="Marque" v-model="this.store.selected.make" :items="this.store.makes"
-                        density="compact" clearable></v-select>
+                    <v-select :loading="loadingMakes" bg-color="grey-lighten-3" label="Marque" v-model="this.store.selected.make" :items="this.store.makes"
+                density="compact" clearable></v-select>
                 </v-list-item>
 
                 <v-list-item>
-
-                    <v-select label="Année" v-model="this.store.selected.year" :items="this.store.years"
-                        density="compact" clearable></v-select>
+                    <v-select bg-color="grey-lighten-3" label="Opérateur" item-title="name" item-value="value" v-model="this.store.selected.yearSign" :items="this.store.signs"
+                density="compact"></v-select>
+                <v-select :loading="loadingYears" bg-color="grey-lighten-3" label="Année" v-model="this.store.selected.year" :items="this.store.years"
+                density="compact" clearable></v-select>
                 </v-list-item>
 
                 <v-list-item>
-                    <v-select label="Modéle" v-model="this.store.selected.model" :items="this.store.models"
-                        density="compact" clearable></v-select>
+                    <v-select :loading="loadingModels" bg-color="grey-lighten-3" label="Modéle" v-model="this.store.selected.model" :items="this.store.models"
+                density="compact" clearable></v-select>
                 </v-list-item>
                 <v-list-subheader>Prix entre </v-list-subheader>
                 <v-list-item>
@@ -42,9 +43,13 @@
                         thumb-label="always">
                     </v-range-slider>
                 </v-list-item>
+                <v-btn class="my-4" block prepend-icon="mdi-car-search" @click="this.searchVehicles()"
+                        aria-label="confirmer" color="green-lighten-2">Rechercher</v-btn>
 
-                <v-btn block prepend-icon="mdi-cancel" aria-label="annuler" color="red-lighten-2"
+                <v-btn class="my-4" block prepend-icon="mdi-cancel" aria-label="annuler" color="red-lighten-2"
                     @click="this.cancel()">Annuler</v-btn>
+                    
+
             </v-list>
         </v-card>
     </v-dialog>
@@ -64,13 +69,22 @@ export default {
     methods: {
         searchVehicles() {
             this.dialog = false;
-            this.store.getVehiclesList();
+            this.store.filterVehiclesList();
         },
         cancel() {
             this.store.reset();
         }
     },
     computed: {
+        loadingMakes() {
+            return this.store.loading.makes;
+        }, 
+        loadingYears() {
+            return this.store.loading.years;
+        }, 
+        loadingModels() {
+            return this.store.loading.models;
+        }, 
         watchMake() {
             return this.store.selected.make
         },
@@ -106,9 +120,7 @@ export default {
 
     },
     created() {
-        this.store.loadMakes();
         this.store.loadYears();
-        this.store.loadModels()
     }
 
 }
