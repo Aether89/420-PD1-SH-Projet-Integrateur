@@ -104,9 +104,9 @@ passport.authenticate('basic', { session: false }),
             }
 
             console.log("vehiculeSell",vehiculeSell)
-            /*if(vehiculeSell.id_etat === 3) {
+            if(vehiculeSell.id_etat === 3) {
                 return next(new HttpError(400, `Le vehicule ${vehiculeSell.vin} est déjà vendu`))
-            }*/
+            }
 
             //console.log("evenement", evenement)
 
