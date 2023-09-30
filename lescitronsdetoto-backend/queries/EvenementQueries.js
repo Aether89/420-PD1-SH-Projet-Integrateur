@@ -3,18 +3,28 @@ const pool = require('./DBPool');
 const getAllEvenementByType = async (id_type_evenement) => {
     const result = await pool.query(
         `SELECT
-        id_type_evenement,
-        id_client,
-        user_account_id,
-        prix_evenement,
-        date_heure_evenement,
-        etat_vue_evenement
+            e.id_evenement,
+            e.id_type_evenement,
+            e.id_client,
+            e.user_account_id,
+            e.prix_evenement,
+            e.date_heure_evenement,
+            e.etat_vue_evenement,
+            c.nom_client,
+            c.prenom_client
         FROM
-        evenement
-        WHERE id_type_evenement = $1
-        ORDER BY date_heure_evenement`,
+            evenement e
+        INNER JOIN
+            client c
+        ON
+            e.id_client = c.id_client
+        WHERE
+            e.id_type_evenement = $1
+        ORDER BY
+            e.date_heure_evenement`,
         [id_type_evenement]
     );
+
     const evenement = result.rows.map(row => {
         return {
             id_evenement: row.id_evenement,
@@ -23,9 +33,12 @@ const getAllEvenementByType = async (id_type_evenement) => {
             user_account_id: row.user_account_id,
             prix_evenement: row.prix_evenement,
             date_heure_evenement: row.date_heure_evenement,
-            etat_vue_evenement: row.etat_vue_evenement
-        }
+            etat_vue_evenement: row.etat_vue_evenement,
+            nom_client: row.nom_client,
+            prenom_client: row.prenom_client
+        };
     });
+
     return evenement;
 };
 exports.getAllEvenementByType = getAllEvenementByType;

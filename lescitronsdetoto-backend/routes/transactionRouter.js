@@ -21,7 +21,7 @@ router.get('/achat', (req, res, next) => {
     });
 });
 
-router.get('/vendu', (req, res, next) => {
+router.get('/vente', (req, res, next) => {
     evenementQueries.getAllEvenementByType(3).then(evenements => {
         res.json(evenements);
     }).catch(err => {

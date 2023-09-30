@@ -7,13 +7,13 @@
                     <v-text-field v-if="nouveauvehicule" v-model="vin" label="Identifiant unique du véhicule" density="compact"  @blur="autoVin" @keyup.enter="autoVin"
                         :rules="[rules.required]"></v-text-field>
                     <p v-else >  VIN :{{ id }}</p>
-                    <v-text-field v-model="couleur" label="Couleur du véhicule" density="compact" maxlength="32"
+                    <v-text-field v-model="couleur" label="Couleur du véhicule" density="compact" maxlength="32" :rules="[rules.required]"
                     ></v-text-field>
-                    <v-text-field v-model="nombre_kilometre" label="Nombre de kilomètre" density="compact" type="number" step="1" min = 0
+                    <v-text-field v-model="nombre_kilometre" label="Nombre de kilomètre" density="compact" type="number" step="1" min = 0 :rules="[validateNumer]" :error-messages="errorMessages"
                     ></v-text-field>
-                    <v-text-field v-model="prix_annonce" label="Prix annoncé" density="compact" type="number" prefix="$" step="0.01" min = 0
+                    <v-text-field v-model="prix_annonce" label="Prix annoncé" density="compact" type="number" prefix="$" step="0.01" min = 0 :rules="[validateNumer]" :error-messages="errorMessages" 
                     ></v-text-field>
-                    <v-text-field v-model="promotion" label="Promotion" density="compact" type="number" prefix="$" step="0.01" min = 0
+                    <v-text-field v-model="promotion" label="Promotion" density="compact" type="number" prefix="$" step="0.01" min = 0  :rules="[validatePromotion]" :error-messages="errorMessagesPromotion"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6">
@@ -54,7 +54,7 @@
             <br>
             
             <v-btn prepend-icon="mdi-car-search" color="green-lighten-2" 
-                text-align="right" class="mx-2" type="submit" @click="validateVehicule" :disabled="this.loading"> {{ boutonText }}
+                text-align="right" class="mx-2" type="submit" @click="validateVehicule"> {{ boutonText }}
             </v-btn>
 
             <router-link :to="{path: '/' }">
@@ -75,9 +75,16 @@ import { fetchVIN } from'../services/VINAPI';
 
 const store = useVehiclesStore();
 export default {
-    props: ['mode', 'id'],
+    props: {
+        id: String,
+        mode: String
+    },
     data() {
         return {
+            //nombre_kilometre: null,
+            errorMessagesPrixAnnonce: [],
+            errorMessages: [],
+            errorMessagesPromotion: [],
             session: session,
             loading: true,
             loadError: false,
@@ -97,13 +104,30 @@ export default {
             description_longue: '',   
             rules: {
                 required: value => !!value || "Le champ est requis",
-                vinIdUnique: () => this.vinIdUnique || "Ce véhicule existe déjà dans le systeme"
+                vinIdUnique: () => this.vinIdUnique || "Ce véhicule existe déjà dans le systeme",
+                //validateNumer: value => !!value || "Le champs doit être supérieur de 0"
             },
             vinIdUnique: true
             
         };
     },
     methods: {
+        validatePromotion(value) {
+            if (value >= this.prix_annonce) {
+                this.errorMessagesPromotion = ['Le prix de la promotion ne doit pas être supérieur ou égale au prix annoncé'];
+                return false;
+            }
+            this.errorMessagesPromotion = [];
+            return true;
+        },
+        validateNumer(value) {
+            if (value <= 0) {
+                this.errorMessages = ['Le nombre doit être supérieur à 0'];
+                return false;
+            }
+            this.errorMessages = [];
+            return true;
+        },
         async refreshVehicule() {
             this.loadError = false;
             this.loading = true;
@@ -261,6 +285,9 @@ export default {
     mounted() {
         this.autoVin();
         this.refreshVehicule(this.vehiculeVin);
-    }
+    },
+    created() {
+        console.log('Mode reçu en props :', this.mode);
+    },
 }
 </script>
