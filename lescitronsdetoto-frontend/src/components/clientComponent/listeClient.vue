@@ -2,7 +2,7 @@
   <v-card max-width="400" min-width="400" height="auto">
     <v-card-item class="bg-orange-darken-4">
       <v-card-title>
-        Liste des employés
+        Liste des clients
       </v-card-title>
 
       <template v-slot:append>

@@ -8,7 +8,37 @@ const upload = multer({ storage: storage });
 
 const HttpError = require("../HttpError");
 const InfoClientQueries = require("../queries/InfoClientQueries");
+const rules = require('./regles.js');
 
+function validateClient(client) {
+    if (client.nomClient!=="") { if (!rules.nom.test(client.nomClient)) {
+        throw new HttpError(400, "Format de nom invalide");
+    }}
+    if (client.prenomClient!=="") { if (!rules.prenom.test(client.prenomClient)) {
+        throw new HttpError(400, "Format du prénom invalide");
+    }	}
+    if (client.telephone!=='') { if (!rules.telephone.test(client.telephoneClient)) {
+        throw new HttpError(400, "Format du numéro de téléphone invalid");
+    }}
+    if (client.numeroCivic!=='') { if (!rules.numeroCivic.test(client.numeroCivic)) {
+        throw new HttpError(400, "Format du numéro civic invalid");
+    }}
+    if (client.numeroAppartement!=="") { if (!rules.numeroAppartement.test(client.numeroAppartement)) {
+        throw new HttpError(400, "Format du numéro d'appartement invalid");
+    }}
+    if (client.nomRue!=="") { if (!rules.nomRue.test(client.nomRue)) {
+        throw new HttpError(400, "Format du nom de rue invalide");
+    }}
+    if (client.nomVille!=="") { if (!rules.nomVille.test(client.nomVillee)) {
+        throw new HttpError(400, "Format du nom de la ville invalide");
+    }}
+    if (client.nomProvince!=="") { if (!rules.nomProvince.test(client.nomProvince)) {
+        throw new HttpError(400, "Format du nom de la province invalide");
+    }}
+    if (client.codePostal!=="") { if (!rules.codePostal.test(client.codePostal)) {
+        throw new HttpError(400, "Format du code postal invalide");
+    }}
+}
 
 router.get("/", (req, res, next) => {
     InfoClientQueries
@@ -44,12 +74,12 @@ router.post('/',
             return next(new HttpError(403, "Droit administrateur requis"));
         }
 
-
+validateClient(req.body);   
         const InfoClient = {
             nomClient: "" + req.body.nomClient,
             prenomClient: "" + req.body.prenomClient,
             telephoneClient: "" + req.body.telephoneClient,
-            numeroCivic: "" + req.body.numeroCivic,
+            numeroCivic:  + req.body.numeroCivic,
             numeroAppartement: "" + req.body.numeroAppartement,
             nomRue: "" + req.body.nomRue,
             nomVille: "" + req.body.nomVille,
@@ -89,6 +119,7 @@ router.put('/:id',
             if (idClient !== req.body.idClient) {
                 throw new HttpError(400, `Le paramètre spécifie l'id ${idClient} alors que l'utilisateur fourni a l'id ${req.body.idClient}`);
             }
+            validateClient(req.body);
 
             // Préparation des informations mises à jour du client
             const infoClient = {

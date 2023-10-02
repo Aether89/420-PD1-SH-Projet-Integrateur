@@ -8,34 +8,39 @@
             <v-form @submit.prevent="submit" validate-on="submit lazy" ref="clientform">
                 <v-row>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomClient" label="Nom" :rules="[rules.required]"
-                            dense></v-text-field>
+                        <v-text-field v-model="this.store.nomClient" label="Nom" :rules="[rules.nom]" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.prenomClient" label="Prénom" :rules="[rules.required]"
+                        <v-text-field v-model="this.store.prenomClient" label="Prénom" :rules="[rules.prenom]"
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field v-model="this.store.telephoneClient" label="Téléphone de l'employé"
-                            :rules="[rules.required]" dense></v-text-field>
+                        <v-text-field v-model="this.store.telephoneClient" type="number" label="Téléphone de l'employé"
+                            :rules="[rules.telephone]" class="no-spinner" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="this.store.numeroCivic" label="# Civic" dense></v-text-field>
+                        <v-text-field v-model="this.store.numeroCivic" type="number" label="# Civic"
+                            :rules="[rules.numeroCivic]" class="no-spinner"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="this.store.numeroAppartement" label="Appt." dense></v-text-field>
+                        <v-text-field v-model="this.store.numeroAppartement" label="Appt."
+                            :rules="[rules.numeroAppartement]" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomRue" label="Nom de la rue" dense></v-text-field>
+                        <v-text-field v-model="this.store.nomRue" label="Nom de la rue" :rules="[rules.nomRue]"
+                            dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomVille" label="Ville" dense></v-text-field>
+                        <v-text-field v-model="this.store.nomVille" label="Ville" :rules="[rules.nomVille]"
+                            dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomProvince" label="Province" dense></v-text-field>
+                        <v-text-field v-model="this.store.nomProvince" label="Province" :rules="[rules.nomProvince]"
+                            dense></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field v-model="this.store.codePostal" label="Code postal du client" dense></v-text-field>
+                        <v-text-field v-model="this.store.codePostal" label="Code postal du client"
+                            :rules="[rules.codePostal]" dense></v-text-field>
                     </v-col>
                 </v-row>
 
@@ -43,7 +48,7 @@
                     :disabled="!this.store.nomClient || !this.store.prenomClient || !this.store.telephoneClient">{{
                         txt.btn }}</v-btn>
                 <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
-                <v-btn :disabled="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+                <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
             </v-form>
         </v-card-text>
     </v-card>
@@ -56,16 +61,16 @@
 import session from '../../session.js';
 import { useClientStore } from '@/store/client';
 import { createClient, deleteClient, updateClient } from '@/services/ClientService';
+import rules from '@/regles';
+
 
 export default {
     data() {
         return {
+            isNew: true,
             session: session,
             store: useClientStore(),
-            rules: {
-                required: value => !!value || "Le champ est requis",
-
-            },
+            rules: rules,
         };
     },
     methods: {
@@ -104,7 +109,8 @@ export default {
                     this.$refs.clientform.validate();
                 }
             }
-            this.store.getClients();
+            this.store.getClients()
+            this.store.newClient();
         },
         async supprimer() {
             try {
@@ -130,3 +136,11 @@ export default {
 }
 
 </script> 
+
+<style>
+.no-spinner input::-webkit-outer-spin-button,
+.no-spinner input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+</style>

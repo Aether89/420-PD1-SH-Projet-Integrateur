@@ -16,7 +16,7 @@ const getAllEmployes = async () => {
             prenomEmploye: row.prenom_employe,
             posteEmploye: row.poste_employe,
             telephoneEmploye: row.telephone_employe,
-            numero_civic: row.numero_civic,
+            numeroCivic: row.numero_civic,
             numeroAppartement: row.numero_appartement,
             nomRue: row.nom_rue,
             nomVille: row.nom_ville,
@@ -35,6 +35,7 @@ const getEmploye = async (idEmploye, clientParam) => {
 
     try {
         if (!clientParam) {
+            
             await client.query("BEGIN");
         }
 
@@ -54,7 +55,7 @@ const getEmploye = async (idEmploye, clientParam) => {
                 prenomEmploye: row.prenom_employe,
                 posteEmploye: row.poste_employe,
                 telephoneEmploye: row.telephone_employe,
-                numero_civic: row.numero_civic,
+                numeroCivic: row.numero_civic,
                 numeroAppartement: row.numero_appartement,
                 nomRue: row.nom_rue,
                 nomVille: row.nom_ville,
@@ -86,9 +87,11 @@ const createEmploye = async (employe, clientParam) => {
     const client = clientParam || (await pool.connect());
 
     try {
-        if (!clientParam) {
+        if (!client) {
             await client.query('BEGIN');
         }
+        
+        
         const result = await client.query(
             `INSERT INTO employe (nom_employe, prenom_employe, poste_employe, telephone_employe, numero_civic, numero_appartement, nom_rue,
                                 nom_ville, nom_province, code_postal,is_archive ) 
@@ -109,23 +112,20 @@ const createEmploye = async (employe, clientParam) => {
         );
 
         const newEmploye = await getEmploye(result.rows[0].id_employe, client);
-        const user = employe.prenomEmploye[0] + '.' + employe.nomEmploye;
-        const pass = employe.prenomEmploye[0] + employe.nomEmploye;
 
-        await createUserAccount(user, result.rows[0].id_employe, newEmploye.codePostal, pass, pass);
 
-        if (!clientParam) {
+        if (!client) {
             await client.query('COMMIT');
         }
 
         return newEmploye;
     } catch (err) {
-        if (!clientParam) {
+        if (!client) {
             await client.query('ROLLBACK');
         }
         throw new HttpError("Une erreur est survenue lors de la création de l'employé", 500);
     } finally {
-        if (!clientParam) {
+        if (!client) {
             client.release();
         }
     }
