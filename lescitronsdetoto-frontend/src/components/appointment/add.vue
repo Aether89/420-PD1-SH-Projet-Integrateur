@@ -1,49 +1,58 @@
 <template>
-    <v-container fluid justify="center">
+    <v-container fluid class="ma-16">
         <v-row>
-            <v-col cols="5" class="flex d-flex justify-center">
-                <v-pagination :total-visible="7" :length="this.pagination" v-model="page"></v-pagination>
+            <v-col cols="5">
+                <v-card width="550" height="500" color="lime-lighten-2">
+                    <v-card-title class="justify-center text-center">
+                        Plage de disponibilités
+                        <v-pagination :total-visible="7" :length="this.pagination" v-model="page"></v-pagination>
+                    </v-card-title>
+
+                    <div class="flex d-flex justify-left ma-2 bg-lime-lighten-4" width="550" height="360">
+                        <v-list class="ma-2" bg-color="lime-lighten-4"
+                            v-for="(day, index) in this.availability.slice(this.currentIndex, this.currentIndex + this.totalDayToDisplay)"
+                            width="110" height="360">
+                            <v-list-item-title class="mb-8" style="position: sticky; top: 0;">{{ day.date
+                            }}</v-list-item-title>
+                            <v-checkbox class="my-n8" v-for="block in day.block" v-model="selectedTimeSlot"
+                                :value="{ date: block.date, time: block.time, status: block.status }"
+                                :label="block.time"></v-checkbox>
+                        </v-list>
+                    </div>
+                </v-card>
             </v-col>
-            <v-col cols="1">
+            <v-col cols="2" class="mt-16 pt-16">
+                <v-btn color="lime-lighten-2" class="ma-1" :disabled="!toRemoveTimeSlot.length >= 1"
+                    @click="this.addTimeSlot(toRemoveTimeSlot, availability, myAvailability)"
+                    icon="mdi-arrow-left-bold-box-outline" size="x-large" />
+                <v-btn color="lime-lighten-2" class="ma-1" :disabled="!selectedTimeSlot.length >= 1"
+                    @click="this.addTimeSlot(selectedTimeSlot, myAvailability, availability)"
+                    icon="mdi-arrow-right-bold-box-outline" size="x-large" />
+
+                <v-btn prepend-icon="mdi-file-send" :disabled="!canSubmit" class=" my-8" @click="submit">Soumettre</v-btn>
             </v-col>
             <v-col cols="5">
-                <v-pagination v-if="this.myPagination > 1" :total-visible="7" :length="this.myPagination" v-model="myPage"></v-pagination>
+                <v-card width="550" height="500" color="light-green-lighten-2">
+                    <v-card-title class="justify-center text-center">
+                        Mes disponibilités
+                        <v-pagination :total-visible="7" :length="this.myPagination" v-model="myPage"></v-pagination>
+                    </v-card-title>
+
+                    <div class="flex d-flex justify-left ma-2 bg-light-green-lighten-4" width="550" height="360">
+                        <v-list v-if="this.myAvailability.length > 0" class="ma-2" bg-color="light-green-lighten-4"
+                            v-for="mday in this.myAvailability.slice(this.myCurrentIndex, this.myCurrentIndex + this.totalDayToDisplay)"
+                            width="110" height="360">
+                            <v-list-item-title class="mb-8" style="position: sticky; top: 0;">{{ mday.date
+                            }}</v-list-item-title>
+                            <v-checkbox class="my-n8" v-for="block in mday.block" v-model="toRemoveTimeSlot"
+                                :value="{ date: block.date, time: block.time, status: block.status }"
+                                :label="block.time"></v-checkbox>
+                        </v-list>
+                        <v-list v-else class="ma-2" bg-color="light-green-lighten-4" width="550" height="360"></v-list>
+                    </div>
+                </v-card>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col cols="5" class="flex d-flex justify-center">
-                <v-list bg-color="grey-lighten-3" v-for="(day, index) in this.availability.slice(this.currentIndex, this.currentIndex + this.totalDayToDisplay)" width="110" height="360">
-                    <v-list-item-title class="mb-8" style="position: sticky; top: 0;">{{ day.date }}</v-list-item-title>
-                    <v-checkbox class="my-n8" v-for="block in day.block" v-model="selectedTimeSlot"
-                        :value="{ date: block.date, time: block.time, status: block.status }"
-                        :label="block.time"></v-checkbox>
-                </v-list>
-                </v-col>
-            <v-col cols="1" class="flex-horizontal">
-                <v-btn class="ma-1" @click="this.addTimeSlot(selectedTimeSlot, myAvailability, availability)">Ajouter</v-btn>
-                <v-btn class="ma-1" @click="this.addTimeSlot(toRemoveTimeSlot, availability, myAvailability)">Retirer</v-btn>
-                <v-spacer></v-spacer>
-                <v-btn :disabled="!canSubmit" class="ma-1" @click="submit">Soumettre</v-btn>
-
-            </v-col>
-            <v-col cols="5" class="flex d-flex justify-center">
-                <v-list bg-color="grey-lighten-3" v-for="mday in this.myAvailability.slice(this.myCurrentIndex, this.myCurrentIndex + this.totalDayToDisplay)" width="110" height="360">
-                    <v-list-item-title class="mb-8" style="position: sticky; top: 0;">{{ mday.date }}</v-list-item-title>
-                    <v-checkbox class="my-n8" v-for="block in mday.block" v-model="toRemoveTimeSlot"
-                        :value="{ date: block.date, time: block.time, status: block.status }"
-                        :label="block.time"></v-checkbox>
-                </v-list>
-            </v-col>
-
-        </v-row>
-
-        <v-row >
-            <p>{{ this.selectedTimeSlot }}</p><br>
-
-            <p>{{ this.toRemoveTimeSlot }}</p> <br>
-            <p>{{ this.removedAvailability }}</p>
-        </v-row>
-
     </v-container>
 </template>
 
@@ -51,6 +60,7 @@
 <script>
 
 import session from '../../session.js';
+import { saveAvailability, fetchAvailability } from '@/services/AvailabilityService.js';
 export default {
     data() {
         return {
@@ -65,8 +75,8 @@ export default {
             totalDayToDisplay: 5,
             totalDays: 15,
             availability: [],
-            receivedAvailability: [{ "date": "2023/9/26", "block": [{ "date": "2023/9/26", "time": "11:00", "status": "old" }, { "date": "2023/9/26", "time": "12:00", "status": "old" }] }, { "date": "2023/9/30", "block": [{ "date": "2023/9/30", "time": "12:00", "status": "old" }, { "date": "2023/9/30", "time": "16:00", "status": "old" }] }],
-            myAvailability: [{ "date": "2023/9/26", "block": [{ "date": "2023/9/26", "time": "11:00", "status": "old" }, { "date": "2023/9/26", "time": "12:00", "status": "old" }] }, { "date": "2023/9/30", "block": [{ "date": "2023/9/30", "time": "12:00", "status": "old" }, { "date": "2023/9/30", "time": "16:00", "status": "old" }] }],
+            receivedAvailability: [],
+            myAvailability: [],
             removedAvailability: [],
             timeBlock: 60,
             selectedTimeSlot: [],
@@ -84,12 +94,13 @@ export default {
                 dayArray = (this.generateTimeArray(this.startTime, this.endTime, this.timeBlock, day));
 
                 const dayObj = {
-                    date: (day.getFullYear() + '/' + (day.getMonth() + 1) + '/' + day.getDate()),
+                    date: (day.getFullYear() + '/' + (day.getMonth() + 1) + '/' + day.getDate().toString().padStart(2, '0')),
                     block: dayArray,
                 };
                 this.availability.push(dayObj);
             }
         },
+
         generateTimeArray(startTime, endTime, timeBlock, day) {
             let timeArray = [];
             let currentTime = new Date();
@@ -100,18 +111,22 @@ export default {
                 let minutes = currentTime.getMinutes();
 
                 let timeString = {
-                    date: (day.getFullYear() + '/' + (day.getMonth() + 1) + '/' + day.getDate()),
+                    date: (day.getFullYear() + '/' + (day.getMonth() + 1) + '/' + day.getDate().toString().padStart(2, '0')),
                     time: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`,
                     status: 'new'
                 }
-                timeArray.push(timeString);
+
+                if (currentTime.getTime() > new Date().getTime() || day.getTime() > new Date().getTime()) {
+                    timeArray.push(timeString);
+                }
+
                 currentTime.setMinutes(currentTime.getMinutes() + timeBlock);
             }
             return timeArray;
         },
 
         addTimeSlot(inputArray, outputArray, arrayToClean) {
-            (this.canSubmit === false)? this.canSubmit = true: null;
+            (this.canSubmit === false) ? this.canSubmit = true : null;
             var output = outputArray.reduce((acc, curr) => {
                 acc[curr.date] = curr.block;
                 return acc;
@@ -163,18 +178,65 @@ export default {
             arrayToClean.splice(0, arrayToClean.length, ...newArray);
         },
 
-        submit() {
+        async submit() {
             const submitAvailability = {
                 toRemove: this.availability.flatMap(day => day.block.filter(block => block.status === "old")),
                 toAdd: this.myAvailability.flatMap(day => day.block.filter(block => block.status === "new"))
             }
+            await saveAvailability(submitAvailability).then(async () => {
+                await this.init();
+            })
+        },
 
-            console.log("Sent", JSON.stringify(submitAvailability,null,2));
+        isOriginal() {
+            return JSON.stringify(this.myAvailability) === JSON.stringify(this.receivedAvailability);
+        },
+
+        cleanPast(array) {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+            array.forEach(day => {
+                day.block = day.block.filter(timeBlock => {
+                    const blockDate = new Date(day.date);
+                    const blockTime = new Date(`${day.date} ${timeBlock.time}`);
+
+                    return blockDate > today || (blockDate.getTime() === today.getTime() && blockTime > now);
+                });
+            });
+
+            array.forEach(day => {
+                if (day.block.length === 0) {
+                    const index = array.indexOf(day);
+                    if (index > -1) {
+                        array.splice(index, 1);
+                    }
+                }
+            });
+        },
+
+        async getDBAvailability() {
+            const response = await fetchAvailability();
+            if (response.status === 200) {
+                this.receivedAvailability = JSON.parse(JSON.stringify(response.data))
+                this.myAvailability = JSON.parse(JSON.stringify(this.receivedAvailability));
+            } else {
+                this.receivedAvailability = [];
+                this.myAvailability = [];
+            }
+        },
+
+        async init() {
+            this.availability.splice(0, this.availability.length);
+            await this.generateAvailability().then(() => {
+                this.cleanPast(this.availability);
+            })
+            await this.getDBAvailability().then(() => {
+                this.removeFromAvailability(this.availability, this.myAvailability);
+                this.cleanPast(this.myAvailability);
+            })
 
         },
-        isOriginal() {
-                return JSON.stringify(this.myAvailability) === JSON.stringify(this.receivedAvailability);
-        }
     },
     computed: {
         pagination() {
@@ -193,8 +255,7 @@ export default {
         }
     },
     mounted() {
-        this.generateAvailability();
-        this.removeFromAvailability(this.availability, this.myAvailability);
+        this.init();
     },
 }
 

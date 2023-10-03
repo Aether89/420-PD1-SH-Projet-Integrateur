@@ -13,6 +13,7 @@ const EmployeRouter = require('./routes/EmployeRouter');
 
 const citronRouter = require('./routes/citronsdetotoRouter');
 const vehiculeRouter = require('./routes/vehiculeRouter');
+const AvailabilityRouter = require('./routes/AvailabilityRouter');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/vehicule', vehiculeRouter);
 app.use('/employes', EmployeRouter);
+app.use('/availability', AvailabilityRouter);
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {
