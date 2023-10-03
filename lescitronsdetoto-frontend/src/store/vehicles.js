@@ -1,7 +1,5 @@
 // Utilities
 import { defineStore } from 'pinia';
-import { fetchMakes } from '../services/MakesAPI'
-import { fetchModels } from '../services/ModelsAPI'
 import { fetchVIN } from '../services/VINAPI'
 import { generateYears, prune } from '../services/common'
 import { fetchVehicle, fetchVehicles } from '@/services/VehicleDB';
@@ -61,8 +59,7 @@ export const useVehiclesStore = defineStore('vehicles', {
     },
     async loadModels() {
       this.loading.models = true;
-      await this.getAllModels();
-      this.loading.models = false;
+      this.selected.make !== null ? await this.getAllModels().then(() => this.loading.models = false) : null;
     },
     async loadVIN(vin) {
       this.vehicle.api = await fetchVIN(vin);
@@ -132,6 +129,7 @@ export const useVehiclesStore = defineStore('vehicles', {
       (this.vehicle.local.promo === "$0.00") ? this.vehicle.local.promo = null : this.vehicle.local.promo = this.vehicle.local.promo;
     },
     async reset() {
+  this.loading.models = true;
   this.selected.make = null;
   this.selected.year = null;
   this.selected.model = null;
@@ -139,7 +137,6 @@ export const useVehiclesStore = defineStore('vehicles', {
     this.selected.priceRange[0] = this.minPrice;
   this.selected.priceRange[1] = this.maxPrice;
   this.vehicles = JSON.parse(JSON.stringify(this.unfiltredVehicles));
-
 }
   }
 });
