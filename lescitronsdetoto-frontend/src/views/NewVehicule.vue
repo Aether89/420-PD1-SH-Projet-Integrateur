@@ -56,6 +56,7 @@
             <v-btn v-if="mode !== 'vehicule'" prepend-icon="mdi-car-search" color="green-lighten-2" 
                 text-align="right" class="mx-2" type="submit" @click="validateVehicule"> {{ boutonText }}
             </v-btn>
+            
 
             <router-link v-if="mode !== 'vehicule'" :to="{path: '/' }">
                 <v-btn prepend-icon="mdi-cancel" class="mx-2" aria-label="annuler" color="red-lighten-2"
