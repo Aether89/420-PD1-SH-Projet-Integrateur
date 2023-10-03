@@ -1,59 +1,81 @@
 <template>
-    <v-container fluid class="ma-16">
+    <v-container v-if="session.user">
         <v-row>
-            <v-col cols="5">
-                <v-card width="550" height="500" color="lime-lighten-2">
+            <v-col cols="6">
+                <v-card width="600" color="lime-lighten-2" class="mr-8">
                     <v-card-title class="justify-center text-center">
                         Plage de disponibilités
                         <v-pagination :total-visible="7" :length="this.pagination" v-model="page"></v-pagination>
                     </v-card-title>
 
-                    <div class="flex d-flex justify-left ma-2 bg-lime-lighten-4" width="550" height="360">
-                        <v-list class="ma-2" bg-color="lime-lighten-4"
-                            v-for="(day, index) in this.availability.slice(this.currentIndex, this.currentIndex + this.totalDayToDisplay)"
-                            width="110" height="360">
-                            <v-list-item-title class="mb-8" style="position: sticky; top: 0;">{{ day.date
-                            }}</v-list-item-title>
-                            <v-checkbox class="my-n8" v-for="block in day.block" v-model="selectedTimeSlot"
-                                :value="{ date: block.date, time: block.time, status: block.status }"
+                    <div class="justify-left ma-2 bg-lime-lighten-4" width="500">
+                        <v-row>
+                            <v-col cols="2" class="mx-2 mb-n6" bg-color="lime-lighten-4"
+                            v-for="(day, index)  in this.availability.slice(this.currentIndex, this.currentIndex + this.totalDayToDisplay)"
+                            height="360">
+                            <p class=" justify-center text-subtitle-2" width="110">{{ day.date
+                            }}</p>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="2" class="mx-2 mb-2" bg-color="lime-lighten-4"
+                            v-for="(day, index)  in this.availability.slice(this.currentIndex, this.currentIndex + this.totalDayToDisplay)">
+                        <v-list class="bg-transparent" width="100" height="360">
+                            <v-list-item-title class="my-n1" style="position: sticky; top: 0;"><br/></v-list-item-title>
+                            <v-checkbox class="my-n10" v-for="block in day.block" v-model="selectedTimeSlot"
+                                :value="{ date: block.date, time: block.time, status: block.status }"   
                                 :label="block.time"></v-checkbox>
                         </v-list>
+                    </v-col>
+                    </v-row>
+                    </div>
+                    <div class="text-right">
+                        <v-btn variant="text" class="ma-2 mx-6" :disabled="!selectedTimeSlot.length >= 1"
+                    @click="this.addTimeSlot(selectedTimeSlot, myAvailability, availability)"
+                    icon="mdi-arrow-right-bold-box-outline" />
                     </div>
                 </v-card>
             </v-col>
-            <v-col cols="2" class="mt-16 pt-16">
-                <v-btn color="lime-lighten-2" class="ma-1" :disabled="!toRemoveTimeSlot.length >= 1"
-                    @click="this.addTimeSlot(toRemoveTimeSlot, availability, myAvailability)"
-                    icon="mdi-arrow-left-bold-box-outline" size="x-large" />
-                <v-btn color="lime-lighten-2" class="ma-1" :disabled="!selectedTimeSlot.length >= 1"
-                    @click="this.addTimeSlot(selectedTimeSlot, myAvailability, availability)"
-                    icon="mdi-arrow-right-bold-box-outline" size="x-large" />
-
-                <v-btn prepend-icon="mdi-file-send" :disabled="!canSubmit" class=" my-8" @click="submit">Soumettre</v-btn>
-            </v-col>
-            <v-col cols="5">
-                <v-card width="550" height="500" color="light-green-lighten-2">
+            <v-col cols="6">
+                <v-card width="605" color="light-green-lighten-2" class="ml-8">
                     <v-card-title class="justify-center text-center">
                         Mes disponibilités
                         <v-pagination :total-visible="7" :length="this.myPagination" v-model="myPage"></v-pagination>
                     </v-card-title>
-
-                    <div class="flex d-flex justify-left ma-2 bg-light-green-lighten-4" width="550" height="360">
-                        <v-list v-if="this.myAvailability.length > 0" class="ma-2" bg-color="light-green-lighten-4"
-                            v-for="mday in this.myAvailability.slice(this.myCurrentIndex, this.myCurrentIndex + this.totalDayToDisplay)"
-                            width="110" height="360">
-                            <v-list-item-title class="mb-8" style="position: sticky; top: 0;">{{ mday.date
-                            }}</v-list-item-title>
-                            <v-checkbox class="my-n8" v-for="block in mday.block" v-model="toRemoveTimeSlot"
-                                :value="{ date: block.date, time: block.time, status: block.status }"
+                    <div class="justify-left ma-2 bg-light-green-lighten-4" width="500">
+                        <v-row>
+                            <v-col cols="2" class="mx-2 mb-n6" bg-color="lime-lighten-4"
+                            v-for="(day, index)  in this.myAvailability.slice(this.myCurrentIndex, this.myCurrentIndex + this.totalDayToDisplay)"
+                            height="360">
+                            <p class=" justify-center text-subtitle-2" width="110">{{ day.date
+                            }}</p>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col cols="2" class="mx-2 mb-2" bg-color="lime-lighten-4"
+                            v-for="(day, index)  in this.myAvailability.slice(this.currentIndex, this.currentIndex + this.totalDayToDisplay)">
+                        <v-list class="bg-transparent" width="100" height="360">
+                            <v-list-item-title class="my-n1" style="position: sticky; top: 0;"><br/></v-list-item-title>
+                            <v-checkbox class="my-n10" v-for="block in day.block" v-model="selectedTimeSlot"
+                                :value="{ date: block.date, time: block.time, status: block.status }"   
                                 :label="block.time"></v-checkbox>
                         </v-list>
-                        <v-list v-else class="ma-2" bg-color="light-green-lighten-4" width="550" height="360"></v-list>
+                    </v-col>
+                    </v-row>
                     </div>
+
+                    <v-btn variant="text" class="ma-2 mx-6" :disabled="!toRemoveTimeSlot.length >= 1"
+                    @click="this.addTimeSlot(toRemoveTimeSlot, availability, myAvailability)"
+                    icon="mdi-arrow-left-bold-box-outline" />
+                    <v-btn color="green-darken-1" prepend-icon="mdi-file-send" :disabled="!canSubmit" class=" ma-1" @click="submit">Soumettre</v-btn>
+
                 </v-card>
             </v-col>
+
         </v-row>
     </v-container>
+    <v-container v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-container>
+
 </template>
 
   
