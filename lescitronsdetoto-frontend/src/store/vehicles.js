@@ -62,7 +62,6 @@ export const useVehiclesStore = defineStore('vehicles', {
     async loadModels() {
       this.loading.models = true;
       await this.getAllModels();
-      console.log("unfiltered Model", JSON.stringify(this.unfiltredModels,null,"  "));
       this.loading.models = false;
     },
     async loadVIN(vin) {
@@ -71,8 +70,8 @@ export const useVehiclesStore = defineStore('vehicles', {
     async getVehiclesList() {
       this.vehicles = await fetchVehicles();
       this.vehicles = this.vehicles.map((vehicle) => {
-        vehicle.priceNum = parseFloat(vehicle.price.replace('$', ''));
-        vehicle.promoNum = (vehicle.promo === "$0.00") ? null : parseFloat(vehicle.promo.replace('$', ''));
+        vehicle.priceNum = parseFloat(vehicle.price.replace('$', '').replace(',', ''));
+        vehicle.promoNum = (vehicle.promo === "$0,00" || vehicle.promo === null ) ? null : parseFloat(vehicle.promo.replace('$', '').replace(',', ''));
         return vehicle;
       });
       this.unfiltredVehicles = JSON.parse(JSON.stringify(this.vehicles));
@@ -80,7 +79,6 @@ export const useVehiclesStore = defineStore('vehicles', {
       this.getAllModels();
     },
     async filterVehiclesList() {
-      console.log("FILTERING");
       if (this.selected.make) {
         this.vehicles = this.unfiltredVehicles.filter(vehicle => vehicle.make === this.selected.make);
         (this.selected.model) ? this.vehicles = this.vehicles.filter(vehicle => vehicle.model === this.selected.model) : null;

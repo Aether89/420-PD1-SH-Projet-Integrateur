@@ -253,7 +253,6 @@ export async function fetchVehicle(vehiculeID) {
   //     });
       const response = await fetch(`/api/vehicule/${vehiculeID}`);
 
-      console.log("respone un vehicule", response);
       if (response.ok) {
         return convertToVehicule(await response.json());
       } else {
@@ -288,7 +287,6 @@ export async function fetchVehicles() {
         if (response.ok) {
           
           const respJson = await response.json();
-          console.log("respone", respJson.map(p => convertToVehiculeList(p)));
           return respJson.map(p => convertToVehiculeList(p));
         } else {
           throw new Error("Failed to fetch vehicles data");
