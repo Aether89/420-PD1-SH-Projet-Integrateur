@@ -9,11 +9,11 @@
                     <p v-else >  VIN :{{ id }}</p>
                     <v-text-field v-model="couleur" label="Couleur du véhicule" density="compact" maxlength="32" :rules="[rules.required]"
                     ></v-text-field>
-                    <v-text-field v-model="nombre_kilometre" label="Nombre de kilomètre" density="compact" type="number" step="1" min = 0 :rules="[validateNumer]" :error-messages="errorMessages"
+                    <v-text-field class="no-spinner" v-model="nombre_kilometre" label="Nombre de kilomètre" density="compact" type="number" step="1" min = 0 :rules="[validateNumer]" :error-messages="errorMessages"
                     ></v-text-field>
-                    <v-text-field v-model="prix_annonce" label="Prix annoncé" density="compact" type="number" prefix="$" step="0.01" min = 0 :rules="[validateNumer]" :error-messages="errorMessages" 
+                    <v-text-field class="no-spinner" v-model="prix_annonce" label="Prix annoncé" density="compact" type="number" prefix="$" step="0.01" min = 0 :rules="[validateNumer]" :error-messages="errorMessages" 
                     ></v-text-field>
-                    <v-text-field v-model="promotion" label="Promotion" density="compact" type="number" prefix="$" step="0.01" min = 0  :rules="[validatePromotion]" :error-messages="errorMessagesPromotion"
+                    <v-text-field class="no-spinner" v-model="promotion" label="Promotion" density="compact" type="number" prefix="$" step="0.01" min = 0  :rules="[validatePromotion]" :error-messages="errorMessagesPromotion"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6">
@@ -53,11 +53,11 @@
             </v-row>
             <br>
             
-            <v-btn prepend-icon="mdi-car-search" color="green-lighten-2" 
+            <v-btn v-if="mode !== 'vehicule'" prepend-icon="mdi-car-search" color="green-lighten-2" 
                 text-align="right" class="mx-2" type="submit" @click="validateVehicule"> {{ boutonText }}
             </v-btn>
 
-            <router-link :to="{path: '/' }">
+            <router-link v-if="mode !== 'vehicule'" :to="{path: '/' }">
                 <v-btn prepend-icon="mdi-cancel" class="mx-2" aria-label="annuler" color="red-lighten-2"
                 >Annuler</v-btn>
             </router-link>
@@ -270,7 +270,7 @@ export default {
     },
     computed: {
         nouveauvehicule() {
-            return this.mode === 'newvehicle';
+            return this.mode === 'vehicule';
         },
         boutonText() {
             return this.nouveauvehicule? "Ajouter" : "Éditer";
@@ -291,3 +291,11 @@ export default {
     },
 }
 </script>
+
+<style>
+.no-spinner input::-webkit-outer-spin-button,
+.no-spinner input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+</style>

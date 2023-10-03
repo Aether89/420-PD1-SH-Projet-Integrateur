@@ -28,7 +28,7 @@
 
       <v-window-item :value="2">
         <v-card-text>
-            <NewVehicule :step="step"/>
+            <NewVehicule :step="step" :mode="mode" :id="id"/>
         </v-card-text>
       </v-window-item>
   
@@ -78,9 +78,9 @@
   
     const currentTitle = computed(() => {
       switch (step.value) {
-        case 1: return 'Sign-up'
-        case 2: return 'Create a password'
-        default: return 'Account created'
+        case 1: return 'Information du vendeur'
+        case 2: return 'Information du véhicule'
+        default: return 'Détail de la transaction'
       }
     })
   </script>
@@ -96,9 +96,9 @@
       computed: {
         currentTitle () {
           switch (this.step) {
-            case 1: return 'Sign-up'
-            case 2: return 'Create a password'
-            default: return 'Account created'
+            case 1: return 'Information du vendeur'
+            case 2: return 'Information du véhicule'
+            default: return 'Détail de la transaction'
           }
         },
       },

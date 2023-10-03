@@ -110,12 +110,14 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if(newVehicule.promotion <= 0) {
             newVehicule.promotion = null;
         }
-        
+        const currentTime = new Date();
+        console.log("currentTime", currentTime.toISOString())
         const newAchat = {
             prix_evenement: req.body.prix_evenement.replace(/\s/g, ''),
             etat_vue: null,
             id_type_evenement: 2,
             id_client: req.body.id_client,
+            date_heure_evenement: currentTime.toISOString(),
             user_account_id: user.userAccountId
         }
 

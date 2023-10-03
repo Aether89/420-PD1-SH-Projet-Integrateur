@@ -78,9 +78,9 @@ exports.getEvenementById = getEvenementById;
 const insertEvenement = async (evenement) => {
     const result = await pool.query(
         `INSERT INTO evenement(id_type_evenement, id_client, user_account_id, prix_evenement, date_heure_evenement, etat_vue_evenement)
-        VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP,  $5)
+        VALUES ($1, $2, $3, $4, $5,  $6)
         RETURNING id_evenement`,
-        [evenement.id_type_evenement, evenement.id_client, evenement.user_account_id, evenement.prix_evenement, evenement.etat_vue_evenement]
+        [evenement.id_type_evenement, evenement.id_client, evenement.user_account_id, evenement.prix_evenement, evenement.date_heure_evenement, evenement.etat_vue_evenement]
     );
     return result.rows[0].id_evenement;;
 };
