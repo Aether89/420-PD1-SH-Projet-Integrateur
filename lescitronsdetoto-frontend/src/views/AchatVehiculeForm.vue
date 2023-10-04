@@ -2,20 +2,21 @@
     <v-card
       class="mx-auto"
       max-width="80%"
-    >
+    ><v-toolbar class="bg-orange-darken-4">
       <v-card-title class="text-h6 font-weight-regular justify-space-between">
         <span>{{ getTitleWithoutNumber }}</span>
-        <v-avatar
-          color="primary"
-          size="24"
-          v-text="step"
-        ></v-avatar>
       </v-card-title>
-  
+      <v-spacer></v-spacer>
+        <router-link :to="{path: '/' }">
+          <v-btn variant="flat" prepend-icon="mdi-cancel" class="mx-2 text-red-accent-3 font-weight-bold " aria-label="annuler" color="white-darken-2" 
+          >Annuler</v-btn>
+            </router-link>
+    </v-toolbar>
       <v-window v-model="step">
         <v-window-item :value="1">
             <v-card-text>
-                <NewClient :step="step" :mode="mode" :id="id"/>
+                <NewClient :step="step" :mode="mode" :id="id" :prenomClient="prenomClient"
+            @client-info="updatePrenomClient"/>
             </v-card-text>
         </v-window-item>
   
@@ -27,18 +28,7 @@
       </v-window-item>
   
         <v-window-item :value="3">
-          <div class="pa-4 text-center">
-            <v-img
-              class="mb-4"
-              contain
-              height="128"
-              src="https://cdn.vuetifyjs.com/images/logos/v.svg"
-            ></v-img>
-            <h3 class="text-h6 font-weight-light mb-2">
-              Welcome to Vuetify
-            </h3>
-            <span class="text-caption text-grey">Thanks for signing up!</span>
-          </div>
+          <Confirmation :step="step" :prenomClient="prenomClient"/>
         </v-window-item>
       </v-window>
   
@@ -50,13 +40,9 @@
           variant="text"
           @click="step--"
         >
-          Back
+          Précédent
         </v-btn>
-        <v-spacer></v-spacer>
-        <router-link :to="{path: '/' }">
-          <v-btn prepend-icon="mdi-cancel" class="mx-2" aria-label="annuler" color="red-lighten-2"
-          >Annuler</v-btn>
-            </router-link>
+        
         <v-spacer></v-spacer>
         <v-btn
           v-if="step < 3"
@@ -64,7 +50,7 @@
           variant="flat"
           @click="step++"
         >
-          Next
+          Suivant
         </v-btn>
         
         <v-btn
@@ -77,9 +63,11 @@
   
   <script setup>
     import { computed, ref } from 'vue'
-    import session from '@/session'
+    import session from '../session'
     import NewVehicule from './NewVehicule.vue'
     import NewClient from '../components/clientComponent/Client.vue'
+    import Confirmation from '../components/transactionComponent/confirmation.vue'
+    //import store from '../store/client'
     const step = ref(1)
 
     const currentTitle = computed(() => {
@@ -89,6 +77,10 @@
             default: return 'Détail de la transaction';
         }
     });
+    const prenomClient = ref("");
+    function updatePrenomClient(newPrenomClient) {
+      prenomClient.value = newPrenomClient;
+    }
 
     const getTitleWithoutNumber = computed(() => {
         // Supprimer le chiffre du début du titre
@@ -97,13 +89,14 @@
   </script>
   
   <script>
-    export default {
-        
+  export default {
       data: () => ({
         step: 1,
         session: session,
+        //prenomClient: ""
+                
       }),
-      props: ['mode', 'id'],
+      props: ['mode', 'id', 'prenomClient'],
   
       computed: {
         

@@ -69,7 +69,8 @@ import rules from '@/regles';
 export default {
     props: {
         id: String,
-        mode: String
+        mode: String,
+        prenomClient: String
     },
     data() {
         return {
