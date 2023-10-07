@@ -59,3 +59,32 @@ const createUserAccount = async (userAccountId, idEmploye, courrielCompteEmploye
   }
 };
 exports.createUserAccount = createUserAccount;
+
+const changeMDP = async (userAccountId, passwordHash, passwordSalt) => {
+
+  const client = await pool.connect();
+
+  try {
+    // Initie la transaction
+    await client.query('BEGIN');
+
+    const result = await (client || pool).query(
+      `UPDATE user_account 
+             SET password_hash=$2, password_salt=$3, a_change=false
+             WHERE user_account_id=$1`,
+      [userAccountId, passwordHash, passwordSalt]
+    );
+
+    const userAccount = getLoginByUserAccountId(result.userAccountId, client);
+
+    client.query('COMMIT');
+
+    return userAccount;
+  } catch (err) {
+    // Annule la transaction en cas d'échec
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+};
