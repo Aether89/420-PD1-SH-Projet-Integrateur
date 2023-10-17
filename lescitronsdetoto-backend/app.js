@@ -118,8 +118,8 @@ app.post('/login',
           userAccountId: userAccountWithPasswordHash.userAccountId,
           idEmploye: userAccountWithPasswordHash.idEmploye,
           courrielCompteEmploye: userAccountWithPasswordHash.courrielCompteEmploye,
-          isAdmin: userAccountWithPasswordHash.isAdmin,
-          isActive: userAccountWithPasswordHash.isActive
+          passwordHash: userAccountWithPasswordHash.passwordHash,
+          passwordSalt: userAccountWithPasswordHash.passwordSalt,
         };
 
         res.json(userDetails);

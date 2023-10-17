@@ -35,7 +35,7 @@ const getEmploye = async (idEmploye, clientParam) => {
 
     try {
         if (!clientParam) {
-            
+
             await client.query("BEGIN");
         }
 
@@ -90,8 +90,8 @@ const createEmploye = async (employe, clientParam) => {
         if (!client) {
             await client.query('BEGIN');
         }
-        
-        
+
+
         const result = await client.query(
             `INSERT INTO employe (nom_employe, prenom_employe, poste_employe, telephone_employe, numero_civic, numero_appartement, nom_rue,
                                 nom_ville, nom_province, code_postal,is_archive ) 
@@ -112,8 +112,6 @@ const createEmploye = async (employe, clientParam) => {
         );
 
         const newEmploye = await getEmploye(result.rows[0].id_employe, client);
-
-
         if (!client) {
             await client.query('COMMIT');
         }
