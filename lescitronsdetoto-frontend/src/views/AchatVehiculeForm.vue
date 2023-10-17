@@ -15,20 +15,19 @@
       <v-window v-model="step">
         <v-window-item :value="1">
             <v-card-text>
-                <NewClient :step="step" :mode="mode" :id="id" :prenomClient="prenomClient"
-            @client-info="updatePrenomClient"/>
+                <NewClient :step="step" :mode="mode" :id="id"/>
             </v-card-text>
         </v-window-item>
   
 
       <v-window-item :value="2">
         <v-card-text>
-            <NewVehicule :step="step" :mode="mode" :id="id"/>
+            <NewVehicule :step="step" :mode="mode" :id="id "/>
         </v-card-text>
       </v-window-item>
   
         <v-window-item :value="3">
-          <Confirmation :step="step" :prenomClient="prenomClient"/>
+          <Confirmation :step="step" :mode="mode" :id="id"/>
         </v-window-item>
       </v-window>
   
@@ -45,7 +44,18 @@
         
         <v-spacer></v-spacer>
         <v-btn
-          v-if="step < 3"
+          v-if="step === 1"
+          :disabled="!this.storeClient.nomClient || !this.storeClient.prenomClient || !this.storeClient.telephoneClient"
+          color="primary"
+          variant="flat"
+          @click="step++"
+        >
+          Suivant
+        </v-btn>
+
+        <v-btn
+          v-if="step === 2"
+
           color="primary"
           variant="flat"
           @click="step++"
@@ -67,20 +77,23 @@
     import NewVehicule from './NewVehicule.vue'
     import NewClient from '../components/clientComponent/Client.vue'
     import Confirmation from '../components/transactionComponent/confirmation.vue'
+    //import rules from '@/regles';
+
+    
     //import store from '../store/client'
     const step = ref(1)
 
     const currentTitle = computed(() => {
         switch (step.value) {
-            case 1: return 'Information du vendeur';
+            case 1: return 'Information du client';
             case 2: return 'Information du véhicule';
             default: return 'Détail de la transaction';
         }
     });
-    const prenomClient = ref("");
+    /*const prenomClient = ref("");
     function updatePrenomClient(newPrenomClient) {
       prenomClient.value = newPrenomClient;
-    }
+    }*/
 
     const getTitleWithoutNumber = computed(() => {
         // Supprimer le chiffre du début du titre
@@ -88,24 +101,32 @@
     });
   </script>
   
-  <script>
+<script>
+  import { useClientStore } from '@/store/client';
+  //import rules from '@/regles';
   export default {
-      data: () => ({
-        step: 1,
-        session: session,
-        //prenomClient: ""
-                
-      }),
-      props: ['mode', 'id', 'prenomClient'],
-  
-      computed: {
+    data: () => ({
+      step: 1,
+      session: session,
+      storeClient: useClientStore(),
+    }),
+    props: ['mode', 'id', 'rules'],
+    computed: {
         
       },
-      created() {
-        console.log('Mode reçu en props :', this.mode);
-        console.log('Session :', session)
-        //console.log('Admin :', session.user.isAdmin);
-        console.log("step", this.step)
+    methods:{
+      async validForm() {
+        const formValid = await this.$refs.clientform.validate();
+        if (!formValid.valid) {
+            return;
+        }
+      },
     },
-    }
-  </script>
+    created() {
+      console.log('Mode reçu en props :', this.mode);
+      console.log('Session :', this.session.user)
+      //console.log('Admin :', session.user.isAdmin);
+      console.log("step", this.step)
+    },
+  }
+</script>

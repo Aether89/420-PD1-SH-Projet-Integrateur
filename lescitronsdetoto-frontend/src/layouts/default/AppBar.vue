@@ -22,7 +22,7 @@
             Déconnexion
           </v-btn>
           <v-btn v-else to="/login" prepend-icon="mdi-account">
-            Se connecter
+            Espace employé
           </v-btn>
         </div>
         <div class="text-body-2 text-center" v-if="session.user">

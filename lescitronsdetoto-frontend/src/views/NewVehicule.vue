@@ -78,7 +78,7 @@ const store = useVehiclesStore();
 export default {
     props: {
         id: String,
-        mode: String
+        mode: String,
     },
     data() {
         return {

@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>Liste des transactions</h1>
+      <h1>Liste des transactions ({{ title }})</h1>
       <div class="button-container">
         <button @click="afficherListeAchat" class="custom-button">Achat</button>
         <button @click="afficherListeVente" class="custom-button">Vente</button>
@@ -8,7 +8,8 @@
       <ul>
         <li v-for="transaction in transactions" :key="transaction.id" class="transaction-item">
             <div>
-            
+                <strong>Nunméro de transaction : </strong> {{ transaction.id_evenement }}
+                &nbsp;|&nbsp;
                 <strong>Vendeur : </strong>{{ transaction.user_account_id }}
                 &nbsp;|&nbsp;
                 <strong>Client : </strong>{{ transaction.prenom_client }} {{ transaction.nom_client }}
@@ -35,6 +36,7 @@ export default {
         return {
             session: session,
             transactions: [],
+            title: "vente"
         }
     },
     methods: {
@@ -57,6 +59,7 @@ export default {
             } catch (err) {
                 console.error(err);
             }
+            this.title = "achat";
         },
         async afficherListeVente() {
             try {
@@ -65,6 +68,7 @@ export default {
             } catch (err) {
                 console.error(err);
             }
+            this.title = "vente";
         },
     },
     /*

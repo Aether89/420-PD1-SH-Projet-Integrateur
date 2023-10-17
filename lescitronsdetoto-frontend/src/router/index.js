@@ -73,7 +73,7 @@ const routes = [
         props: true
       },
       {
-        path: 'vente/vehicule',
+        path: 'vente/:mode',
         name: 'Vente véhicule',
         component: () => import(/* webpackChunkName: "home" */ '@/views/VenteVehicule.vue'),
         props: true
