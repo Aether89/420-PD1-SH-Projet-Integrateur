@@ -8,8 +8,8 @@
     </v-container>
 </template>
 <script>
-import listeClient from '@/components/clientComponent/listeClient.vue';
-import ClientVue from '@/components/clientComponent/Client.vue';
+import listeClient from '@/components/accessoireComponent/listeClient.vue';
+import ClientVue from '@/components/accessoireComponent/Client.vue';
 
 export default {
     components: {

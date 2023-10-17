@@ -8,5 +8,6 @@ module.exports = {
     nomRue:/^[A-Za-z0-9\s]+$/,
     nomVille:/^[A-Za-z\s]+$/,
     nomProvince:/^[A-Za-z\s]+$/,
-   codePostal:/^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/,
+    codePostal: /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/,
+   monetaire: /^\d+(\.?,?\d?d?)?$/,
 };

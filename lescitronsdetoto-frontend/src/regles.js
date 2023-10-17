@@ -10,7 +10,13 @@ const rules = {
   nomRue: (v) => /^[A-Za-z0-9\s]+$/.test(v) || "Nom de rue invalide",
   nomVille: (v) => /^[A-Za-z\s]+$/.test(v) || "Nom de ville invalide",
   nomProvince: (v) => /^[A-Za-z\s]+$/.test(v) || "Nom de province invalide",
-  codePostal: (v) => /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/.test(v) || "Code postal invalide"
+  codePostal: (v) => /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/.test(v) || "Code postal invalide",
+  monetaire: (v) => /^\d+(\.?,?\d?d?)?$/.test(v) || "Valeur monétaire invalide",
+
+
+
 };
+
+
 
 export default rules;
