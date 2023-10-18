@@ -5,7 +5,7 @@
         </v-toolbar>
 
         <v-card-text>
-            <v-form @submit.prevent="submit" validate-on="submit lazy" ref="employeform">
+            <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="employeform">
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.nom]"

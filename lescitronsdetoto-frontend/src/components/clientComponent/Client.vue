@@ -1,12 +1,12 @@
 <template>
     <v-card class="mx-auto" max-width="600">
         <div v-if="mode !== 'vehicule'">
-        <v-toolbar class="bg-orange-darken-4">
-            <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
-        </v-toolbar>
+            <v-toolbar class="bg-orange-darken-4">
+                <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
+            </v-toolbar>
         </div>
         <v-card-text>
-            <v-form @submit.prevent="submit" validate-on="submit lazy" ref="clientform">
+            <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="clientform">
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-text-field v-model="this.store.nomClient" label="Nom" :rules="[rules.nom]" dense></v-text-field>
@@ -45,12 +45,11 @@
                     </v-col>
                 </v-row>
                 <div v-if="mode !== 'vehicule'">
-                <v-btn type="submit"
-                    :disabled="!this.store.nomClient || !this.store.prenomClient || !this.store.telephoneClient">{{
+                    <v-btn type="submit">{{
                         txt.btn }}</v-btn>
-                <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
-                <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
-            </div>
+                    <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
+                    <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+                </div>
             </v-form>
         </v-card-text>
     </v-card>
@@ -133,6 +132,7 @@ export default {
 
     },
     computed: {
+
         txt() {
             return (this.store.isNew) ? { title: "Nouveau Client", btn: "Créer" } : { title: "Client Existant", btn: "Modifier" };
         },
