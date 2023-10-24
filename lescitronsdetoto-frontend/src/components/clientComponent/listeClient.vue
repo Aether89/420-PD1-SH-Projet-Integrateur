@@ -2,16 +2,16 @@
   <v-card max-width="400" min-width="400" height="auto">
     <v-card-item class="bg-orange-darken-4">
       <v-card-title>
-        Liste des employés
+        Liste des clients
       </v-card-title>
 
       <template v-slot:append>
         <v-btn :disabled="!(this.session.user.isAdmin)" color="white" icon="mdi-plus" size="small"
-          @click="employeStore.newEmploye()"></v-btn>
+          @click="clientStore.newClient()"></v-btn>
       </template>
     </v-card-item>
     <v-divider></v-divider>
-    <div v-if="!this.employeStore.loading">
+    <div v-if="!this.clientStore.loading">
       <v-virtual-scroll :items="items" height="auto" item-height="50">
         <template v-slot:default="{ item }">
           <v-list-item>
@@ -24,7 +24,7 @@
             <v-list-item-title>{{ item.fullName }}</v-list-item-title>
 
             <template v-slot:append>
-              <v-btn @click="(this.employeStore.chargerEmploye(item.idEmploye))" size="small" variant="tonal">
+              <v-btn @click="(this.clientStore.chargerClient(item.idClient))" size="small" variant="tonal">
                 View User
 
                 <v-icon color="orange-darken-4" end>
@@ -41,14 +41,14 @@
 
 <script>
 
-import { useEmployeStore } from '@/store/employe';
+import { useClientStore } from '@/store/client';
 import session from '@/session';
 
 export default {
 
   data() {
     return {
-      employeStore: useEmployeStore(),
+      clientStore: useClientStore(),
       colors: ['#2196F3', '#90CAF9', '#64B5F6', '#42A5F5', '#1E88E5', '#1976D2', '#1565C0', '#0D47A1', '#82B1FF', '#448AFF', '#2979FF', '#2962FF'],
       loading: true,
       loadError: false,
@@ -59,8 +59,8 @@ export default {
     genRandomIndex(length) {
       return Math.ceil(Math.random() * (length - 1))
     },
-    rafraichirEmployes() {
-      this.employeStore.getEmployes();
+    rafraichirClients() {
+      this.clientStore.getClients();
     }
 
   },
@@ -72,29 +72,29 @@ export default {
       const colorsLength = this.colors.length
       let num = 0
 
-      return Array.from({ length: this.employes.length }, () => {
+      return Array.from({ length: this.clients.length }, () => {
 
 
-        const name = this.employes[num].nomEmploye
-        const surname = this.employes[num].prenomEmploye
-        const id = this.employes[num].idEmploye
+        const name = this.clients[num].nomClient
+        const surname = this.clients[num].prenomClient
+        const id = this.clients[num].idClient
         num++
         return {
           color: this.colors[this.genRandomIndex(colorsLength)],
           fullName: `${name} ${surname}`,
           initials: `${name[0]} ${surname[0]}`,
-          idEmploye: `${id}`
+          idClient: `${id}`
 
         }
       });
     },
-    employes() {
-      return this.employeStore.employes;
+    clients() {
+      return this.clientStore.clients;
     }
   },
   mounted() {
 
-    this.employeStore.getEmployes();
+    this.clientStore.getClients();
 
   },
 
