@@ -1,24 +1,65 @@
 <template>
-    <v-card class="ml-6" max-width="40rem" min-width="600">
-        <div class="text-h5">{{ txt.title }}</div>
-        <v-form @submit.prevent="submit" validate-on="submit lazy" ref="employeform">
-            <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.required]"
-                density="compact"></v-text-field>
-            <v-text-field v-model="this.store.prenomEmploye" label="Prenom employé" :rules="[rules.required]"
-                density="compact"></v-text-field>
-            <v-text-field :disabled="!(session.user.isAdmin)" v-model="this.store.posteEmploye" label="Poste de l'employé"
-                :rules="[rules.required]" density="compact"></v-text-field>
-            <v-text-field v-model="this.store.telephoneEmploye" label="Téléphone de l'employé" :rules="[rules.required]"
-                density="compact"></v-text-field>
-            <v-text-field v-model="this.store.codePostalEmploye" label="Code postal de l'employe" :rules="[rules.required]"
-                density="compact"></v-text-field>
-            <v-btn type="submit"
-                :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye || !this.store.codePostalEmploye">{{
-                    txt.btn }}</v-btn>
-            <v-btn type="button" @click="(this.store.chargerEmploye(this.store.idEmploye))">Annuler</v-btn>
-            <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+    <v-card class="mx-auto" max-width="600">
+        <v-toolbar class="bg-orange-darken-4">
+            <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
+        </v-toolbar>
 
-        </v-form>
+        <v-card-text>
+            <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="employeform">
+                <v-row>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.nom]"
+                            dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-model="this.store.prenomEmploye" label="Prenom employé" :rules="[rules.prenom]"
+                            dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field :disabled="!(session.user.isAdmin)" v-model="this.store.posteEmploye"
+                            label="Poste de l'employé" :rules="[rules.posteEmploye]" dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field type="number" class="no-spinner" v-model="this.store.telephoneEmploye"
+                            label="Téléphone de l'employé" :rules="[rules.telephone]" dense></v-text-field></v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field type="number" class="no-spinner" v-model="this.store.numeroCivic"
+                            :rules="[rules.numeroCivic]" label="# Civic" dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="this.store.numeroAppartement" label="Appt."
+                            :rules="[rules.numeroAppartement]" dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-model="this.store.nomRue" label="Nom rue" :rules="[rules.nomRue]"
+                            dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-model="this.store.nomVille" label="Ville" :rules="[rules.nomVille]"
+                            dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-model="this.store.nomProvince" label="Province" :rules="[rules.nomProvince]"
+                            dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-model="this.store.codePostal" label="Code postal de l'employe"
+                            :rules="[rules.codePostal]" dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-checkbox v-if="!this.store.isNew && session.user.isAdmin" v-model="this.store.isArchive"
+                            label="Archiver l'employé" dense></v-checkbox>
+                    </v-col>
+                </v-row>
+
+
+                <v-btn type="submit"
+                    :disabled="!this.store.nomEmploye || !this.store.prenomEmploye || !this.store.posteEmploye || !this.store.telephoneEmploye">{{
+                        txt.btn }}</v-btn>
+                <v-btn type="button" @click="(this.store.chargerEmploye(this.store.idEmploye))">Annuler</v-btn>
+                <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+            </v-form>
+        </v-card-text>
     </v-card>
 </template>
 
@@ -28,16 +69,15 @@
 import session from '../../session.js';
 import { useEmployeStore } from '@/store/employe';
 import { createEmploye, deleteEmploye, updateEmploye } from '@/services/EmployeService';
+import rules from '@/regles';
 
 export default {
     data() {
         return {
+            isNew: true,
             session: session,
             store: useEmployeStore(),
-            rules: {
-                required: value => !!value || "Le champ est requis",
-
-            },
+            rules: rules
         };
     },
     methods: {
@@ -69,7 +109,8 @@ export default {
                     this.$refs.employeform.validate();
                 }
             }
-            this.store.getEmployes();
+            this.store.getEmployes()
+            this.store.newEmploye();
         },
         async supprimer() {
             try {
@@ -87,8 +128,21 @@ export default {
     computed: {
         txt() {
             return (this.store.isNew) ? { title: "Nouvel Employé", btn: "Créer" } : { title: "Employé", btn: "Modifier" };
-        }
+        },
+    },
+    mounted() {
+        this.store.newEmploye();
     }
 }
 
+
 </script> 
+
+
+<style>
+.no-spinner input::-webkit-outer-spin-button,
+.no-spinner input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+</style>

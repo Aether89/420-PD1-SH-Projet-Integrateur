@@ -9,7 +9,9 @@ const upload = multer({ storage: storage });
 const HttpError = require("../HttpError");
 
 const vehiculeQuerie = require("../queries/VehiculeQueries");
+const evenementQueries = require("../queries/EvenementQueries");
 const fetchVIN = require("../vpic/VINAPI");
+const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
 
 module.exports = router;
 
@@ -48,6 +50,23 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if (!vin || vin === '') {
             return next(new HttpError(400, 'Le champ vin est requis'));
         }
+        
+        const prixDAchat = req.body.prix_evenement;
+        /*const prixDAchat = req.body.prixEvenement;
+        if(!prixDAchat || prixDAchat <= 0) {
+            return next(new HttpError(400, 'Le champ prix d\'achat est requis et doit être supérieur à 0'));
+        }
+
+        console.log("user : ", user.userAccountId);
+        const employeID = user.userAccountId;
+        if(!employeID || employeID === ''){
+            return next(new HttpError(400, 'Une transaction doit avoir un employé'));
+        }
+
+        const clientId = req.body.id_client;
+        if(!clientId || clientId === null) {
+            return next(new HttpError(400, 'Veillez associer un client à la transaction'));
+        }
 
         const fetchedVehicule = await fetchVIN(vin);
         if (fetchedVehicule.ErrorCode !== "0") {
@@ -70,7 +89,9 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             promotion: req.body.promotion.replace(/\s/g, ''),
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
+            selectedAccessoire:[] + req.body.selectedAccessoire,
         };
+       
         
         const vehiculeExcite = await vehiculeQuerie.getVehiculeByVin(vin);
         if (vehiculeExcite) {
@@ -93,11 +114,43 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if(newVehicule.promotion <= 0) {
             newVehicule.promotion = null;
         }
+        const currentTime = new Date();
+        console.log("currentTime", currentTime.toISOString())
+        const newAchat = {
+            prix_evenement: req.body.prix_evenement.replace(/\s/g, ''),
+            etat_vue: null,
+            id_type_evenement: 2,
+            id_client: req.body.id_client,
+            date_heure_evenement: currentTime.toISOString(),
+            user_account_id: user.userAccountId
+        }
 
+        
+        
+
+        console.log("newEvent : ", newAchat);
         console.log("newVehicule", newVehicule);
+        const evenementId = await evenementQueries.insertEvenement(newAchat);
         vehiculeQuerie.addVehicule(newVehicule);
+
+        if (
+            newVehicule.selectedAccessoire) {
+            const accessoire = await accessoireVehiculeQuerie.addAccessoireVehicule(newVehicule.selectedAccessoire, vin);
+            if (!accessoire) {
+                return next(new HttpError(404, `Accessoire ${id} introuvable`));
+            }
+        }
         res.json(newVehicule);
 
+        console.log("evenementId", evenementId);
+        const newEvenementVehicule ={
+            id_evenement: evenementId,
+            vin: vin
+        }
+        console.log("newEvenementVehicule : ", newEvenementVehicule);
+        evenementQueries.insertAutoEvenement(newEvenementVehicule);
+
+        res.json(newVehicule);
         return vehiculeQuerie.getVehiculeByVin(vin);
     } catch(err) {
         next(err);
@@ -112,7 +165,6 @@ passport.authenticate('basic', { session: false }),
             if (!user || !user.isAdmin) {
                 return next(new HttpError(403, "Droit administrateur requis"));
             }
-
             
             const vin = req.body.vin;
             if (!vin || vin === '') {

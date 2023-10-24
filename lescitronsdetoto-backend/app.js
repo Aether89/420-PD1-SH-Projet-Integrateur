@@ -10,9 +10,13 @@ const crypto = require('crypto');
 
 const userAccountQueries = require("./queries/UserAccountQueries");
 const EmployeRouter = require('./routes/EmployeRouter');
-
+const ClientRouter = require('./routes/ClientRouter');
 const citronRouter = require('./routes/citronsdetotoRouter');
 const vehiculeRouter = require('./routes/vehiculeRouter');
+const transactionRouter = require('./routes/transactionRouter');
+const interventionRouter = require('./routes/InterventionRouter');
+const accessoireRouter = require('./routes/AccessoireRouter');
+const AvailabilityRouter = require('./routes/AvailabilityRouter');
 
 const app = express();
 
@@ -23,6 +27,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/vehicule', vehiculeRouter);
 app.use('/employes', EmployeRouter);
+app.use('/transaction', transactionRouter);
+app.use('/clients', ClientRouter);
+app.use('/interventions', interventionRouter);
+app.use('/accessoires', accessoireRouter);
+app.use('/availability', AvailabilityRouter);
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {
@@ -115,8 +124,8 @@ app.post('/login',
           userAccountId: userAccountWithPasswordHash.userAccountId,
           idEmploye: userAccountWithPasswordHash.idEmploye,
           courrielCompteEmploye: userAccountWithPasswordHash.courrielCompteEmploye,
-          isAdmin: userAccountWithPasswordHash.isAdmin,
-          isActive: userAccountWithPasswordHash.isActive
+          passwordHash: userAccountWithPasswordHash.passwordHash,
+          passwordSalt: userAccountWithPasswordHash.passwordSalt,
         };
 
         res.json(userDetails);

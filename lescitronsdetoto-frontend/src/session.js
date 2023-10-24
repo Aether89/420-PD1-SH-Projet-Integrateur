@@ -44,6 +44,7 @@ const session = reactive({
     disconnect() {
         this.user = null;
         this.clearCredentials();
+        this.$router.push(`/`);
     },
     async fetchUser() {
         const response = await fetch("/api/login", {

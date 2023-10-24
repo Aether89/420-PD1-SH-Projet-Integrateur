@@ -42,6 +42,7 @@ const getVehiculeByVin = async (vin) => {
         const vehiculeResult = await pool.query(
         `SELECT 
         vin,
+        id_etat,
         marque,
         modele,
         annee,
@@ -64,6 +65,7 @@ const getVehiculeByVin = async (vin) => {
         if (row) {
             return {
                 vin: row.vin,
+                id_etat: row.id_etat,
                 marque: row.marque,
                 modele: row.modele,
                 annee: row.annee,

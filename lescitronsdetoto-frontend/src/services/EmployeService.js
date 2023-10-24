@@ -21,22 +21,6 @@ async function createServiceError(response) {
     return new ServiceError(response.status, await getResponseMessage(response));
 }
 
-export async function createEmploye(Employe) {
-    const response = await fetch(`/api/employes`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            ...session.getAuthHeaders()
-        },
-        body: JSON.stringify(Employe)
-    });
-
-    if (response.ok) {
-        return response.json();
-    } else {
-        throw await createServiceError(response);
-    }
-};
 
 async function convertToEmploye(jsonEmploye) {
     return {
@@ -45,7 +29,13 @@ async function convertToEmploye(jsonEmploye) {
         prenomEmploye: jsonEmploye.prenomEmploye,
         posteEmploye: jsonEmploye.posteEmploye,
         telephoneEmploye: jsonEmploye.telephoneEmploye,
-        codePostalEmploye: jsonEmploye.codePostalEmploye,
+        numeroCivic: jsonEmploye.numeroCivic,
+        numeroAppartement: jsonEmploye.numeroAppartement,
+        nomRue: jsonEmploye.nomRue,
+        nomVille: jsonEmploye.nomVille,
+        nomProvince: jsonEmploye.nomProvince,
+        codePostal: jsonEmploye.codePostal,
+        isArchive: jsonEmploye.isArchive
     };
 };
 
@@ -69,6 +59,23 @@ export async function fetchemploye(idEmploye) {
     const response = await axios(`/api/employes/${idEmploye}`);
     if (response.status === 200) {
         return convertToEmploye(response.data);
+    } else {
+        throw await createServiceError(response);
+    }
+};
+
+export async function createEmploye(Employe) {
+    const response = await fetch(`/api/employes`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(Employe)
+    });
+
+    if (response.ok) {
+        return response.json();
     } else {
         throw await createServiceError(response);
     }

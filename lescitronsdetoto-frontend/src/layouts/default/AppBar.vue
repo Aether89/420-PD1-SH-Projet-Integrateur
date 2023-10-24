@@ -14,7 +14,7 @@
         </div>
         <div>
 
-          <v-btn v-if="session.user" @click="session.disconnect()"
+          <v-btn v-if="session.user" to="/" @click="session.disconnect()"
             :prepend-icon="session.user && session.user.isAdmin ? 'mdi-car-key' : 'mdi-car'"><template v-slot:prepend>
               <v-icon v-if="session.user && session.user.isAdmin" color="yellow-lighten-3"></v-icon>
               <v-icon v-else color="white"></v-icon>
@@ -22,7 +22,7 @@
             Déconnexion
           </v-btn>
           <v-btn v-else to="/login" prepend-icon="mdi-account">
-            Se connecter
+            Espace employé
           </v-btn>
         </div>
         <div class="text-body-2 text-center" v-if="session.user">
@@ -46,7 +46,9 @@ export default {
 
     };
   },
-}
+
+
+};
 </script>
 
 <style>

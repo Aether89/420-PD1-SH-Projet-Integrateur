@@ -24,17 +24,29 @@ const routes = [
         name: 'Nouveau Compte',
         component: () => import(/* webpackChunkName: "home" */ '@/views/LoginNew.vue'),
       },
-      {
-        path: 'NouvelEmployes',
-        name: 'Liste des Employés',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeEmployes.vue'),
-
-      },
 
       {
         path: 'listeEmployes',
         name: 'Liste des Employés',
         component: () => import(/* webpackChunkName: "home" */ '@/views/ListeEmployes.vue'),
+
+      },
+      {
+        path: 'listeClients',
+        name: 'Liste des Clients',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeClients.vue'),
+
+      },
+      {
+        path: 'listeAccessoires',
+        name: 'Liste des Accessoires',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeAccessoires.vue'),
+
+      },
+      {
+        path: 'listeInterventions',
+        name: 'Liste des Interventions',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeInterventions.vue'),
 
       },
       {
@@ -65,6 +77,35 @@ const routes = [
         path: 'EditerEmploye',
         name: 'Édition Employe',
         component: () => import(/* webpackChunkName: "home" */ '@/views/InfoEmploye.vue'),
+      },
+      {
+        path: 'achat/:mode',
+        name: 'Achat véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/AchatVehiculeForm.vue'),
+        props: true
+      },
+      {
+        path: 'vente/:mode',
+        name: 'Vente véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/VenteVehicule.vue'),
+        props: true
+      },
+      {
+        path: 'transaction',
+        name: 'Transaction',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeTransaction.vue'),
+        props: true
+      },
+      {
+        path: 'transaction/editer/:id',
+        name: 'Édition de transaction',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/EditionTransaction.vue'),
+        props: true
+      },
+{
+        path: 'manage/availability',
+        name: 'Gestion des disponibilités',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),
       }
     ],
   },

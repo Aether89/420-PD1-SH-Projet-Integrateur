@@ -231,6 +231,19 @@ export const convertToVehicule = jsonVehicule => {
   }
 };
 
+export const convertToVehiculefr = jsonVehicule => {
+  return {
+    vin: jsonVehicule.vin,
+    img: [ "../src/assets/lemon.png", "../src/assets/race-car.png", "../src/assets/city-car.png"],
+    description_courte: jsonVehicule.description_courte,
+    description_longue: jsonVehicule.description_longue,
+    prix_annonce: jsonVehicule.prix_annonce,
+    promotion: jsonVehicule.promotion,
+    nombre_kilometre: jsonVehicule.nombre_kilometre,
+    couleur: jsonVehicule.couleur
+  }
+};
+
 export const convertToVehiculeUpdate = jsonVehicule => {
   return {
     vin: jsonVehicule.vin,
@@ -253,7 +266,6 @@ export async function fetchVehicle(vehiculeID) {
   //     });
       const response = await fetch(`/api/vehicule/${vehiculeID}`);
 
-      console.log("respone un vehicule", response);
       if (response.ok) {
         return convertToVehicule(await response.json());
       } else {
@@ -288,7 +300,6 @@ export async function fetchVehicles() {
         if (response.ok) {
           
           const respJson = await response.json();
-          console.log("respone", respJson.map(p => convertToVehiculeList(p)));
           return respJson.map(p => convertToVehiculeList(p));
         } else {
           throw new Error("Failed to fetch vehicles data");

@@ -1,6 +1,6 @@
 import session from '../session';
 import { createServiceError } from '../ErrorService';
-import { convertToVehicule,convertToVehiculeUpdate } from './VehicleDB';
+import { convertToVehicule,convertToVehiculeUpdate, convertToVehiculefr } from './VehicleDB';
 
 export async function createVehicule(vehicule) {
     const response = await fetch(`/api/vehicule`, {
@@ -54,3 +54,15 @@ export async function deleteVehicule(id) {
     });
     return response;
 }
+
+export async function getVehiculefr(vin) {
+
+        const response = await fetch(`/api/vehicule/${vin}`);
+  
+        console.log("respone un vehicule", response);
+        if (response.ok) {
+          return convertToVehiculefr(await response.json());
+        } else {
+          throw new Error("Failed to fetch vehicle data");
+        }
+  };

@@ -12,7 +12,7 @@
     </v-card-item>
     <v-divider></v-divider>
     <div v-if="!this.employeStore.loading">
-      <v-virtual-scroll :items="items" height="300" item-height="50">
+      <v-virtual-scroll :items="items" height="auto" item-height="50">
         <template v-slot:default="{ item }">
           <v-list-item>
             <template v-slot:prepend>
