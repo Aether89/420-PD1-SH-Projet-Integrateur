@@ -75,11 +75,11 @@ const createIntervention = async (intervention, clientParam) => {
 
 
         const result = await client.query(
-            `INSERT INTO intervention (id_intervention, type_intervention, valeur_intervention, etat_intervention ) 
-                         VALUES ($1, $2, $3, $4 )
+            `INSERT INTO intervention ( type_intervention, valeur_intervention, etat_intervention ) 
+                         VALUES ($1, $2, $3 )
                          RETURNING id_intervention`,
             [
-                intervention.idIntervention,
+                
                 intervention.typeIntervention,
                 intervention.valeurIntervention,
                 intervention.etatIntervention,

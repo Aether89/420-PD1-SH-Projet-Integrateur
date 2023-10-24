@@ -17,7 +17,43 @@ const getAllAccessoires = async () => {
         return accessoire;
     });
 };
+
+
 exports.getAllAccessoires = getAllAccessoires;
+
+const addAccessoireVehicule = async ( vin,idAccessoire, clientParam) => {
+    const client = clientParam || (await pool.connect());
+    try {
+        if (!clientParam) {
+            await client.query('BEGIN');
+        }
+        const result = await client.query(
+            `INSERT INTO vehicule_accessoire (vin, id_vehicule) 
+                         VALUES ($1, $2 )
+                         RETURNING id_accessoire`,
+            [
+                vin,
+                idAccessoire
+            ]
+        );
+                    await client.query('COMMIT');
+       
+        const newAccessoire = await getAccessoire(result.rows[0].vin, client);
+  
+
+        return newAccessoire;
+    } catch (err) {
+        if (!client) {
+            await client.query('ROLLBACK');
+        }
+        throw new HttpError("Une erreur est survenue lors de la création de l'accessoire", 500);
+    } finally {
+        if (!client) {
+            client.release();
+        }
+    }
+};
+exports.addAccessoireVehicule = addAccessoireVehicule;
 
 const getAccessoire = async (idAccessoire, clientParam) => {
     const client = clientParam || (await pool.connect());
@@ -65,33 +101,33 @@ const createAccessoire = async (accessoire, clientParam) => {
     const client = clientParam || (await pool.connect());
 
     try {
-        if (!client) {
+        if (!clientParam) {
             await client.query('BEGIN');
         }
 
 
         const result = await client.query(
-            `INSERT INTO accessoire (id_accessoire, nom_accessoire) 
-                         VALUES ($1, $2 )
+            `INSERT INTO accessoire (nom_accessoire) 
+                         VALUES ($1 )
                          RETURNING id_accessoire`,
             [
-                accessoire.idAccessoire,
+                
                 accessoire.nomAccessoire
             
             ]
         );
-
-        const newAccessoire = await getAccessoire(result.rows[0].id_accessoire, client);
-        if (!client) {
+      
             await client.query('COMMIT');
-        }
+       
+        const newAccessoire = await getAccessoire(result.rows[0].id_accessoire, client);
+  
 
         return newAccessoire;
     } catch (err) {
         if (!client) {
             await client.query('ROLLBACK');
         }
-        throw new HttpError("Une erreur est survenue lors de la création de l'employé", 500);
+        throw new HttpError("Une erreur est survenue lors de la création de l'accessoire", 500);
     } finally {
         if (!client) {
             client.release();
@@ -151,19 +187,12 @@ const deleteAccessoire = async (idAccessoire, clientParam) => {
         if (checkResult.rows.find(row => row.id_accessoire === idAccessoire)) {
 
 
-            // Si l'employé est lié, retourner une réponse vide
+            
             throw new error("L'employé est lier a une autre table");
 
         }
 
-        // Supprimer de user_account
-        const deleteQuery = `
-            DELETE FROM user_account
-            WHERE id_accessoire = $1
-        `;
-
-        await pool.query(deleteQuery, [idAccessoire]);
-
+       
         // Supprimer de la table accessoire
         const deleteAccessoireQuery = `
             DELETE FROM accessoire

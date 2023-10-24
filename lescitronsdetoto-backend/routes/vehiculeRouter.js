@@ -10,6 +10,7 @@ const HttpError = require("../HttpError");
 
 const vehiculeQuerie = require("../queries/VehiculeQueries");
 const fetchVIN = require("../vpic/VINAPI");
+const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
 
 module.exports = router;
 
@@ -49,6 +50,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             return next(new HttpError(400, 'Le champ vin est requis'));
         }
         
+        
         /*const prixDAchat = req.body.prixEvenement;
         if(!prixDAchat || prixDAchat <= 0) {
             return next(new HttpError(400, 'Le champ prix d\'achat est requis'));
@@ -76,7 +78,9 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             promotion: req.body.promotion.replace(/\s/g, ''),
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
+            selectedAccessoire:[] + req.body.selectedAccessoire,
         };
+       
         
         const vehiculeExcite = await vehiculeQuerie.getVehiculeByVin(vin);
         if (vehiculeExcite) {
@@ -103,6 +107,13 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
 
         console.log("newVehicule", newVehicule);
         vehiculeQuerie.addVehicule(newVehicule);
+        if (
+            newVehicule.selectedAccessoire) {
+            const accessoire = await accessoireVehiculeQuerie.addAccessoireVehicule(newVehicule.selectedAccessoire, vin);
+            if (!accessoire) {
+                return next(new HttpError(404, `Accessoire ${id} introuvable`));
+            }
+        }
         res.json(newVehicule);
 
         return vehiculeQuerie.getVehiculeByVin(vin);

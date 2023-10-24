@@ -5,7 +5,7 @@
         </v-toolbar>
 
         <v-card-text>
-            <v-form @submit.prevent="submit" validate-on="submit lazy" ref="accessoireform">
+            <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="accessoireform">
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-text-field v-model="this.store.nomAccessoire" label="Nom" :rules="[rules.nom]"
@@ -66,7 +66,7 @@ export default {
                     this.$refs.accessoireform.validate();
                 }
             }
-            this.store.getAccessoires()
+            this.store.getAccessoires();
             this.store.newAccessoire();
         },
         async supprimer() {

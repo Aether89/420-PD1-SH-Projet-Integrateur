@@ -4,12 +4,12 @@ const passport = require("passport");
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+
 
 const HttpError = require("../HttpError");
 const InterventionQueries = require("../queries/InterventionQueries");
 const rules = require('./regles.js');
-const crypto = require('crypto');
+
 
 
 router.get("/", (req, res, next) => {
@@ -65,7 +65,6 @@ router.post('/',
 
 
         const intervention = {
-            nomIntervention: "" + req.body.nomIntervention,
             typeIntervention: "" + req.body.typeIntervention,
             valeurIntervention: "" + req.body.valeurIntervention,
             etatIntervention: "" + req.body.etatIntervention
@@ -75,11 +74,14 @@ router.post('/',
         try {
 
 
-            const newIntervention = await InterventionQueries.createIntervention(intervention);
+            const newIntervention = await InterventionQueries.createIntervention(intervention).then(result => {
             if (!newIntervention) {
                 return next(new HttpError(404, `Intervention ${id} introuvable`));
             }
-  
+   res.json(result);
+            }).catch(err => {
+                return next(err);
+            });
         } catch (error) {
             return next(error);
         }
@@ -90,12 +92,12 @@ router.post('/',
 
 router.put('/:id',
     passport.authenticate('basic', { session: false }),
-    (req, res, next) => {
+    async (req, res, next) => {
 
         const id = req.params.id
         const user = req.user;
         console.log(user);
-        if (!user || !user.isAdmin || user.id_intervention !== id) {
+        if (!user || !user.isAdmin ) {
             return next(new HttpError(403, "Droit administrateur requis ou être titulaire du compte"));
         }
 
@@ -118,24 +120,20 @@ router.put('/:id',
             }
 
 
-            InterventionQueries.updateIntervention(intervention).then(result => {
-                if (!result) {
-                    return next(new HttpError(404, `Intervention ${id} introuvable`));
-                }
+            const result = await InterventionQueries.updateIntervention(intervention);
 
-            }).catch(err => {
-                return next(err);
-            });
+            if (!result) {
+                throw new HttpError(404, `Intervntion ${id} introuvable`);
+            }
 
-            InterventionQueries.getIntervention(id).then(intervention => {
-                if (intervention) {
-                    res.json(intervention);
-                } else {
-                    return next(new HttpError(404, `Intervention ${id} introuvable`));
-                }
-            }).catch(err => {
-                return next(err);
-            });
+            // Récupérer et renvoyer les informations mises à jour du client
+            const updatedIntervntion = await InterventionQueries.getIntervention(id);
+
+            if (updatedIntervntion) {
+                res.json(updatedIntervntion);
+            } else {
+                throw new HttpError(404, `Intervntion ${id} introuvable`);
+            }
         } catch (error) {
             return next(error);
         }

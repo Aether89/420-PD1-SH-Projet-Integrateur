@@ -8,6 +8,7 @@ const storage = multer.memoryStorage();
 
 const HttpError = require("../HttpError");
 const AccessoireQueries = require("../queries/AccessoireQueries");
+const rules = require('./regles.js');
 
 
 
@@ -24,8 +25,8 @@ router.get("/", (req, res, next) => {
 });
 
 function validateAccessoire(accessoire) {
-    if (accessoire.nomAccessoire !== "") {
-        if (!rules.nom.test(accessoire.nomAccessoire)) {
+    if(accessoire.nomAccessoire !== "") {
+        if(!rules.nom.test(accessoire.nomAccessoire)) {
             throw new HttpError(400, "Format de nom invalide");
         }
     }
@@ -61,20 +62,23 @@ router.post('/',
 
 
         const accessoire = {
-            idAccessoire: "" + req.body.idAccessoire,
-            nomAccessoire: "" + req.body.nomAccessoire
+            
+            nomAccessoire:""+  req.body.nomAccessoire
         }
 
 
         try {
 
 
-            const newAccessoire = await AccessoireQueries.createAccessoire(accessoire);
-            if (!newAccessoire) {
+            AccessoireQueries.createAccessoire(accessoire).then(result => {
+            if (!result) {
                 return next(new HttpError(404, `Accessoire ${id} introuvable`));
             }
-  
-        } catch (error) {
+  res.json(result);
+        }).catch(err => {
+            return next(err);
+        });
+    } catch (error) {
             return next(error);
         }
     }
@@ -84,50 +88,41 @@ router.post('/',
 
 router.put('/:id',
     passport.authenticate('basic', { session: false }),
-    (req, res, next) => {
+    async (req, res, next) => {
 
         const id = req.params.id
         const user = req.user;
         console.log(user);
-        if (!user || !user.isAdmin || user.id_accessoire !== id) {
-            return next(new HttpError(403, "Droit administrateur requis ou être titulaire du compte"));
+        if (!user || !user.isAdmin ) {
+            return next(new HttpError(403, "Droit ajout accessoire requis"));
         }
 
         if (!id || id === '') {
             return next(new HttpError(400, 'Le paramètre id est requis'));
         }
 
-        if (id != req.body.idAccessoire) {
-            return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que l'utilisateur fourni a l'id ${req.body.idAccessoire}`));
-        }
         validateAccessoire(req.body);
 
         try {
             const accessoire = {
-                idAccessoire: "" + req.body.idAccessoire,
-                nomAccessoire: "" + req.body.nomAccessoire
+                idAccessoire: req.body.idAccessoire,
+                nomAccessoire: req.body.nomAccessoire
                 
+            };
+const result = await AccessoireQueries.updateAccessoire(accessoire);
+
+            if (!result) {
+                throw new HttpError(404, `Accessoire ${id} introuvable`);
             }
 
+            // Récupérer et renvoyer les informations mises à jour du client
+            const updatedAccessoire = await AccessoireQueries.getAccessoire(accessoire);
 
-            AccessoireQueries.updateAccessoire(accessoire).then(result => {
-                if (!result) {
-                    return next(new HttpError(404, `Accessoire ${id} introuvable`));
-                }
-
-            }).catch(err => {
-                return next(err);
-            });
-
-            AccessoireQueries.getAccessoire(id).then(accessoire => {
-                if (accessoire) {
-                    res.json(accessoire);
-                } else {
-                    return next(new HttpError(404, `Accessoire ${id} introuvable`));
-                }
-            }).catch(err => {
-                return next(err);
-            });
+            if (updatedAccessoire) {
+                res.json(updatedAccessoire);
+            } else {
+                throw new HttpError(404, `Accessoire ${id} introuvable`);
+            }
         } catch (error) {
             return next(error);
         }

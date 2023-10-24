@@ -1,6 +1,5 @@
+// Description: Composant pour la liste des accessoires
 
-
-<script>
 
 import { useAccessoireStore } from '@/store/accessoire';
 import session from '@/session';
@@ -59,5 +58,5 @@ export default {
 
 
 }
-</script>
+
 

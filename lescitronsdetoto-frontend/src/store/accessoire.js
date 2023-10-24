@@ -18,8 +18,6 @@ export const useAccessoireStore = defineStore('accessoire', {
         .then((result) => {
           this.isNew = false;
           this.nomAccessoire = result.nomAccessoire;
-         
-
         })
     },
 
