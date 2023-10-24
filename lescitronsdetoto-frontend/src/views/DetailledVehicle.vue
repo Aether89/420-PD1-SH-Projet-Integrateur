@@ -190,7 +190,8 @@ FooterBar: FooterBar
         },
         async suppression() {
             await deleteVehicule(this.id);
-            this.$router.push('/');
+            this.$router.push(`/`);
+            //test
         }
     },
     mounted() {
