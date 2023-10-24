@@ -16,8 +16,9 @@
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field :disabled="!(session.user.isAdmin)" v-model="this.store.posteEmploye"
-                            label="Poste de l'employé" :rules="[rules.posteEmploye]" dense></v-text-field>
+                        <v-text-field :disabled="!(this.session.user && this.session.user.isAdmin)"
+                            v-model="this.store.posteEmploye" label="Poste de l'employé" :rules="[rules.posteEmploye]"
+                            dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field type="number" class="no-spinner" v-model="this.store.telephoneEmploye"
@@ -47,7 +48,7 @@
                             :rules="[rules.codePostal]" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-checkbox v-if="!this.store.isNew && session.user.isAdmin" v-model="this.store.isArchive"
+                        <v-checkbox v-if="!this.store.isNew && this.session.user.isAdmin" v-model="this.store.isArchive"
                             label="Archiver l'employé" dense></v-checkbox>
                     </v-col>
                 </v-row>

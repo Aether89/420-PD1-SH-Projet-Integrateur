@@ -24,6 +24,7 @@
 import { useAccessoireStore } from '@/store/accessoire';
 import session from '@/session';
 import { reactive } from 'vue';
+import session from '@/session';
 
 export default {
 
