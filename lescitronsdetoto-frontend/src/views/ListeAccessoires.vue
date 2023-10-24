@@ -1,22 +1,20 @@
 <template  v-if="this.session.user">
     <v-container class="d-flex block" justify="center">
 
-        <listeClient />
-
-        <ClientVue />
+        <ScrollAccessoire />
+        <AccessoireVue />
 
     </v-container>
 </template>
 <script>
-import listeClient from '@/components/clientComponent/listeClient.vue';
-import ClientVue from '@/components/clientComponent/Client.vue';
+import ScrollAccessoire from '@/components/accessoireComponent/ScrollAccessoire.vue';
+import AccessoireVue from '@/components/accessoireComponent/Accessoire.vue';
 import session from '@/session';
 
 export default {
     components: {
-        listeClient: listeClient,
-        ClientVue: ClientVue,
-
+        ScrollAccessoire: ScrollAccessoire,
+        AccessoireVue: AccessoireVue,
     },
 
 

@@ -11,6 +11,7 @@ const HttpError = require("../HttpError");
 const vehiculeQuerie = require("../queries/VehiculeQueries");
 const evenementQueries = require("../queries/EvenementQueries");
 const fetchVIN = require("../vpic/VINAPI");
+const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
 
 module.exports = router;
 
@@ -51,6 +52,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         }
         
         const prixDAchat = req.body.prix_evenement;
+        /*const prixDAchat = req.body.prixEvenement;
         if(!prixDAchat || prixDAchat <= 0) {
             return next(new HttpError(400, 'Le champ prix d\'achat est requis et doit être supérieur à 0'));
         }
@@ -87,7 +89,9 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             promotion: req.body.promotion.replace(/\s/g, ''),
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
+            selectedAccessoire:[] + req.body.selectedAccessoire,
         };
+       
         
         const vehiculeExcite = await vehiculeQuerie.getVehiculeByVin(vin);
         if (vehiculeExcite) {
@@ -128,6 +132,15 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         console.log("newVehicule", newVehicule);
         const evenementId = await evenementQueries.insertEvenement(newAchat);
         vehiculeQuerie.addVehicule(newVehicule);
+
+        if (
+            newVehicule.selectedAccessoire) {
+            const accessoire = await accessoireVehiculeQuerie.addAccessoireVehicule(newVehicule.selectedAccessoire, vin);
+            if (!accessoire) {
+                return next(new HttpError(404, `Accessoire ${id} introuvable`));
+            }
+        }
+        res.json(newVehicule);
 
         console.log("evenementId", evenementId);
         const newEvenementVehicule ={

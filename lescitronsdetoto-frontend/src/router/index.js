@@ -38,6 +38,18 @@ const routes = [
 
       },
       {
+        path: 'listeAccessoires',
+        name: 'Liste des Accessoires',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeAccessoires.vue'),
+
+      },
+      {
+        path: 'listeInterventions',
+        name: 'Liste des Interventions',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeInterventions.vue'),
+
+      },
+      {
         path: 'vehicle/:id',
         name: 'Informations du Véhicule',
         component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
@@ -90,11 +102,24 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/EditionTransaction.vue'),
         props: true
       },
+<<<<<<< HEAD
       {
         path: 'manage/availability',
         name: 'Gestion des disponibilités',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),
       }
+=======
+{
+        path: 'manage/availability',
+        name: 'Gestion des disponibilités',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),
+      },
+      {
+        path: 'reservation',
+        name: 'Réservation',
+        component: () => import(/* webpackChunkName: "home" */ '@/components/appointment/reservation.vue'),
+      },
+>>>>>>> ec8a0a2272e4d0b20822e3acedebb970aafb783c
     ],
   },
 ]

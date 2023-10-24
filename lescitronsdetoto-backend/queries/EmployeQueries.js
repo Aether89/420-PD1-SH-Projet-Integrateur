@@ -3,8 +3,7 @@ const pool = require('./DBPool');
 
 const getAllEmployes = async () => {
     const result = await pool.query(
-        `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, numero_civic, numero_appartement, nom_rue,
-        nom_ville, nom_province, code_postal, is_archive
+        `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal
          FROM employe
          ORDER BY id_employe`,
     );
@@ -40,8 +39,7 @@ const getEmploye = async (idEmploye, clientParam) => {
         }
 
         const result = await client.query(
-            `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, numero_civic, numero_appartement, nom_rue,
-            nom_ville, nom_province, code_postal, is_archive
+            `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal
          FROM employe
          WHERE id_employe = $1`,
             [idEmploye]
@@ -115,7 +113,6 @@ const createEmploye = async (employe, clientParam) => {
         if (!client) {
             await client.query('COMMIT');
         }
-
         return newEmploye;
     } catch (err) {
         if (!client) {
@@ -138,11 +135,11 @@ const updateEmploye = async (employe) => {
         await client.query('BEGIN');
 
         const result = await client.query(
+
             `UPDATE employe SET nom_employe = $2, prenom_employe = $3, poste_employe = $4, telephone_employe = $5 ,numero_civic = $6, numero_appartement = $7, nom_rue = $8,
              nom_ville = $9, nom_province = $10, code_postal = $11, is_archive = $12
             WHERE id_employe = $1`,
-            [employe.idEmploye, employe.nomEmploye, employe.prenomEmploye, employe.posteEmploye, employe.telephoneEmploye, employe.numeroCivic, employe.numeroAppartement,
-            employe.nomRue, employe.nomVile, employe.nomProvince, employe.codePostal, employe.isArchive]
+            [employe.idEmploye, employe.nomEmploye, employe.prenomEmploye, employe.posteEmploye, employe.telephoneEmploye, employe.codePostalEmploye]
         );
         if (result.rowCount === 0) {
             throw new HttpError(`Impossible de trouver l'employé avec id_employe ${employe.idEmploye}`, 404);
@@ -158,8 +155,6 @@ const updateEmploye = async (employe) => {
     }
 };
 exports.updateEmploye = updateEmploye;
-
-
 
 const deleteEmploye = async (idEmploye, clientParam) => {
     const client = clientParam || (await pool.connect());
@@ -220,7 +215,6 @@ const deleteEmploye = async (idEmploye, clientParam) => {
             client.release();
         }
     }
+    return {};
 };
-
-exports.deleteEmploye = deleteEmploye;
-
+exports.deleteEmploye = deleteEmploye
