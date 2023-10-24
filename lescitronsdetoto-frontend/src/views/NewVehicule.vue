@@ -300,9 +300,6 @@ export default {
         vehiculeVin() {
             return this.nouveauvehicule? this.storeVehicule.vin : this.id;
         },  
-        async reset() {
-            return this.storeVehicule.isValidate2 = false;
-        },
     },
     mounted() {
         this.autoVin();
