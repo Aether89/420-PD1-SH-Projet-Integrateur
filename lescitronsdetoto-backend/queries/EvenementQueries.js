@@ -125,3 +125,35 @@ const getautoEvenementIdByViv= async (vin) => {
     return result.rows[0];
 };
 exports.getautoEvenementIdByViv = getautoEvenementIdByViv;
+
+const deleteAvailability = async (evenement) => {
+const result = await pool.query(
+    `DELETE FROM evenement 
+    WHERE user_account_id = $1 AND date_heure_evenement = $2 AND id_client IS NULL AND id_type_evenement = 1;`,
+    [evenement.user_account_id, evenement.time_stamp]
+);
+return (result.rowCount > 0)? true : false;
+};
+exports.deleteAvailability = deleteAvailability;
+
+const checkAvailabilityExist = async (evenement) => {
+    const result = await pool.query(
+        `SELECT * FROM public.evenement
+        WHERE date_heure_evenement = $1 AND user_account_id = $2
+        `,
+        [evenement.time_stamp, evenement.user_account_id]
+    );
+    return (result.rows.length > 0)? true : false;
+}
+exports.checkAvailabilityExist = checkAvailabilityExist;
+
+const getAvailability = async (user) => {
+    const result = await pool.query(
+        `SELECT * FROM evenement
+        WHERE user_account_id = $1 AND id_type_evenement = 1 AND id_client IS NULL
+        ORDER BY date_heure_evenement ASC`,
+        [user]
+    );
+    return result.rows;
+}
+exports.getAvailability = getAvailability;

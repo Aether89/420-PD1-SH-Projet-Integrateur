@@ -1,12 +1,22 @@
 <template>
     <v-card :color="colourAccent" width="parent" class="pa-8">
-        <v-row>
-            <v-select :loading="loadingMakes" bg-color="grey-lighten-3" style="width: 2em" label="Marque" v-model="this.store.selected.make" :items="this.store.makes"
+        <v-row no-gutters>
+            <v-col cols="4">
+            <v-select :loading="loadingMakes" bg-color="grey-lighten-3" label="Marque" v-model="this.store.selected.make" :items="this.store.makes"
                 density="compact" clearable></v-select>
-            <v-select :loading="loadingModels" bg-color="grey-lighten-3" style="width: 2em" label="Modéle" v-model="this.store.selected.model" :items="this.store.models"
+            </v-col>
+            <v-col cols="3">
+            <v-select :loading="loadingModels" :disabled="!this.store.selected.make" bg-color="grey-lighten-3" label="Modéle" v-model="this.store.selected.model" :items="this.store.models"
                 density="compact" clearable></v-select>
-            <v-select :loading="loadingYears" bg-color="grey-lighten-3" style="width: 2em" label="Année" v-model="this.store.selected.year" :items="this.store.years"
+            </v-col>
+            <v-col cols="3">
+                <v-select bg-color="grey-lighten-3" label="Opérateur" item-title="name" item-value="value" v-model="this.store.selected.yearSign" :items="this.store.signs"
+                density="compact"></v-select>
+            </v-col>
+            <v-col cols="2">
+            <v-select :loading="loadingYears" bg-color="grey-lighten-3" label="Année" v-model="this.store.selected.year" :items="this.store.years"
                 density="compact" clearable></v-select>
+                </v-col>
         </v-row><v-row>
             <v-range-slider v-model="this.store.selected.priceRange" :step="this.store.priceIncrement"
                 :min="this.store.minPrice" :max="this.store.maxPrice">
@@ -44,7 +54,7 @@ export default {
     },
     methods: {
         searchVehicles() {
-            this.store.getVehiclesList();
+            this.store.filterVehiclesList();
         },
         cancel() {
             this.store.reset();
@@ -90,9 +100,7 @@ export default {
 
     },
     created() {
-        this.store.loadMakes();
         this.store.loadYears();
-        this.store.loadModels()
     }
 
 }

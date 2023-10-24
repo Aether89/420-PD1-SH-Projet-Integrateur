@@ -1,8 +1,13 @@
 INSERT INTO employe (nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal, is_archive)
 VALUES
 	('Admin', 'AD', 'patate', '819-123-4567', 'a1a1a1', false),
+<<<<<<< HEAD
 	('Martin', 'Félix', 'patate', '819-123-4567', 'a1a1a1', false),
 	('Beauchamp', 'Michaël', 'patate', '819-123-4567', 'a1a1a1', false),
+=======
+	('Beauchamp', 'Michaël', 'patate', '819-123-4567', 'a1a1a1', false),
+	('Martin', 'Félix', 'patate', '819-123-4567', 'a1a1a1', false),
+>>>>>>> origin/dev
 	('Deschamps', 'Réal', 'patate', '819-123-4567', 'a1a1a1', false)
 ;
 
@@ -22,4 +27,8 @@ values
 
 insert into client (nom_client, prenom_client, telephone_client, courriel_client, numero_civic, numero_appartement, nom_rue, nom_ville, nom_province, code_postal, is_archive)
 values
+<<<<<<< HEAD
 	('bob', 'tamer', '111', '111', '111', 1, 'larue', 'laville', 'laprovince', '111aaa', false)
+=======
+	('bob', 'tamer', '111', '111', '111', 1, 'larue', 'laville', 'laprovince', '111aaa', false)
+>>>>>>> origin/dev

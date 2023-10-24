@@ -1,0 +1,1 @@
+ALTER TABLE evenement ALTER COLUMN id_client DROP NOT NULL;

@@ -61,11 +61,13 @@ export default {
       return priceFormatting(this.price);
     },
     formatedPromo() {
+
       console.log("this.promo", this.promo)
       return (this.promo === "$0,00") ? null : this.promo;
     },
     hasPromo() {
       return (this.promo === "0,00 $" || this.promo === null) ? false : true;
+
     },
     colourPrimary() {
       return (!this.promo) ? appStore.colourPrimary : appStore.colourTernary;
