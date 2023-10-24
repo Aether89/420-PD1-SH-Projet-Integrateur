@@ -6,6 +6,7 @@ export const useClientStore = defineStore('client', {
   state: () => ({
     clients: [],
     isNew: false,
+    isValidate: false,
     idClient: "",
     nomClient: "",
     prenomClient: "",
@@ -44,6 +45,7 @@ export const useClientStore = defineStore('client', {
 
     newClient() {
       this.isNew = true;
+      this.isValidate = false;
       this.idClient = "";
       this.nomClient = "";
       this.prenomClient = "";

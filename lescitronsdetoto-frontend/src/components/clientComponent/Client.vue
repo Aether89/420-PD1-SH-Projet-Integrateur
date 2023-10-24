@@ -1,11 +1,12 @@
 <template>
     <v-card class="mx-auto" max-width="600">
-        <v-toolbar class="bg-orange-darken-4">
-            <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
-        </v-toolbar>
-
+        <div v-if="mode !== 'vehicule'">
+            <v-toolbar class="bg-orange-darken-4">
+                <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
+            </v-toolbar>
+        </div>
         <v-card-text>
-            <v-form @submit.prevent="submit" validate-on="submit lazy" ref="clientform">
+            <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="clientform">
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-text-field v-model="this.store.nomClient" label="Nom" :rules="[rules.nom]" dense></v-text-field>
@@ -43,12 +44,15 @@
                             :rules="[rules.codePostal]" dense></v-text-field>
                     </v-col>
                 </v-row>
-
-                <v-btn type="submit"
-                    :disabled="!this.store.nomClient || !this.store.prenomClient || !this.store.telephoneClient">{{
+                <div v-if="mode !== 'vehicule'">
+                    <v-btn type="submit">{{
                         txt.btn }}</v-btn>
-                <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
-                <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+                    <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
+                    <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+                </div>
+                <div v-else>
+                    <v-btn type="submit">Valider</v-btn>
+                </div>
             </v-form>
         </v-card-text>
     </v-card>
@@ -65,6 +69,11 @@ import rules from '@/regles';
 
 
 export default {
+    props: {
+        id: String,
+        mode: String,
+        prenomClient: String
+    },
     data() {
         return {
             isNew: true,
@@ -76,11 +85,15 @@ export default {
     methods: {
         async submit() {
 
+            
             const formValid = await this.$refs.clientform.validate();
-
+            
             if (!formValid.valid) {
+                this.store.isValidate = false;
                 return;
             }
+
+            this.store.isValidate = true;
 
             const Client = {
                 nomClient: this.store.nomClient,
@@ -96,21 +109,23 @@ export default {
                 isArchive: this.store.isArchive
 
             };
-            if (!this.store.isNew) { Client.idClient = this.store.idClient };
+            if(this.mode !== 'vehicule') {
+                if (!this.store.isNew) { Client.idClient = this.store.idClient };
 
-            try {
+                try {
 
-                if (this.store.isNew) { await createClient(Client); } else { await updateClient(Client); }
+                    if (this.store.isNew) { await createClient(Client); } else { await updateClient(Client); }
 
-            } catch (err) {
-                console.error(err);
-                alert(err.message);
-                if (err.status === 409) {
-                    this.$refs.clientform.validate();
+                } catch (err) {
+                    console.error(err);
+                    alert(err.message);
+                    if (err.status === 409) {
+                        this.$refs.clientform.validate();
+                    }
                 }
+                this.store.getClients()
+                this.store.newClient();
             }
-            this.store.getClients()
-            this.store.newClient();
         },
         async supprimer() {
             try {
@@ -126,13 +141,17 @@ export default {
 
     },
     computed: {
+
         txt() {
             return (this.store.isNew) ? { title: "Nouveau Client", btn: "Créer" } : { title: "Client Existant", btn: "Modifier" };
-        }
+        },
     },
     mounted() {
         this.store.newClient();
-    }
+    },
+    created() {
+        console.log('Mode reçu en props :', this.mode);
+    },
 }
 
 </script> 

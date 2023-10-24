@@ -122,11 +122,10 @@ export const useVehiclesStore = defineStore('vehicles', {
         this.models = [];
       }
     },
- 
-  async getVehicle(id) {
-    this.vehicle.local = await fetchVehicle(id);
-    this.vehicle.api = await fetchVIN(id);
-      (this.vehicle.local.promo === "$0.00") ? this.vehicle.local.promo = null : this.vehicle.local.promo = this.vehicle.local.promo;
+    async getVehicle(id) {   
+      this.vehicle.local = await fetchVehicle(id);
+      this.vehicle.api = await fetchVIN(id);
+      (this.vehicle.local.promo === "0,00 $")? this.vehicle.local.promo = null : this.vehicle.local.promo = this.vehicle.local.promo;
     },
     async reset() {
   this.loading.models = true;

@@ -79,6 +79,30 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/InfoEmploye.vue'),
       },
       {
+        path: 'achat/:mode',
+        name: 'Achat véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/AchatVehiculeForm.vue'),
+        props: true
+      },
+      {
+        path: 'vente/:mode',
+        name: 'Vente véhicule',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/VenteVehicule.vue'),
+        props: true
+      },
+      {
+        path: 'transaction',
+        name: 'Transaction',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeTransaction.vue'),
+        props: true
+      },
+      {
+        path: 'transaction/editer/:id',
+        name: 'Édition de transaction',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/EditionTransaction.vue'),
+        props: true
+      },
+
         path: 'manage/availability',
         name: 'Gestion des disponibilités',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),
