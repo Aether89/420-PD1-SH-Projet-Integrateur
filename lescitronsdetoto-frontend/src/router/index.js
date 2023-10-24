@@ -106,7 +106,12 @@ const routes = [
         path: 'manage/availability',
         name: 'Gestion des disponibilités',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),
-      }
+      },
+      {
+        path: 'reservation',
+        name: 'Réservation',
+        component: () => import(/* webpackChunkName: "home" */ '@/components/appointment/reservation.vue'),
+      },
     ],
   },
 ]

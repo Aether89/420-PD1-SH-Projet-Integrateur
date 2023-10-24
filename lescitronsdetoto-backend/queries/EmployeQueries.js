@@ -3,7 +3,7 @@ const pool = require('./DBPool');
 
 const getAllEmployes = async () => {
     const result = await pool.query(
-        `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal_employe
+        `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal
          FROM employe
          ORDER BY id_employe`,
     );
@@ -39,7 +39,7 @@ const getEmploye = async (idEmploye, clientParam) => {
         }
 
         const result = await client.query(
-            `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal_employe
+            `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal
          FROM employe
          WHERE id_employe = $1`,
             [idEmploye]

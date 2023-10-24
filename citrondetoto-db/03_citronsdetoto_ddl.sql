@@ -121,7 +121,7 @@ CREATE TABLE evenement (
 	id_evenement serial PRIMARY KEY NOT NULL,
 	id_type_evenement serial NOT NULL REFERENCES type_evenement (id_type_evenement),
 	id_client serial REFERENCES client (id_client),
-	user_account_id text NOT NULL REFERENCES user_account (user_account_id),
+	user_account_id text REFERENCES user_account (user_account_id),
 	prix_evenement money,
 	date_heure_evenement timestamptz NOT NULL,
 	etat_vue_evenement boolean
