@@ -7,7 +7,7 @@
             <v-list-item v-if="session.user.isAdmin">
                 <v-list-item-title><router-link to="/listeEmployes">Liste Employes</router-link></v-list-item-title>
             </v-list-item>
-            <v-list-item v-if="session.user && !session.user.isAdmin">
+            <v-list-item v-if="!session.user.isAdmin">
                 <v-list-item-title><router-link to="/EditerEmploye">Editer employe</router-link></v-list-item-title>
             </v-list-item>
             <v-list-item v-if="session.user.isAdmin">
@@ -15,6 +15,9 @@
             </v-list-item>
             <v-list-item v-if="session.user">
                 <v-list-item-title><router-link to="/admin/newvehicle">Nouveau Véhicule</router-link></v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+                <v-list-item-title><router-link to="/manage/availability">Gestion des disponibilités</router-link></v-list-item-title>
             </v-list-item>
         </v-list>
     </v-menu>
