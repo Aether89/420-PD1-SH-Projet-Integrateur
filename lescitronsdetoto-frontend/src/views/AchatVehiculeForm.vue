@@ -34,13 +34,13 @@
       <v-divider></v-divider>
   
       <v-card-actions>
-        <v-btn
+        <!--<v-btn
           v-if="step > 1"
           variant="text"
-          @click="step--"
+          @click="goToPreviousStep step--"
         >
           Précédent
-        </v-btn>
+        </v-btn>-->
         
         <v-spacer></v-spacer>
         <v-btn
@@ -103,6 +103,7 @@
 <script>
   import { useClientStore } from '@/store/client';
   import { useActualyAVehiculeStore } from '@/store/actualyAVehicule'
+import { reactive } from 'vue'
   //import rules from '@/regles';
   export default {
     data: () => ({
@@ -113,7 +114,11 @@
     }),
     props: ['mode', 'id', 'rules'],
     computed: {
-        
+        /*formState() {
+          reactive({
+            validate
+          })
+        }*/
       },
     methods:{
       async validForm() {
@@ -121,6 +126,17 @@
         if (!formValid.valid) {
             return;
         }
+      },
+      goToPreviousStep() {
+        console.log("step", this.step)
+        if(this.step === 3) {
+          this.storeVehicule.isValidate2 = false;
+         
+        } else if(this.step === 2) {
+          this.storeClient.isValidate = false;
+         
+        }
+        console.log("step ", this.step)
       },
     },
     created() {
