@@ -38,6 +38,18 @@ const routes = [
 
       },
       {
+        path: 'listeAccessoires',
+        name: 'Liste des Accessoires',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeAccessoires.vue'),
+
+      },
+      {
+        path: 'listeInterventions',
+        name: 'Liste des Interventions',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/ListeInterventions.vue'),
+
+      },
+      {
         path: 'vehicle/:id',
         name: 'Informations du Véhicule',
         component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
@@ -90,6 +102,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/EditionTransaction.vue'),
         props: true
       },
+
+        path: 'manage/availability',
+        name: 'Gestion des disponibilités',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),
+      }
     ],
   },
 ]

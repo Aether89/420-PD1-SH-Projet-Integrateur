@@ -73,14 +73,18 @@ import session from '../session';
 import { useVehiclesStore } from '@/store/vehicles';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 import { createVehicule, udpateVoiture, getVehiculefr } from '../services/vehicule';
-import { fetchVIN } from'../services/VINAPI';
+import { fetchVIN } from '../services/VINAPI';
+import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.vue';
+
+
 
 const store = useVehiclesStore();
 export default {
-    props: {
-        id: String,
-        mode: String,
+    components: {
+        SelectAccessoire: SelectAccessoire
+
     },
+    props: ['mode', 'id'],
     data() {
         return {
             //nombre_kilometre: null,
@@ -99,19 +103,20 @@ export default {
                 modele: '',
                 annee: ''
             },
+            selectedAccessoire: SelectAccessoire,
             couleur: '',
             nombre_kilometre: 0,
             prix_annonce: 0,
             promotion: 0,
             description_courte: '',
-            description_longue: '',   
+            description_longue: '',
             rules: {
                 required: value => !!value || "Le champ est requis",
                 vinIdUnique: () => this.vinIdUnique || "Ce véhicule existe déjà dans le systeme",
                 //validateNumer: value => !!value || "Le champs doit être supérieur de 0"
             },
             vinIdUnique: true
-            
+
         };
     },
     methods: {
@@ -139,7 +144,7 @@ export default {
             this.errorMessage = null;
             this.recette = null;
 
-            if(!this.nouveauvehicule) {
+            if (!this.nouveauvehicule) {
                 /*console.log("refresh vehiculeVin", this.vehiculeVin)
                 //const vehiculepatate = await getVehiculefr(this.vehiculeVin);
                 //console.log("vehiculepatate", vehiculepatate)
@@ -156,7 +161,7 @@ export default {
 
                 const formatter = new Intl.NumberFormat('en-US');
 
-                const vehicule = await getVehiculefr(this.id); 
+                const vehicule = await getVehiculefr(this.id);
                 console.log("refresh vehicule", vehicule)
                 this.vin = vehicule.vin;
                 this.id_etat = vehicule.id_etat;
@@ -185,13 +190,14 @@ export default {
                     prix_annonce: 0,
                     promotion: 0,
                     description_courte: null,
-                    description_longue: null
+                    description_longue: null,
+                    selectedAccessoire: []
                 }
-                this.loading=false;
+                this.loading = false;
             }
         },
         async autoVin() {
-            if(this.vehiculeVin !== ''){
+            if (this.vehiculeVin !== '') {
                 console.log(this.vehiculeVin);
                 this.donneesApi = await fetchVIN(this.vehiculeVin);
                 console.log("this.donneesApi", this.donneesApi.Make)
@@ -210,7 +216,7 @@ export default {
             }
         },
         async validateVehicule() {
-            if(this.nouveauvehicule) {
+            if (this.nouveauvehicule) {
                 this.submitNewVehicule();
             } else {
                 this.mettreAJourVehicule();
@@ -227,7 +233,7 @@ export default {
             const promoFormate = formatter.format(promo);
 
             const formValid = await this.$refs.vehiculform.validate();
-            
+
             if (!formValid.valid) {
                 return;
             }
@@ -277,11 +283,11 @@ export default {
             };
             console.log("cest lequel", this.id);
             console.log("couleur", vehicule.couleur);
-            
+
             try {
                 await udpateVoiture(vehicule);
                 this.$router.push(`/vehicle/${vehicule.vin}`);
-            } catch(err) {
+            } catch (err) {
                 console.error(err);
                 alert(err.message);
             }
@@ -292,7 +298,7 @@ export default {
             return this.mode === 'vehicule';
         },
         boutonText() {
-            return this.nouveauvehicule? "Ajouter" : "Éditer";
+            return this.nouveauvehicule ? "Ajouter" : "Éditer";
         },
         afficherVin() {
             return this.vin;
@@ -300,9 +306,6 @@ export default {
         vehiculeVin() {
             return this.nouveauvehicule? this.storeVehicule.vin : this.id;
         },  
-        async reset() {
-            return this.storeVehicule.isValidate2 = false;
-        },
     },
     mounted() {
         this.autoVin();
