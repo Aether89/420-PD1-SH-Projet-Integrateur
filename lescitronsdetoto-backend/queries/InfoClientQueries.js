@@ -146,22 +146,22 @@ const deleteInfoClient = async (idInfoClient, clientParam) => {
         if (!clientParam) {
             await client.query('BEGIN');
         }
-        // Vérifier d'abord si l'employé est lié à message_chat ou evenement
-        // const checkQuery = `
-        //     SELECT id_client 
-        //     FROM client
-        //     WHERE id_client = $1 NOT IN (
-        //         SELECT id_client FROM message_chat
-        //     )
-        // `;
-        // [idInfoClient]
+        // Vérifier d'abord si le client est lié à message_chat 
+        const checkQuery = `
+            SELECT id_client 
+            FROM client
+            WHERE id_client = $1 NOT IN (
+                SELECT id_client FROM message_chat
+            )
+        `;
+        [idInfoClient]
 
-        // const row = result.rows[0];
-        // if (row) {
+        const row = result.rows[0];
+        if (row) {
 
-        //     throw new error("L'employé est lier a une autre table");
+            throw new error("L'employé est lier a une autre table");
 
-        // }
+        }
 
 
         // Supprimer de la table client

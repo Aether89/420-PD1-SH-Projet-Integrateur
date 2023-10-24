@@ -13,7 +13,11 @@
             <v-list-item v-if="session.user.isAdmin">
                 <v-list-item-title><router-link to="/listeClients">Liste Clients</router-link></v-list-item-title>
             </v-list-item>
-            <v-list-item v-if="session.user">
+            <v-list-item v-if="session.user || !session.user.isAdmin">
+                <v-list-item-title><router-link to="/EditerEmploye">Editer employe</router-link></v-list-item-title>
+                <v-list-item-title><router-link to="/listeInterventions">Liste
+                        Interventions</router-link></v-list-item-title>
+                <v-list-item-title><router-link to="/listeAccessoires">Liste Accessoires</router-link></v-list-item-title>
                 <v-list-item-title><router-link to="/admin/newvehicle">Nouveau Véhicule</router-link></v-list-item-title>
             </v-list-item>
             <v-list-item>
