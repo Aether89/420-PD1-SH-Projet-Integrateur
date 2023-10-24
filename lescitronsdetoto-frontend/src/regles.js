@@ -11,7 +11,7 @@ const rules = {
   nomRue: (v) => ((!!v || "Champ requis") &&(/^[A-Za-z0-9\s]+$/.test(v) || "Nom de rue invalide")),
   nomVille: (v) => ((!!v || "Champ requis") &&(/^[A-Za-z\s]+$/.test(v) || "Nom de ville invalide")),
   nomProvince: (v) => ((!!v || "Champ requis") &&(/^[A-Za-z\s]+$/.test(v) || "Nom de province invalide")),
-  codePostal: (v) => ((!!v || "Champ requis") &&(/^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/.test(v) || "Code postal invalide"))
+  codePostal: (v) => ((!!v || "Champ requis") &&(/^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/.test(v) || "Code postal invalide")),
   monetaire: (v) => /^\d+(\.?,?\d?d?)?$/.test(v) || "Valeur monétaire invalide",
 
 };

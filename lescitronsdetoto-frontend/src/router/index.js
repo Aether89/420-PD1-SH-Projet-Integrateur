@@ -102,7 +102,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/EditionTransaction.vue'),
         props: true
       },
-
+{
         path: 'manage/availability',
         name: 'Gestion des disponibilités',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),
