@@ -45,7 +45,7 @@
         <v-spacer></v-spacer>
         <v-btn
           v-if="step === 1"
-          :disabled="!this.storeClient.nomClient || !this.storeClient.prenomClient || !this.storeClient.telephoneClient"
+          :disabled="this.storeClient.isValidate === false"
           color="primary"
           variant="flat"
           @click="step++"
@@ -55,7 +55,7 @@
 
         <v-btn
           v-if="step === 2"
-
+          :disabled="this.storeVehicule.isValidate2 === false"
           color="primary"
           variant="flat"
           @click="step++"
@@ -77,8 +77,7 @@
     import NewVehicule from './NewVehicule.vue'
     import NewClient from '../components/clientComponent/Client.vue'
     import Confirmation from '../components/transactionComponent/confirmation.vue'
-    //import rules from '@/regles';
-
+    //import rules from '@/regles'; 
     
     //import store from '../store/client'
     const step = ref(1)
@@ -103,12 +102,14 @@
   
 <script>
   import { useClientStore } from '@/store/client';
+  import { useActualyAVehiculeStore } from '@/store/actualyAVehicule'
   //import rules from '@/regles';
   export default {
     data: () => ({
       step: 1,
       session: session,
       storeClient: useClientStore(),
+      storeVehicule: useActualyAVehiculeStore()
     }),
     props: ['mode', 'id', 'rules'],
     computed: {
@@ -127,6 +128,7 @@
       console.log('Session :', this.session.user)
       //console.log('Admin :', session.user.isAdmin);
       console.log("step", this.step)
+      console.log("Validate", this.storeClient.isValidate)
     },
   }
 </script>

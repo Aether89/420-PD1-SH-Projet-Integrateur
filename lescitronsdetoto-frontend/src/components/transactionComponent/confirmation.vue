@@ -16,32 +16,32 @@
                                 </th>
                             </tr>
                             <tr>
-                                <td>Vin</td>
-                                <td>patate</td>
+                                <td>Vin : </td>
+                                <td>{{ this.storeVehicule.vin }}</td>
                             </tr>
                             <tr>
                                 <td>Marque</td>
-                                <td>patate</td>
+                                <td>{{this.storeVehicule.marque}}</td>
                             </tr>
                             <tr>
                                 <td>Modèle</td>
-                                <td>patate</td>
+                                <td>{{this.storeVehicule.modele}}</td>
                             </tr>
                             <tr>
                                 <td>Année</td>
-                                <td>patate</td>
+                                <td>{{this.storeVehicule.annee}}</td>
                             </tr>
                             <tr>
                                 <td>Couleur</td>
-                                <td>patate</td>
+                                <td>{{ this.storeVehicule.couleur }}</td>
                             </tr>
                             <tr>
                                 <td>Nombre de kilomètre</td>
-                                <td>patate km</td>
+                                <td>{{ this.storeVehicule.nombre_kilometre }}</td>
                             </tr>
                             <tr>
                                 <td>Estimation prix de vente</td>
-                                <td>patate</td>
+                                <td>{{ formatAmount(this.storeVehicule.prix_annonce) }} $</td>
                             </tr>
                             
                             </thead>
@@ -114,6 +114,7 @@
 import session from '../../session'
 import { useClientStore } from '@/store/client';
 import { useEmployeStore } from '@/store/employe'
+import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 export default {
     props: {
         id: String,
@@ -122,6 +123,7 @@ export default {
     data() {
         return {
             storeClient: useClientStore(),
+            storeVehicule: useActualyAVehiculeStore(),
             session: session,
             storeEmploye: useEmployeStore(),
             prix_evenement: null,
@@ -131,7 +133,16 @@ export default {
         };
     },
     methods: {
-        
+        formatAmount(amount) {
+            amount = parseFloat(amount);
+            if (!isNaN(amount)) {
+                const formattedAmount = amount.toFixed(2);
+                const trimmedAmount = formattedAmount.replace(/^0+/, '');
+                return trimmedAmount;
+            } else {
+                return amount;
+            }
+        }
     },
     computed: {
         codePostalVerif() {
@@ -152,8 +163,13 @@ export default {
     },
     mounted() {
         this.storeEmploye.chargerEmploye(this.session.user.idEmploye);
-        console.log("mode confirmation : ", this.mode)
-    }
+        console.log("mode confirmation : ", this.mode);
+        //console.log("storeVehicule", this.storeVehicule.marque)
+        
+    },
+    watch() {
+        this.storeVehicule.fetchVehiculeDetail();
+    },
 }
 </script>
 

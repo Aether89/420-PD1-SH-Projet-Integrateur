@@ -50,6 +50,9 @@
                     <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
                     <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
                 </div>
+                <div v-else>
+                    <v-btn type="submit">Valider</v-btn>
+                </div>
             </v-form>
         </v-card-text>
     </v-card>
@@ -82,11 +85,15 @@ export default {
     methods: {
         async submit() {
 
+            
             const formValid = await this.$refs.clientform.validate();
-
+            
             if (!formValid.valid) {
+                this.store.isValidate = false;
                 return;
             }
+
+            this.store.isValidate = true;
 
             const Client = {
                 nomClient: this.store.nomClient,
@@ -102,21 +109,23 @@ export default {
                 isArchive: this.store.isArchive
 
             };
-            if (!this.store.isNew) { Client.idClient = this.store.idClient };
+            if(this.mode !== 'vehicule') {
+                if (!this.store.isNew) { Client.idClient = this.store.idClient };
 
-            try {
+                try {
 
-                if (this.store.isNew) { await createClient(Client); } else { await updateClient(Client); }
+                    if (this.store.isNew) { await createClient(Client); } else { await updateClient(Client); }
 
-            } catch (err) {
-                console.error(err);
-                alert(err.message);
-                if (err.status === 409) {
-                    this.$refs.clientform.validate();
+                } catch (err) {
+                    console.error(err);
+                    alert(err.message);
+                    if (err.status === 409) {
+                        this.$refs.clientform.validate();
+                    }
                 }
+                this.store.getClients()
+                this.store.newClient();
             }
-            this.store.getClients()
-            this.store.newClient();
         },
         async supprimer() {
             try {
