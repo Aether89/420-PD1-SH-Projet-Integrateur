@@ -61,19 +61,11 @@ export default {
       return priceFormatting(this.price);
     },
     formatedPromo() {
-<<<<<<< HEAD
-
-=======
->>>>>>> ec8a0a2272e4d0b20822e3acedebb970aafb783c
       console.log("this.promo", this.promo)
       return (this.promo === "$0,00") ? null : this.promo;
     },
     hasPromo() {
       return (this.promo === "0,00 $" || this.promo === null) ? false : true;
-<<<<<<< HEAD
-
-=======
->>>>>>> ec8a0a2272e4d0b20822e3acedebb970aafb783c
     },
     colourPrimary() {
       return (!this.promo) ? appStore.colourPrimary : appStore.colourTernary;
