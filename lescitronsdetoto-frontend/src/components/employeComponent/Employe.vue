@@ -94,14 +94,7 @@ export default {
                 prenomEmploye: this.store.prenomEmploye,
                 posteEmploye: this.store.posteEmploye,
                 telephoneEmploye: this.store.telephoneEmploye,
-                numeroCivic: this.store.numeroCivic,
-                numeroAppartement: this.store.numeroAppartement,
-                nomRue: this.store.nomRue,
-                nomVille: this.store.nomVille,
-                nomProvince: this.store.nomProvince,
-                codePostal: this.store.codePostal,
-                isArchive: this.store.isArchive
-
+                codePostalEmploye: this.store.codePostalEmploye,
             };
             if (!this.store.isNew) { Employe.idEmploye = this.store.idEmploye };
 

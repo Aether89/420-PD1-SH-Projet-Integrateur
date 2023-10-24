@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia'
-import { fetchemploye, fetchEmploye } from '@/services/EmployeService'
+import { fetchemploye , fetchEmploye} from '@/services/EmployeService'
 
 export const useEmployeStore = defineStore('employe', {
   state: () => ({
@@ -11,13 +11,7 @@ export const useEmployeStore = defineStore('employe', {
     prenomEmploye: "",
     posteEmploye: "",
     telephoneEmploye: "",
-    numeroCivic: "",
-    numeroAppartement: "",
-    nomRue: "",
-    nomVille: "",
-    nomProvince: "",
-    codePostal: "",
-    isArchive: "",
+    codePostalEmploye: "",
     loading: false,
     loadingerror: false,
   }),
@@ -38,8 +32,6 @@ export const useEmployeStore = defineStore('employe', {
           this.nomProvince = result.nomProvince;
           this.codePostal = result.codePostal;
           this.isArchive = result.isArchive;
-          console.log(this.nomEmploye);
-
         })
     },
     newEmploye() {
@@ -55,7 +47,6 @@ export const useEmployeStore = defineStore('employe', {
       this.nomVille = "";
       this.nomProvince = "";
       this.codePostal = "";
-
     },
     getEmployes() {
       this.employes = [];
@@ -67,7 +58,7 @@ export const useEmployeStore = defineStore('employe', {
         this.loading = false;
         this.loadError = true;
       });
-    },
+  },
 
   },
 })
