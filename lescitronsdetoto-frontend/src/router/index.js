@@ -77,6 +77,11 @@ const routes = [
         path: 'EditerEmploye',
         name: 'Édition Employe',
         component: () => import(/* webpackChunkName: "home" */ '@/views/InfoEmploye.vue'),
+      },
+      {
+        path: 'manage/availability',
+        name: 'Gestion des disponibilités',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),
       }
     ],
   },

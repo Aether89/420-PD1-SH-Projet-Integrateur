@@ -2,7 +2,11 @@ export async function prune(objects, value) {
     let pruneValuesSet = new Set();
 
     objects.forEach(object => {
-        pruneValuesSet.add(object[value]);
+        if (value) {
+            pruneValuesSet.add(object[value]);
+        } else {
+            pruneValuesSet.add(object);
+        }
     });
 
     let pruneValues = Array.from(pruneValuesSet);

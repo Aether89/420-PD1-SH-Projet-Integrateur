@@ -15,7 +15,7 @@ const getAllInfoClients = async () => {
             nomClient: row.nom_client,
             prenomClient: row.prenom_client,
             telephoneClient: row.telephone_client,
-            numero_civic: row.numero_civic,
+            numeroCivic: row.numero_civic,
             numeroAppartement: row.numero_appartement,
             nomRue: row.nom_rue,
             nomVille: row.nom_ville,
@@ -52,7 +52,7 @@ const getInfoClient = async (idInfoClient, clientParam) => {
                 nomClient: row.nom_client,
                 prenomClient: row.prenom_client,
                 telephoneClient: row.telephone_client,
-                numero_civic: row.numero_civic,
+                numeroCivic: row.numero_civic,
                 numeroAppartement: row.numero_appartement,
                 nomRue: row.nom_rue,
                 nomVille: row.nom_ville,
@@ -92,7 +92,7 @@ const createInfoClient = async (infoClient, clientParam) => {
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,false )
              RETURNING id_client`,
             [infoClient.nomClient, infoClient.prenomClient, infoClient.telephoneClient, infoClient.numeroCivic, infoClient.numeroAppartement,
-            infoClient.nomRue, infoClient.nomVile, infoClient.nomProvince, infoClient.codePostal]
+            infoClient.nomRue, infoClient.nomVille, infoClient.nomProvince, infoClient.codePostal]
         );
 
 
@@ -121,7 +121,7 @@ const updateInfoClient = async (infoClient) => {
              nom_ville = $8, nom_province = $9, code_postal = $10, is_archive = $11
             WHERE id_client = $1`,
             [infoClient.idClient, infoClient.nomClient, infoClient.prenomClient, infoClient.telephoneClient, infoClient.numeroCivic, infoClient.numeroAppartement,
-            infoClient.nomRue, infoClient.nomVile, infoClient.nomProvince, infoClient.codePostal, infoClient.isArchive]
+            infoClient.nomRue, infoClient.nomVille, infoClient.nomProvince, infoClient.codePostal, infoClient.isArchive]
         );
         if (result.rowCount === 0) {
             throw new Error(`Impossible de trouver le client avec id_client ${infoClient.idClient}`);

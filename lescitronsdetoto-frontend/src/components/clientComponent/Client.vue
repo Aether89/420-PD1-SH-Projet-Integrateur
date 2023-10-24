@@ -15,7 +15,7 @@
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field v-model="this.store.telephoneClient" type="number" label="Téléphone de l'employé"
+                        <v-text-field v-model="this.store.telephoneClient" type="number" label="Téléphone du client"
                             :rules="[rules.telephone]" class="no-spinner" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">

@@ -171,7 +171,7 @@ router.put('/:id',
         const id = req.params.id
         const user = req.user;
         console.log(user);
-        if (!user || !user.isAdmin || user.id_employe !== id) {
+        if (!user && !user.isAdmin && user.id_employe !== id) {
             return next(new HttpError(403, "Droit administrateur requis ou être titulaire du compte"));
         }
 

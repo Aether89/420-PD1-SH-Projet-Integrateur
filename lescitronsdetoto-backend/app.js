@@ -15,6 +15,7 @@ const citronRouter = require('./routes/citronsdetotoRouter');
 const vehiculeRouter = require('./routes/vehiculeRouter');
 const interventionRouter = require('./routes/InterventionRouter');
 const accessoireRouter = require('./routes/AccessoireRouter');
+const AvailabilityRouter = require('./routes/AvailabilityRouter');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/employes', EmployeRouter);
 app.use('/clients', ClientRouter);
 app.use('/interventions', interventionRouter);
 app.use('/accessoires', accessoireRouter);
+app.use('/availability', AvailabilityRouter);
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {
