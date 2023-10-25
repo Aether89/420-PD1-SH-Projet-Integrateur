@@ -50,7 +50,7 @@
                                 </tr>
                             </thead>
                         </v-table>
-                        <SelectAccessoire />
+                        <SelectAccessoire @selectedEventIDs="selectedAccessoire" />
                     </v-col>
                 </v-row>
                 <br>
@@ -80,7 +80,8 @@ import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.
 const store = useVehiclesStore();
 export default {
     components: {
-        SelectAccessoire: SelectAccessoire
+        SelectAccessoire: SelectAccessoire,
+        selectedAccessoire="@selectedEventIDs"
 
     },
     props: ['mode', 'id'],
@@ -97,7 +98,7 @@ export default {
                 modele: '',
                 annee: ''
             },
-            selectedAccessoire: SelectAccessoire,
+            selectedAccessoire: [],
             couleur: '',
             nombre_kilometre: 0,
             prix_annonce: 0,
@@ -209,7 +210,8 @@ export default {
                 prix_annonce: prixFormate,
                 promotion: promoFormate,
                 description_courte: this.description_courte,
-                description_longue: this.description_longue
+                description_longue: this.description_longue,
+                selectedAccessoire: this.selectedAccessoire
             };
             try {
                 await createVehicule(vehicule);

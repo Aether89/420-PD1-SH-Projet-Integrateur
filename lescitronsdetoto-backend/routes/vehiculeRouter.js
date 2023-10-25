@@ -12,6 +12,7 @@ const vehiculeQuerie = require("../queries/VehiculeQueries");
 const fetchVIN = require("../vpic/VINAPI");
 const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
 
+
 module.exports = router;
 
 router.get('/', (req, res, next) => {
@@ -155,6 +156,7 @@ passport.authenticate('basic', { session: false }),
                     : req.body.promotion,
                 description_courte: "" + req.body.description_courte,
                 description_longue: "" + req.body.description_longue,
+                selectedAccessoire:[] + req.body.selectedAccessoire,
             };
             console.log("updated Vehicule : ", updateVehicule);
 

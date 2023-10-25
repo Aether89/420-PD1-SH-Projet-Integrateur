@@ -2,38 +2,46 @@ const HttpError = require('../HttpError');
 const pool = require('./DBPool');
 const accessoireQuerie = require('./AccessoireQueries');
 
-const addAccessoireVehicule = async ( idAccessoire,vin, clientParam) => {
-    const client = clientParam || (await pool.connect());
+const addAccessoireVehicule = async (idAccessoire, vin, clientParam) => {
+    let client; // Déclarez client en dehors du bloc try
     try {
-        if (!clientParam) {
-            await client.query('BEGIN');
+        client = clientParam || (await pool.connect());
+
+        await client.query('BEGIN');
+
+        for (let i = 0; i < idAccessoire.length; i++) {
+            const result = await client.query(
+                `INSERT INTO vehicule_accessoire (vin, id_accessoire) 
+                 VALUES ($1, $2 )
+                 RETURNING id_accessoire`,
+                [vin, idAccessoire[i]]
+            );
         }
-        const result = await client.query(
-            `INSERT INTO vehicule_accessoire (vin, id_accessoire) 
-                         VALUES ($1, $2 )
-                         RETURNING id_accessoire`,
-            [
-                vin,
-                idAccessoire
-            ]
-        );
-                    await client.query('COMMIT');
-       
-        const newAccessoire = await accessoireQuerie.getAccessoire(result.rows.map, client);
-  
+
+        await client.query('COMMIT');
+
+        // Déclarez newAccessoire en dehors de la boucle for
+        const newAccessoire = [];
+
+        for (let i = 0; i < result.rows.length; i++) {
+            const row = result.rows[i];
+            const accessoire = await accessoireQuerie.getAccessoire(row, client);
+            newAccessoire.push(accessoire);
+        }
 
         return newAccessoire;
     } catch (err) {
-        if (!client) {
+        if (client && !clientParam) {
             await client.query('ROLLBACK');
         }
         throw new HttpError("Une erreur est survenue lors de la création de l'accessoire", 500);
     } finally {
-        if (!client) {
+        if (client && !clientParam) {
             client.release();
         }
     }
 };
+
 exports.addAccessoireVehicule = addAccessoireVehicule;
 
 const getAccessoireVehicule = async (vin, clientParam) => {
