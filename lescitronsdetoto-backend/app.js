@@ -25,6 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/', citronRouter)
 app.use('/vehicule', vehiculeRouter);
 app.use('/employes', EmployeRouter);
 app.use('/transaction', transactionRouter);
@@ -84,7 +85,8 @@ app.get('/login',
         idEmploye: req.user.idEmploye,
         courrielCompteEmploye: req.user.courrielCompteEmploye,
         isAdmin: req.user.isAdmin,
-        isActive: req.user.isActive
+        isActive: req.user.isActive,
+        aChangePassword: req.user.aChangePassword,
       };
 
       res.json(userDetails);
@@ -98,6 +100,7 @@ app.get('/login',
 app.post('/login',
   (req, res, next) => {
 
+    
     if (!req.body.userAccountId || req.body.userAccountId === '') {
       return next(new HttpError(400, 'Propriété userAccountId requise'));
     }
