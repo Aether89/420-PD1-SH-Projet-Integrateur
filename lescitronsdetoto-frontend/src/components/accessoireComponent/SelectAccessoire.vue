@@ -76,6 +76,9 @@ export default {
         },
     },
     watch: {
+        selectedEventIDs() {
+            this.$emit('selectedEventIDs', this.selectedEventIDs);
+        },
         page(newIndex, oldIndex) {
             this.currentIndex = this.contentOfPage * (this.page - 1);
         }
