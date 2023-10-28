@@ -169,6 +169,7 @@ router.put('/:id',
     (req, res, next) => {
 
         const id = req.params.id
+        console.log("id : ", id)
         const user = req.user;
         console.log(user);
         if (!user && !user.isAdmin && user.id_employe !== id) {

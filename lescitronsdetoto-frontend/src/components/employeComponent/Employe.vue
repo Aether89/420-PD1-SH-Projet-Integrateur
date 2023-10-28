@@ -5,7 +5,7 @@
         </v-toolbar>
 
         <v-card-text>
-            <v-form @submit.prevent="submit" validate-on="submit lazy" ref="employeform">
+            <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="employeform">
                 <v-row>
                     <v-col cols="12" md="6">
                         <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.nom]"
@@ -16,8 +16,9 @@
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field :disabled="!(session.user.isAdmin)" v-model="this.store.posteEmploye"
-                            label="Poste de l'employé" :rules="[rules.posteEmploye]" dense></v-text-field>
+                        <v-text-field :disabled="!(this.session.user && this.session.user.isAdmin)"
+                            v-model="this.store.posteEmploye" label="Poste de l'employé" :rules="[rules.posteEmploye]"
+                            dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field type="number" class="no-spinner" v-model="this.store.telephoneEmploye"
@@ -47,7 +48,7 @@
                             :rules="[rules.codePostal]" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-checkbox v-if="!this.store.isNew && session.user.isAdmin" v-model="this.store.isArchive"
+                        <v-checkbox v-if="!this.store.isNew && this.session.user.isAdmin" v-model="this.store.isArchive"
                             label="Archiver l'employé" dense></v-checkbox>
                     </v-col>
                 </v-row>
@@ -94,14 +95,7 @@ export default {
                 prenomEmploye: this.store.prenomEmploye,
                 posteEmploye: this.store.posteEmploye,
                 telephoneEmploye: this.store.telephoneEmploye,
-                numeroCivic: this.store.numeroCivic,
-                numeroAppartement: this.store.numeroAppartement,
-                nomRue: this.store.nomRue,
-                nomVille: this.store.nomVille,
-                nomProvince: this.store.nomProvince,
-                codePostal: this.store.codePostal,
-                isArchive: this.store.isArchive
-
+                codePostalEmploye: this.store.codePostalEmploye,
             };
             if (!this.store.isNew) { Employe.idEmploye = this.store.idEmploye };
 

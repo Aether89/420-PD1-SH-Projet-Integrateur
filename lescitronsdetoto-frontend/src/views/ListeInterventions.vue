@@ -10,6 +10,7 @@
 <script>
 import listeIntervention from '@/components/interventionComponent/listeIntervention.vue';
 import InterventionVue from '@/components/interventionComponent/Intervention.vue';
+import session from '@/session';
 
 export default {
     components: {
@@ -20,6 +21,7 @@ export default {
 
     data() {
         return {
+            session: session,
         };
     },
 };

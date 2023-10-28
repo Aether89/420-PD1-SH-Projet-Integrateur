@@ -9,6 +9,7 @@
 <script>
 import ScrollAccessoire from '@/components/accessoireComponent/ScrollAccessoire.vue';
 import AccessoireVue from '@/components/accessoireComponent/Accessoire.vue';
+import session from '@/session';
 
 export default {
     components: {
@@ -19,6 +20,7 @@ export default {
 
     data() {
         return {
+            session: session,
         };
     },
 };

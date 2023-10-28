@@ -6,8 +6,8 @@
             </v-card-title>
 
             <template v-slot:append>
-                <v-btn :disabled="!(this.session.user.isAdmin)" color="white" icon="mdi-plus" size="small"
-                    @click="interventionStore.newIntervention()"></v-btn>
+                <v-btn :disabled="!(this.session.user && this.session.user.isAdmin)" color="white" icon="mdi-plus"
+                    size="small" @click="interventionStore.newIntervention()"></v-btn>
             </template>
         </v-card-item>
         <v-divider></v-divider>
