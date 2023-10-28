@@ -3,28 +3,33 @@ const pool = require('./DBPool');
 const accessoireQuerie = require('./AccessoireQueries');
 
 const addAccessoireVehicule = async (idAccessoire, vin, clientParam) => {
-    let client; // Déclarez client en dehors du bloc try
+    let client; 
     try {
         client = clientParam || (await pool.connect());
 
         await client.query('BEGIN');
-
+        let resultat = [];
         for (let i = 0; i < idAccessoire.length; i++) {
-            const result = await client.query(
+          const result = await client.query(
                 `INSERT INTO vehicule_accessoire (vin, id_accessoire) 
                  VALUES ($1, $2 )
                  RETURNING id_accessoire`,
                 [vin, idAccessoire[i]]
             );
+            
+            if (result.rowCount === 0) {
+                throw new HttpError(404, `Impossible de trouver l'accessoire avec id_accessoire ${idAccessoire[i]}`);
+            }
+            resultat.push(result);
         }
 
         await client.query('COMMIT');
 
         // Déclarez newAccessoire en dehors de la boucle for
-        const newAccessoire = [];
+        let newAccessoire = [];
 
-        for (let i = 0; i < result.rows.length; i++) {
-            const row = result.rows[i];
+        for (let i = 0; i < resultat.length; i++) {
+            const row = resultat[i];
             const accessoire = await accessoireQuerie.getAccessoire(row, client);
             newAccessoire.push(accessoire);
         }
