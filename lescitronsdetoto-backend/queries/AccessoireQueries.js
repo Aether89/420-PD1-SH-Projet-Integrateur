@@ -55,16 +55,9 @@ const addAccessoireVehicule = async ( vin,idAccessoire, clientParam) => {
 };
 exports.addAccessoireVehicule = addAccessoireVehicule;
 
-const getAccessoire = async (idAccessoire, clientParam) => {
-    const client = clientParam || (await pool.connect());
+const getAccessoire = async (idAccessoire) => {
 
-    try {
-        if (!clientParam) {
-
-            await client.query("BEGIN");
-        }
-
-        const result = await client.query(
+        const result = await pool.query(
             `SELECT id_accessoire, nom_accessoire
          FROM accessoire
          WHERE id_accessoire = $1`,
@@ -82,16 +75,7 @@ const getAccessoire = async (idAccessoire, clientParam) => {
 
             return accessoire;
         };
-    } catch (err) {
-        if (!clientParam) {
-            await client.query("ROLLBACK");
-        }
-        throw err;
-    } finally {
-        if (!clientParam) {
-            client.release();
-        }
-    }
+ 
 };
 exports.getAccessoire = getAccessoire;
 
