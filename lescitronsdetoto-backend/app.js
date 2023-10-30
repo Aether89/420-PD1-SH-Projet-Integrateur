@@ -77,6 +77,9 @@ app.get('/login',
   (req, res, next) => {
 
     if (req.user) {
+
+
+
       const userDetails = {
         userAccountId: req.user.userAccountId,
         idEmploye: req.user.idEmploye,
@@ -86,18 +89,13 @@ app.get('/login',
         aChangePassword: req.user.aChangePassword,
       };
 
-      if (req.user.aChangePassword) {
-        // Si aChangePassword est true, l'utilisateur doit changer de mot de passe
-        userDetails.mustChangePassword = true;
-        return res.json(userDetails);
-      } else {
-        res.json(userDetails);
-      }
+      res.json(userDetails);
     } else {
       return next({ status: 500, message: "Propriété user absente" });
     }
   }
 );
+
 
 app.post('/login',
   (req, res, next) => {
@@ -139,60 +137,6 @@ app.post('/login',
       }
 
     });
-  }
-);
-
-app.put('/changepassword',
-  passport.authenticate('basic', { session: false }),
-  async (req, res, next) => {
-    try {
-      const userAccountId = req.user.userAccountId;
-      const oldPassword = req.body.oldPassword;
-      const newPassword = req.body.newPassword;
-
-      // Vérifiez si l'ancien mot de passe est correct avant de le modifier
-      const user = await userAccountQueries.getLoginByUserAccountId(userAccountId);
-      if (!user) {
-        return next(new HttpError(404, 'Utilisateur introuvable'));
-      }
-
-      const iterations = 100000;
-      const keylen = 64;
-      const digest = 'sha512';
-
-      crypto.pbkdf2(oldPassword, user.passwordSalt, iterations, keylen, digest, (err, hashedPassword) => {
-        if (err) {
-          return next(err);
-        }
-
-        const passwordHashBuffer = Buffer.from(user.passwordHash, 'base64');
-
-        if (!crypto.timingSafeEqual(passwordHashBuffer, hashedPassword)) {
-          return next(new HttpError(401, 'Mot de passe incorrect'));
-        }
-
-        // Le mot de passe actuel est correct, générez un nouveau sel et mettez à jour le mot de passe
-        const newSaltBuf = crypto.randomBytes(16);
-        const newSalt = newSaltBuf.toString('base64');
-
-        crypto.pbkdf2(newPassword, newSalt, iterations, keylen, digest, async (err, newDerivedKey) => {
-          if (err) {
-            return next(err);
-          }
-
-          const newPasswordHashBase64 = newDerivedKey.toString('base64');
-
-          const result = await userAccountQueries.updatePassword(userAccountId, newPasswordHashBase64, newSalt);
-          if (!result) {
-            return next(new HttpError(500, 'Erreur lors de la mise à jour du mot de passe'));
-          }
-
-          res.status(200).json({ success: true });
-        });
-      });
-    } catch (error) {
-      return next(error);
-    }
   }
 );
 

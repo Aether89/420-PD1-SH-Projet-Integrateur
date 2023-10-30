@@ -25,9 +25,6 @@
                             density="compact" maxlength="64"></v-text-field>
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
-
-                        <SelectAccessoire v-if="mode === 'vehicule'" @selectedEventIDs="receiveEmit" />
-
                     </v-col>
                 </v-row>
                 <v-row>
@@ -84,7 +81,6 @@ import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.
 
 
 
-
 const store = useVehiclesStore();
 export default {
     components: {
@@ -127,9 +123,6 @@ export default {
         };
     },
     methods: {
-        receiveEmit() {
-            this.selectedAccessoire = selectedEventIDs;
-        },
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
                 console.log("promo", this.storeVehicule.promotion)
@@ -292,7 +285,6 @@ export default {
                 description_courte: this.description_courte,
                 description_longue: this.description_longue
             };
-
             console.log("cest lequel", this.id);
             console.log("couleur", vehicule.couleur);
 
@@ -306,7 +298,6 @@ export default {
         }
     },
     computed: {
-
         nouveauvehicule() {
             return this.mode === 'vehicule';
         },
@@ -335,5 +326,4 @@ export default {
 .no-spinner input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
-}
-</style>
+}</style>

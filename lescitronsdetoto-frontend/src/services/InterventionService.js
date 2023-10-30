@@ -91,7 +91,21 @@ export async function updateIntervention(Intervention) {
 
 
 
+export async function updateInterventionImage(idIntervention, formData) {
+    const response = await fetch(`/api/interventions/${idIntervention}/image`, {
+        method: "POST",
+        headers: {
+            ...session.getAuthHeaders()
+        },
+        body: formData
+    });
 
+    if (response.ok) {
+        return;
+    } else {
+        throw await createServiceError(response);
+    }
+}
 
 export async function deleteIntervention(idIntervention) {
     const response = await fetch(`/api/interventions/${idIntervention}`, {

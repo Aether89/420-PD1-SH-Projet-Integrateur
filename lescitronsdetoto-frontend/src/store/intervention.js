@@ -8,7 +8,7 @@ export const useInterventionStore = defineStore('intervention', {
     isNew: false,
     idIntervention: "",
     typeIntervention: "",
-    valeurIntervention: '',
+    valeurIntervention: "",
     etatIntervention: "",
     loading: false,
     loadingerror: false,

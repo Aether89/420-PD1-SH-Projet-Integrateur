@@ -56,7 +56,7 @@ export async function fetchEmploye() {
 
 
 export async function fetchemploye(idEmploye) {
-    const response = await fetch(`/api/employes/${idEmploye}`);
+    const response = await axios(`/api/employes/${idEmploye}`);
     if (response.status === 200) {
         return convertToEmploye(response.data);
     } else {
