@@ -64,7 +64,7 @@ export default {
   },
 computed: {
   accountIcon() {
-    return (this.session.user.isAdmin) ? 'mdi-shield-crown' : 'mdi-account-circle';
+    return (this.session.user.isAdmin) ? 'mdi-account-supervisor-circle' : 'mdi-account-circle';
   },
   isSM() {
             return this.$vuetify.display.smAndUp;
