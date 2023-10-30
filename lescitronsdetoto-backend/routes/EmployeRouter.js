@@ -46,6 +46,7 @@ function validateEmploye(employe) {
         }
     }
     if (employe.numeroCivic !== '') {
+        console.log("numeroCivic : ", employe.numeroCivic);
         if (!rules.numeroCivic.test(employe.numeroCivic)) {
             throw new HttpError(400, "Format du numéro civic invalid");
         }
@@ -109,7 +110,7 @@ router.post('/',
             prenomEmploye: "" + req.body.prenomEmploye,
             posteEmploye: "" + req.body.posteEmploye,
             telephoneEmploye: "" + req.body.telephoneEmploye,
-            numeroCivic: + req.body.numeroCivic,
+            numeroCivic: req.body.numeroCivic,
             numeroAppartement: "" + req.body.numeroAppartement,
             nomRue: "" + req.body.nomRue,
             nomVille: "" + req.body.nomVille,

@@ -116,7 +116,23 @@
                     </v-col>
 
                     <v-col cols="12" sm="8">
+                        <v-card>
+                            <v-sheet class="pa-3 bg-primary text-center" rounded="t-xl">
+                                Listes des accessoires
+                                <v-pagination :total-visible="1" :length="this.pagination" default="1"
+                                    v-model="page"></v-pagination>
+                            </v-sheet>
 
+                            <div class="pa-4">
+
+                                <v-chip
+                                    v-for="item in items.slice(this.currentIndex, (this.currentIndex + this.contentOfPage))"
+                                    :key="item.index">
+                                    {{ item.name }}
+                                </v-chip>
+
+                            </div>
+                        </v-card>
                         <v-card class="pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
 
                     </v-col>
@@ -133,31 +149,45 @@ import { useVehiclesStore } from '@/store/vehicles';
 import { useAppStore } from '@/store/app';
 import { priceFormatting } from '@/services/common';
 import { deleteVehicule } from '@/services/vehicule';
+import { useAccessoireStore } from '@/store/accessoire';
+import { fetchAccessoireById } from '@/services/AccessoireService';
+import { reactive } from 'vue';
+
+
 import session from '@/session';
 import FooterBar from '@/layouts/default/FooterBar.vue';
 
-const appStore = useAppStore();
-const store = useVehiclesStore();
+
+
+
+
+
 export default {
     components: {
         FooterBar: FooterBar
     },
     props: {
         id: String,
-        isDialog: Boolean
+        isDialog: Boolean,
+
     },
-    data: function () {
+    data() {
         return {
+            page: 1,
             session: session,
             load: true,
+            Accessoires: useAccessoireStore(),
+            store: useVehiclesStore(),
+            appStore: useAppStore(),
+            selectedAccessoire: this.store.selectedAccessoire,
         };
     },
     computed: {
         local() {
-            return store.vehicle.local;
+            return this.store.vehicle.local;
         },
         api() {
-            return store.vehicle.api;
+            return this.store.vehicle.api;
         },
         regPrice() {
             return this.local.price;
@@ -172,22 +202,53 @@ export default {
             return "/vehicles/" + this.id;
         },
         colourPrimary() {
-            return appStore.colourPrimary;
+            return this.appStore.colourPrimary;
         },
         colourSecondary() {
-            return appStore.colourSecondary;
+            return this.appStore.colourSecondary;
         },
         editionURL() {
             return "/vehicle/" + this.id + "/edition";
-        }
+        },
+        formState() {
+            reactive({
+                selectedEventIDs: [],
+            })
+        },
+
+        items() {
+
+
+            console.log(this.store);
+            console.log(this.store.selectedAccessoire.length);
+            let num = 0;
+            return Array.from({ length: this.store.selectedAccessoire.length }, () => {
+                const name = this.store.selectedAccessoire;
+
+                num++;
+                return {
+
+                    name: `${name} `,
+
+                };
+            })
+
+        },
     },
+
+
     methods: {
+
         async loadData() {
             this.load = true;
-            await store.getVehicle(this.id);
+            await this.store.getVehicle(this.id);
+            this.Accessoires.getAccessoires();
             this.load = false;
             console.log(JSON.stringify(this.local.price, null, "  "));
 
+        },
+        page(newIndex, oldIndex) {
+            this.currentIndex = this.contentOfPage * (this.page - 1);
         },
         async suppression() {
             await deleteVehicule(this.id);
@@ -203,6 +264,8 @@ export default {
     },
     mounted() {
         this.loadData();
+
+
     },
     watch: {
         id(newId) {
@@ -210,4 +273,5 @@ export default {
         },
     }
 }
+
 </script>
