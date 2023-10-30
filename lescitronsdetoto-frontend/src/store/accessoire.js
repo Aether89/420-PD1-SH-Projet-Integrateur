@@ -12,7 +12,7 @@ export const useAccessoireStore = defineStore('accessoire', {
     loadingerror: false,
   }),
   actions: {
-    async chargerAccessoire(idAccessoire) {
+    chargerAccessoire(idAccessoire) {
       this.idAccessoire = idAccessoire;
       fetchAccessoireById(idAccessoire)
         .then((result) => {
@@ -27,7 +27,7 @@ export const useAccessoireStore = defineStore('accessoire', {
       this.nomAccessoire = "";
       
     },
-    getAccessoires() {
+    async getAccessoires() {
       this.accessoires = [];
       fetchAccessoire().then(accessoires => {
         this.accessoires = accessoires;
@@ -40,4 +40,4 @@ export const useAccessoireStore = defineStore('accessoire', {
     },
 
   },
-})
+});

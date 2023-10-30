@@ -42,7 +42,8 @@ export const useVehiclesStore = defineStore('vehicles', {
     vehicle: {
       local: null,
       api: null
-    }
+    },
+    selectedAccessoire: [],
 
   }),
   actions: {
