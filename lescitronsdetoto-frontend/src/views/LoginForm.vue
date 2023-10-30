@@ -24,28 +24,21 @@ export default {
             passwordValid: true,
             rules: {
                 required: value => !!value || "Le champ est requis",
-
+                passwordValid: () => this.passwordValid || "Nom d'utilisateur ou mot de passe incorrect"
             }
         };
     },
     methods: {
-
-        async login() {
-            try {
-                const user = await session.login(this.userAccountId, this.password);
+        login() {
+            session.login(this.userAccountId, this.password).then(() => {
+                this.passwordValid = true;
                 this.$refs.loginform.validate();
-
-                if (user.mustChangePassword) {
-                    // Redirigez l'utilisateur vers une page de changement de mot de passe
-                    this.$router.push("/changepassword");
-                } else {
-                    // L'utilisateur n'a pas besoin de changer de mot de passe, redirigez-le vers une page d'accueil
-                    this.$router.go(-1);
-                }
-            } catch (error) {
-                // Gérez les erreurs d'authentification ici
-                console.error(error);
-            }
+                this.$router.go(-1);
+            }).catch(authError => {
+                this.passwordValid = false;
+                this.$refs.loginform.validate();
+                alert(authError.message);
+            });
         }
     }
 }

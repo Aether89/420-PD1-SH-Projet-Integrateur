@@ -228,7 +228,7 @@ export const convertToVehicule = jsonVehicule => {
     promo: jsonVehicule.promotion,
     km: jsonVehicule.nombre_kilometre,
     colour: jsonVehicule.couleur,
-    selectedAccessoire:jsonVehicule.selectedAccessoire
+    Accessoire:jsonVehicule.selectedAccessoire
   }
 };
 
@@ -242,7 +242,7 @@ export const convertToVehiculefr = jsonVehicule => {
     promotion: jsonVehicule.promotion,
     nombre_kilometre: jsonVehicule.nombre_kilometre,
     couleur: jsonVehicule.couleur,
-    selectedAccessoire:jsonVehicule.selectedAccessoire
+    Accessoire:jsonVehicule.selectedAccessoire
   }
 };
 
@@ -285,8 +285,7 @@ const convertToVehiculeList = jsonVehicules => {
     model: jsonVehicules.modele,
     year: jsonVehicules.annee,
     price: jsonVehicules.prix_annonce,
-    promo: jsonVehicules.promotion,
-    selectedAccessoire:jsonVehicules.selectedAccessoire
+    promo: jsonVehicules.promotion
   }
 };
 
