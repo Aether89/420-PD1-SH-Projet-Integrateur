@@ -102,6 +102,19 @@ const updateEvenement = async (evenement) => {
 };
 exports.updateEvenement = updateEvenement;
 
+const updateEvenementClient = async (evenement) => {
+    const result = await pool.query(
+        `UPDATE evenement
+        SET 
+        id_client = $1
+        WHERE id_evenement = $2`,
+        [evenement.id_client, evenement.id_evenement]
+    );
+    return result.rowCount > 0;
+};
+exports.updateEvenementClient = updateEvenementClient;
+
+
 const insertAutoEvenement = async (autoEvenement) => {
     const result = await pool.query(
         `INSERT INTO vehicule_evenement (vin, id_evenement)
@@ -150,10 +163,20 @@ exports.checkAvailabilityExist = checkAvailabilityExist;
 const getAvailability = async (user) => {
     const result = await pool.query(
         `SELECT * FROM evenement
-        WHERE user_account_id = $1 AND id_type_evenement = 1 AND id_client IS NULL
+        WHERE user_account_id = $1 AND id_type_evenement = 1
         ORDER BY date_heure_evenement ASC`,
         [user]
     );
     return result.rows;
 }
 exports.getAvailability = getAvailability;
+
+const getAvailabilities = async () => {
+    const result = await pool.query(
+        `SELECT * FROM evenement
+        WHERE id_type_evenement = 1 AND id_client IS NULL AND date_heure_evenement >= NOW()
+        ORDER BY date_heure_evenement ASC`,
+    );
+    return result.rows;
+}
+exports.getAvailabilities = getAvailabilities;

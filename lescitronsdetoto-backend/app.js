@@ -17,6 +17,7 @@ const transactionRouter = require('./routes/transactionRouter');
 const interventionRouter = require('./routes/InterventionRouter');
 const accessoireRouter = require('./routes/AccessoireRouter');
 const AvailabilityRouter = require('./routes/AvailabilityRouter');
+const RendezVousRouter = require('./routes/RendezVousRouter');
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.use('/clients', ClientRouter);
 app.use('/interventions', interventionRouter);
 app.use('/accessoires', accessoireRouter);
 app.use('/availability', AvailabilityRouter);
+app.use('/rendezvous', RendezVousRouter);
+
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {
