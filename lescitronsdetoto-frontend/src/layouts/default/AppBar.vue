@@ -28,13 +28,13 @@
   
         <v-card min-width="300">
           <v-card-title v-if="!isSM">Bienvenue, {{ this.session.user.userAccountId }}</v-card-title>
-            <v-list>
+            <v-list nav>
               <v-list-item prepend-icon="mdi-cog" density="compact" to="/EditerEmploye" title="Éditer Compte" />
               <v-list-item prepend-icon="mdi-calendar-month" density="compact" to="/manage/availability"
         title="Gestion des disponibilités" />            </v-list>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="session.disconnect()">Déconnexion</v-btn>
+              <v-btn color="red" text @click="session.disconnect()">Déconnexion</v-btn>
             </v-card-actions>
         </v-card>
       </v-menu>

@@ -12,7 +12,7 @@
         </template>
   
         <v-card min-width="300">
-            <v-list>
+            <v-list nav>
                 <div v-if="session.user">
     <v-list-item prepend-icon="mdi-cart-plus" density="compact" to="/achat/vehicule" title="Achat véhicule" />
     <v-list-item prepend-icon="mdi-cart-minus" density="compact" to="/vente/vehicule" title="Vente véhicule" />
@@ -21,15 +21,11 @@
     <v-list-item prepend-icon="mdi-car-cog" density="compact" to="/listeAccessoires"
         title="Gestion des Accessoires" />
 </div>
-
-<v-list-group v-if="session.user.isAdmin" value="Administration">
-    <template v-slot:activator="{ props }">
-        <v-list-item v-bind="props" title="Admin"></v-list-item>
-    </template>
+  <v-divider/>
+  <v-list-item type="subheader" density="compact" title="Administration" />
     <v-list-item prepend-icon="mdi-face-agent" density="compact" to="/listeEmployes" title="Gestion Employés" />
     <v-list-item prepend-icon="mdi-receipt-outline" density="compact" to="/transaction" title="Gestion des Transactions" />
     <v-list-item prepend-icon="mdi-account-group" density="compact" to="/listeClients" title="Gestion des Clients" />
-</v-list-group>
             </v-list>
         </v-card>
       </v-menu>
