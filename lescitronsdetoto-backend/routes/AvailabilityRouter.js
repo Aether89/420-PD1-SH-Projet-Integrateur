@@ -96,17 +96,58 @@ passport.authenticate('basic', { session: false }),
 
             result.forEach((event) => {
                 const date = new Date(event.date_heure_evenement);
+
+                const client = event.id_client;
+                const agent = event.user_account_id;
+
                 const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '/');;
                 const formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
 
                 const existingDate = availability.find((block) => block.date === formattedDate);
 
                 if (existingDate) {
-                    existingDate.block.push({ date: formattedDate, time: formattedTime, status: "old"});
+                    existingDate.block.push({ date: formattedDate, time: formattedTime, status: "old", client: client, agent: agent});
                 } else {    
-                    availability.push({ date: formattedDate, block: [{ date: formattedDate, time: formattedTime, status: "old"}] });
+                    availability.push({ date: formattedDate, block: [{ date: formattedDate, time: formattedTime, status: "old", client: client, agent: agent}] });
                 }
             });
+
+            res = res.status(200).json(availability);
+        } catch (error) {
+            next(error);
+        }
+
+    }
+
+
+);
+
+router.get('/all',
+    async (req, res, next) => {
+
+        try {
+            let result = await evenementQueries.getAvailabilities();
+
+            const availability = [];
+
+            result.forEach((event) => {
+                const date = new Date(event.date_heure_evenement);
+                
+                const client = event.id_client;
+                const agent = event.user_account_id;
+                const eventId = event.id_evenement;
+                const formattedDate = date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/-/g, '/');;
+                const formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+
+                const existingDate = availability.find((block) => block.date === formattedDate);
+
+                if (existingDate) {
+                    existingDate.block.push({ date: formattedDate, time: formattedTime, status: "old", client: client, agent: agent, eventId: eventId});
+                } else {    
+                    availability.push({ date: formattedDate, block: [{ date: formattedDate, time: formattedTime, status: "old", client: client, agent: agent, eventId: eventId}] });
+                }
+            });
+
             res = res.status(200).json(availability);
         } catch (error) {
             next(error);

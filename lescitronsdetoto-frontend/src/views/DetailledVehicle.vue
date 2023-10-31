@@ -39,6 +39,8 @@
                         </v-card>
 
                         <v-card v-if="session.user" color="lime-lighten-1" class="pa-2 text-center mt-4">
+                            <v-btn class="ma-2" type="button" prepend-icon="mdi-shopping" color="green-lighten-3"
+                                aria-label="Éditer" :to="venteURL">Vendre</v-btn>
                             <v-btn class="ma-2" type="button" prepend-icon="mdi-file-edit-outline" color="amber-lighten-3"
                                 aria-label="Éditer" :to="editionURL" router-link>Éditer</v-btn>
                             <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression"
@@ -47,7 +49,13 @@
 
                         <v-card :color="this.colourSecondary" class="pb-6 text-center mt-4">
                             <v-card-title>Ce véhicule m'interesse</v-card-title>
-                            <v-btn :to="appointmentURL" size="large">Prendre un<br>rendez-vous</v-btn>
+                            <v-btn v-bind="props" size="large" @click="dialog = !dialog">Prendre un<br>rendez-vous</v-btn>
+
+                            <v-dialog v-model="dialog" persistent
+                            transition="dialog-bottom-transition"
+                            width="auto">
+                                <reservation-form :vin="this.local.vin" :vehicule="concatName" @close-Reservation-Dialog="this.dialog = !this.dialog"/>
+                            </v-dialog>
                         </v-card>
 
                     </v-col>
@@ -142,7 +150,6 @@
 <script>
 import { useVehiclesStore } from '@/store/vehicles';
 import { useAppStore } from '@/store/app';
-import { priceFormatting } from '@/services/common';
 import { deleteVehicule } from '@/services/vehicule';
 import { useAccessoireStore } from '@/store/accessoire';
 import { fetchAccessoireById } from '@/services/AccessoireService';
@@ -150,7 +157,7 @@ import { reactive } from 'vue';
 
 
 import session from '@/session';
-import FooterBar from '@/layouts/default/FooterBar.vue';
+import reservationForm from '@/components/appointment/reservation.vue';
 
 
 
@@ -159,7 +166,7 @@ import FooterBar from '@/layouts/default/FooterBar.vue';
 
 export default {
     components: {
-        FooterBar: FooterBar
+        ReservationForm: reservationForm
     },
     props: {
         id: String,
@@ -171,6 +178,7 @@ export default {
             page: 1,
             session: session,
             load: true,
+            dialog: false,
             Accessoires: useAccessoireStore(),
             store: useVehiclesStore(),
             appStore: useAppStore(),
@@ -204,6 +212,12 @@ export default {
         },
         editionURL() {
             return "/vehicle/" + this.id + "/edition";
+        },
+        venteURL() {
+            return "/vente/vehicule/" + this.id;
+        },
+        concatName() {
+            return this.api.Make + " " + this.api.Model + " " + this.api.ModelYear;
         },
     },
     methods: {

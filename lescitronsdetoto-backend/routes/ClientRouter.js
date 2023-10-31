@@ -17,9 +17,11 @@ function validateClient(client) {
     if (client.prenomClient!=="") { if (!rules.prenom.test(client.prenomClient)) {
         throw new HttpError(400, "Format du prénom invalide");
     }	}
-    if (client.telephone!=='') { if (!rules.telephone.test(client.telephoneClient)) {
+
+    if (client.telephone!=="") { if (!rules.telephone.test(client.telephoneClient)) {
         throw new HttpError(400, "Format du numéro de téléphone invalid");
     }}
+
     if (client.numeroCivic!=='') { if (!rules.numeroCivic.test(client.numeroCivic)) {
         throw new HttpError(400, "Format du numéro civic invalid");
     }}
@@ -37,6 +39,9 @@ function validateClient(client) {
     }}
     if (client.codePostal!=="") { if (!rules.codePostal.test(client.codePostal)) {
         throw new HttpError(400, "Format du code postal invalide");
+    }}
+    if (client.courriel && client.courriel !=="") { if (!rules.email.test(client.courriel)) {
+        throw new HttpError(400, "Format du courriel invalide");
     }}
 }
 
@@ -66,13 +71,15 @@ router.get("/:id", (req, res, next) => {
 });
 
 router.post('/',
-    passport.authenticate('basic', { session: false }),
+    // passport.authenticate('basic', { session: false }),
     (req, res, next) => {
-        const user = req.user;
 
-        if (!user || !user.isAdmin) {
-            return next(new HttpError(403, "Droit administrateur requis"));
-        }
+        // à retirer si on veut que utilisateur peuve s'ajouter
+        // const user = req.user;
+
+        // if (!user || !user.isAdmin) {
+        //     return next(new HttpError(403, "Droit administrateur requis"));
+        // }
 
 validateClient(req.body);   
         const InfoClient = {
@@ -85,7 +92,7 @@ validateClient(req.body);
             nomVille: "" + req.body.nomVille,
             nomProvince: "" + req.body.nomProvince,
             codePostal: "" + req.body.codePostal,
-
+            courrielClient: "" + req.body.courriel,
         }
 
 

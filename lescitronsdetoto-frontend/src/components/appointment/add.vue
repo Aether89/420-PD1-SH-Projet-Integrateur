@@ -56,7 +56,7 @@
                             v-for="(day, index)  in this.myAvailability.slice(this.myCurrentIndex, this.myCurrentIndex + this.totalDayToDisplay)">
                         <v-list class="bg-transparent" width="100" height="360">
                             <v-list-item-title class="my-n1" style="position: sticky; top: 0;"><br/></v-list-item-title>
-                            <v-checkbox class="my-n10" v-for="block in day.block" v-model="toRemoveTimeSlot"
+                            <v-checkbox :disabled="block.client" class="my-n10" v-for="block in day.block" v-model="toRemoveTimeSlot"
                                 :value="{ date: block.date, time: block.time, status: block.status }"   
                                 :label="block.time"></v-checkbox>
                         </v-list>
