@@ -110,7 +110,7 @@ router.post('/',
             prenomEmploye: "" + req.body.prenomEmploye,
             posteEmploye: "" + req.body.posteEmploye,
             telephoneEmploye: "" + req.body.telephoneEmploye,
-            numeroCivic: req.body.numeroCivic,
+            numeroCivic: +req.body.numeroCivic,
             numeroAppartement: "" + req.body.numeroAppartement,
             nomRue: "" + req.body.nomRue,
             nomVille: "" + req.body.nomVille,
@@ -124,6 +124,7 @@ router.post('/',
 
 
             const newEmploye = await EmployeQueries.createEmploye(employe);
+            
             if (!newEmploye) {
                 return next(new HttpError(404, `Employe ${id} introuvable`));
             }
@@ -144,7 +145,7 @@ router.post('/',
 
                     const userAccountWithPasswordHash = await userAccountQueries.createUserAccount(newAccountName, newEmploye.idEmploye, newAccountCouriel,
                         passwordHashBase64, salt);
-
+console.log("userAccountWithPasswordHash : ", userAccountWithPasswordHash);
                     const userDetails = {
                         userAccountId: userAccountWithPasswordHash.userAccountId,
                         idEmploye: userAccountWithPasswordHash.idEmploye,

@@ -116,24 +116,19 @@
                     </v-col>
 
                     <v-col cols="12" sm="8">
-                        <v-card>
-                            <v-sheet class="pa-3 bg-primary text-center" rounded="t-xl">
+                        <v-card v-if="this.local.selectedAccessoire" rounded="t-xl">
+                            <v-sheet class="pa-3 bg-primary text-center">
                                 Listes des accessoires
-                                <v-pagination :total-visible="1" :length="this.pagination" default="1"
-                                    v-model="page"></v-pagination>
                             </v-sheet>
+                            <div>
+                                <v-chip v-for="name in this.names">
 
-                            <div class="pa-4">
-
-                                <v-chip
-                                    v-for="item in items.slice(this.currentIndex, (this.currentIndex + this.contentOfPage))"
-                                    :key="item.index">
-                                    {{ item.name }}
+                                    {{ name }}
                                 </v-chip>
-
                             </div>
                         </v-card>
-                        <v-card class="pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
+                        <v-card class=" pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}
+                        </v-card>
 
                     </v-col>
                 </v-row>
@@ -179,7 +174,7 @@ export default {
             Accessoires: useAccessoireStore(),
             store: useVehiclesStore(),
             appStore: useAppStore(),
-            selectedAccessoire: this.store.selectedAccessoire,
+            names: [],
         };
     },
     computed: {
@@ -210,45 +205,30 @@ export default {
         editionURL() {
             return "/vehicle/" + this.id + "/edition";
         },
-        formState() {
-            reactive({
-                selectedEventIDs: [],
-            })
-        },
-
-        items() {
-
-
-            console.log(this.store);
-            console.log(this.store.selectedAccessoire.length);
-            let num = 0;
-            return Array.from({ length: this.store.selectedAccessoire.length }, () => {
-                const name = this.store.selectedAccessoire;
-
-                num++;
-                return {
-
-                    name: `${name} `,
-
-                };
-            })
-
-        },
     },
-
-
     methods: {
+        async nomAccessoire() {
+            const names = [];
+            for (let i = 0; i < this.local.selectedAccessoire.length; i++) {
+                const temp = await fetchAccessoireById(this.local.selectedAccessoire[i]);
+                const name = temp.nomAccessoire;
+                names.push(name);
+            }
+            console.log(names);
+            return names;
+
+
+        },
 
         async loadData() {
             this.load = true;
             await this.store.getVehicle(this.id);
             this.Accessoires.getAccessoires();
+            this.names = await this.nomAccessoire();
             this.load = false;
             console.log(JSON.stringify(this.local.price, null, "  "));
 
-        },
-        page(newIndex, oldIndex) {
-            this.currentIndex = this.contentOfPage * (this.page - 1);
+
         },
         async suppression() {
             await deleteVehicule(this.id);
