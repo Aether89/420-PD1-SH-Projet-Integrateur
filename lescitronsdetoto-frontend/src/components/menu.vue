@@ -1,49 +1,45 @@
 <template>
-    <v-menu location="start">
+    <div class="text-center">
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        location="bottom"
+      >
         <template v-slot:activator="{ props }">
-            <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
+          <v-btn
+            v-bind="props"
+            icon="mdi-menu" />
         </template>
-        <v-list>
-
-
-            <v-list-item v-if="session.user">
-                <div v-if="session.user.isAdmin">
-                    <v-list-item-title><router-link to="/listeEmployes">Liste Employes</router-link></v-list-item-title>
-                    <v-list-item-title><router-link to="/EditerEmploye">Editer employe</router-link></v-list-item-title>
-                    <v-list-item-title><router-link to="/listeInterventions">Liste
-                            Interventions</router-link></v-list-item-title>
-                    <v-list-item-title><router-link to="/listeAccessoires">Liste
-                            Accessoires</router-link></v-list-item-title>
-                    <v-list-item-title><router-link to="/admin/newvehicle">Nouveau
-                            Véhicule</router-link></v-list-item-title>
-                </div>
-
-                <v-list-item-title><router-link to="/achat/vehicule">Achat véhicule</router-link></v-list-item-title>
-                <v-list-item-title><router-link to="/vente/vehicule">Vente véhicule</router-link></v-list-item-title>
-                <v-list-item-title><router-link to="/transaction">Liste des
-                        transactions</router-link></v-list-item-title>
-                <v-list-item-title><router-link to="/manage/availability">Gestion des
-                        disponibilités</router-link></v-list-item-title>
-                <v-list-item-title><router-link to="/achat/vehicule">Achat véhicule</router-link></v-list-item-title>
-                <v-list-item-title><router-link to="/vente/vehicule">Vente véhicule</router-link></v-list-item-title>
-                <v-list-item-title><router-link to="/transaction">Liste des
-                        transactions</router-link></v-list-item-title>
-                <v-list-item-title><router-link to="/manage/availability">Gestion des
-                        disponibilités</router-link></v-list-item-title>
-
-                <v-list-item-title><router-link to="/listeClients">Liste Clients</router-link></v-list-item-title>
-            </v-list-item>
-
-        </v-list>
-    </v-menu>
-</template>
   
+        <v-card min-width="300">
+            <v-list nav>
+                <div v-if="session.user">
+    <v-list-item prepend-icon="mdi-cart-plus" density="compact" to="/achat/vehicule" title="Achat véhicule" />
+    <v-list-item prepend-icon="mdi-cart-minus" density="compact" to="/vente/vehicule" title="Vente véhicule" />
+    <v-list-item prepend-icon="mdi-car-wrench" density="compact" to="/listeInterventions"
+        title="Gestion des Interventions" />
+    <v-list-item prepend-icon="mdi-car-cog" density="compact" to="/listeAccessoires"
+        title="Gestion des Accessoires" />
+</div>
+<div v-if="session.user && session.user.isAdmin">
+  <v-divider/>
+  <v-list-item type="subheader" density="compact" title="Administration" />
+  <v-list-item prepend-icon="mdi-chart-line" density="compact" to="/transaction" title="Gestion des Transactions" />
+    <v-list-item prepend-icon="mdi-badge-account-horizontal-outline" density="compact" to="/listeEmployes" title="Gestion Employés" />
+    <v-list-item prepend-icon="mdi-account-box-multiple-outline" density="compact" to="/listeClients" title="Gestion des Clients" />
+</div>
+            </v-list>
+        </v-card>
+      </v-menu>
+    </div>
+  </template>
 <script>
 import session from '@/session';
 
 export default {
     data: function () {
         return {
+            menu: false,
             session: session
         };
     },

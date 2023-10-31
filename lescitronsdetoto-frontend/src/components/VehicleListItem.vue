@@ -61,7 +61,6 @@ export default {
       return priceFormatting(this.price);
     },
     formatedPromo() {
-      console.log("this.promo", this.promo)
       return (this.promo === "$0,00") ? null : this.promo;
     },
     hasPromo() {
@@ -74,7 +73,6 @@ export default {
       return appStore.colourSecondary;
     },
     imgSize() {
-      console.log($(document).width());
       return this.$vuetify.display
     }
   }

@@ -22,6 +22,5 @@ values
 
 insert into client (nom_client, prenom_client, telephone_client, courriel_client, numero_civic, numero_appartement, nom_rue, nom_ville, nom_province, code_postal, is_archive)
 values
-
 	('bob', 'tamer', '111', '111', '111', 1, 'larue', 'laville', 'laprovince', '111aaa', false)
-
+;
