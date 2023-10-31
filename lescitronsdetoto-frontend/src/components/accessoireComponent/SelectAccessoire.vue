@@ -71,11 +71,15 @@ export default {
             });
         },
 
+
         accessoires() {
             return this.accessoireStore.accessoires;
         },
     },
     watch: {
+        selectedEventIDs() {
+            this.$emit('selectedEventIDs', this.selectedEventIDs);
+        },
         page(newIndex, oldIndex) {
             this.currentIndex = this.contentOfPage * (this.page - 1);
         }

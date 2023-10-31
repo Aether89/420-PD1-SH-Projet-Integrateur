@@ -1,71 +1,77 @@
 <template>
     <v-container>
-    <v-sheet v-if="session.user && session.user.isAdmin" class="ma-2">
-        <v-form @submit.prevent validate-on="submit lazy" ref="vehiculform">
-            <v-row>
-                <v-col cols="6">
-                    <v-text-field v-if="nouveauvehicule" v-model="this.storeVehicule.vin" label="Identifiant unique du véhicule" density="compact"  @blur="autoVin" @keyup.enter="autoVin"
-                        :rules="[rules.required]"></v-text-field>
-                    <p v-else >  VIN :{{ id }}</p>
-                    <v-text-field v-model="this.storeVehicule.couleur" label="Couleur du véhicule" density="compact" maxlength="32" :rules="[rules.required]"
-                    ></v-text-field>
-                    <v-text-field class="no-spinner" v-model="this.storeVehicule.nombre_kilometre" label="Nombre de kilomètre" density="compact" type="number" step="1" min = 0 :rules="[validateNumer]" :error-messages="errorMessages"
-                    ></v-text-field>
-                    <v-text-field class="no-spinner" v-model="this.storeVehicule.prix_annonce" label="Prix annoncé" density="compact" type="number" prefix="$" step="0.01" min = 0 :rules="[validateNumer]" :error-messages="errorMessages" 
-                    ></v-text-field>
-                    <v-text-field class="no-spinner" v-model="this.storeVehicule.promotion" label="Promotion" density="compact" type="number" prefix="$" step="0.01" min = 0  :rules="[validatePromotion]" :error-messages="errorMessagesPromotion"
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="6">
-                    <v-text-field v-model="this.storeVehicule.description_courte" label="Description courte du véhicule" density="compact" maxlength="64"
-                    ></v-text-field>
-                    <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule" density="compact"  maxlength="512"
-                    ></v-textarea>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" sm="4">
-                    <v-table>
-                        <thead>
-                            <tr>
-                                <th class="text-left">
-                                    Information
-                                </th>
-                                <th class="text-left">
-                                    Spécification
-                                </th>
-                            </tr>
-                            <tr v-if="this.donneesApi.Make !== ''">
-                                <td>Marque : </td>
-                                <td>{{ this.donneesApi.Make }}</td>
-                            </tr>
-                            <tr v-if="this.donneesApi.Model !== ''">
-                                <td>Model</td>
-                                <td>{{ this.donneesApi.Model }}</td>
-                            </tr>
-                            <tr v-if="this.donneesApi.ModelYear !== ''">
-                                <td>Année</td>
-                                <td>{{ this.donneesApi.ModelYear }}</td>
-                            </tr>
-                        </thead>
-                    </v-table>
-                </v-col>
-            </v-row>
-            <br>
-            
-            <v-btn v-if="mode !== 'vehicule'" prepend-icon="mdi-car-search" color="green-lighten-2" 
-                text-align="right" class="mx-2" type="submit" @click="validateVehicule"> {{ boutonText }}
-            </v-btn>
-            <v-btn v-else @click="validateNext">Valider</v-btn>
+        <v-sheet v-if="session.user && session.user.isAdmin" class="ma-2">
+            <v-form @submit.prevent validate-on="submit lazy" ref="vehiculform">
+                <v-row>
+                    <v-col cols="6">
+                        <v-text-field v-if="nouveauvehicule" v-model="this.storeVehicule.vin"
+                            label="Identifiant unique du véhicule" density="compact" @blur="autoVin" @keyup.enter="autoVin"
+                            :rules="[rules.required]"></v-text-field>
+                        <p v-else> VIN :{{ id }}</p>
+                        <v-text-field v-model="this.storeVehicule.couleur" label="Couleur du véhicule" density="compact"
+                            maxlength="32" :rules="[rules.required]"></v-text-field>
+                        <v-text-field class="no-spinner" v-model="this.storeVehicule.nombre_kilometre"
+                            label="Nombre de kilomètre" density="compact" type="number" step="1" min=0
+                            :rules="[validateNumer]" :error-messages="errorMessages"></v-text-field>
+                        <v-text-field class="no-spinner" v-model="this.storeVehicule.prix_annonce" label="Prix annoncé"
+                            density="compact" type="number" prefix="$" step="0.01" min=0 :rules="[validateNumer]"
+                            :error-messages="errorMessages"></v-text-field>
+                        <v-text-field class="no-spinner" v-model="this.storeVehicule.promotion" label="Promotion"
+                            density="compact" type="number" prefix="$" step="0.01" min=0 :rules="[validatePromotion]"
+                            :error-messages="errorMessagesPromotion"></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-text-field v-model="this.storeVehicule.description_courte" label="Description courte du véhicule"
+                            density="compact" maxlength="64"></v-text-field>
+                        <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
+                            density="compact" maxlength="512"></v-textarea>
 
-            <router-link v-if="mode !== 'vehicule'" :to="{path: '/' }">
-                <v-btn prepend-icon="mdi-cancel" class="mx-2" aria-label="annuler" color="red-lighten-2"
-                >Annuler</v-btn>
-            </router-link>
-        </v-form>
-    </v-sheet>
-    <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
-</v-container>
+                        <SelectAccessoire v-if="mode === 'vehicule'" @selectedEventIDs="receiveEmit" />
+
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="12" sm="4">
+                        <v-table>
+                            <thead>
+                                <tr>
+                                    <th class="text-left">
+                                        Information
+                                    </th>
+                                    <th class="text-left">
+                                        Spécification
+                                    </th>
+                                </tr>
+                                <tr v-if="this.donneesApi.Make !== ''">
+                                    <td>Marque : </td>
+                                    <td>{{ this.donneesApi.Make }}</td>
+                                </tr>
+                                <tr v-if="this.donneesApi.Model !== ''">
+                                    <td>Model</td>
+                                    <td>{{ this.donneesApi.Model }}</td>
+                                </tr>
+                                <tr v-if="this.donneesApi.ModelYear !== ''">
+                                    <td>Année</td>
+                                    <td>{{ this.donneesApi.ModelYear }}</td>
+                                </tr>
+                            </thead>
+                        </v-table>
+                    </v-col>
+                </v-row>
+                <br>
+
+                <v-btn v-if="mode !== 'vehicule'" prepend-icon="mdi-car-search" color="green-lighten-2" text-align="right"
+                    class="mx-2" type="submit" @click="validateVehicule"> {{ boutonText }}
+                </v-btn>
+                <v-btn v-else @click="validateNext">Valider</v-btn>
+
+                <router-link v-if="mode !== 'vehicule'" :to="{ path: '/' }">
+                    <v-btn prepend-icon="mdi-cancel" class="mx-2" aria-label="annuler" color="red-lighten-2">Annuler</v-btn>
+                </router-link>
+            </v-form>
+        </v-sheet>
+        <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
+    </v-container>
 </template>
 
 <script>
@@ -75,6 +81,7 @@ import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 import { createVehicule, udpateVoiture, getVehiculefr } from '../services/vehicule';
 import { fetchVIN } from '../services/VINAPI';
 import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.vue';
+
 
 
 
@@ -103,7 +110,7 @@ export default {
                 modele: '',
                 annee: ''
             },
-            selectedAccessoire: SelectAccessoire,
+            selectedAccessoire: [],
             couleur: '',
             nombre_kilometre: 0,
             prix_annonce: 0,
@@ -120,6 +127,9 @@ export default {
         };
     },
     methods: {
+        receiveEmit() {
+            this.selectedAccessoire = selectedEventIDs;
+        },
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
                 console.log("promo", this.storeVehicule.promotion)
@@ -206,7 +216,7 @@ export default {
                 this.storeVehicule.annee = this.donneesApi.ModelYear
             }
         },
-        async validateNext(){
+        async validateNext() {
             const formValid = await this.$refs.vehiculform.validate();
             if (!formValid.valid) {
                 this.storeVehicule.isValidate2 = false;
@@ -222,7 +232,7 @@ export default {
                 this.mettreAJourVehicule();
             }
         },
-        
+
         async submitNewVehicule() {
             this.loading = true;
             this.vinIdUnique = true;
@@ -248,7 +258,8 @@ export default {
                 prix_annonce: prixFormate,
                 promotion: promoFormate,
                 description_courte: this.description_courte,
-                description_longue: this.description_longue
+                description_longue: this.description_longue,
+                selectedAccessoire: this.selectedAccessoire
             };
             try {
                 await createVehicule(vehicule);
@@ -281,6 +292,7 @@ export default {
                 description_courte: this.description_courte,
                 description_longue: this.description_longue
             };
+
             console.log("cest lequel", this.id);
             console.log("couleur", vehicule.couleur);
 
@@ -294,6 +306,7 @@ export default {
         }
     },
     computed: {
+
         nouveauvehicule() {
             return this.mode === 'vehicule';
         },
@@ -304,8 +317,8 @@ export default {
             return this.vin;
         },
         vehiculeVin() {
-            return this.nouveauvehicule? this.storeVehicule.vin : this.id;
-        },  
+            return this.nouveauvehicule ? this.storeVehicule.vin : this.id;
+        },
     },
     mounted() {
         this.autoVin();
