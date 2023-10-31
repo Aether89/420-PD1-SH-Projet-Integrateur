@@ -23,6 +23,7 @@ const session = reactive({
             this.fetchUser().catch(err => console.error("L'authentification initiale a échouée: ", err));
         }
     },
+
     login(username, password) {
         this.setCredentials(username, password);
         return this.fetchUser();
@@ -106,6 +107,31 @@ const session = reactive({
             }
         }
     },
+    async changePassword(userAccountId, oldPassword, newPassword) {
+  try {
+    const response = await fetch('/api/changepassword', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeaders()
+      },
+      body: JSON.stringify({
+        userAccountId,
+        oldPassword,
+        newPassword
+      })
+    });
+
+    if (response.status === 200) {
+      return { success: true };
+    } else {
+      const data = await response.json();
+      return { success: false, error: data.message };
+    }
+  } catch (error) {
+    return { success: false, error: 'Erreur inattendue' };
+  }
+}
 });
 
 export default session;
