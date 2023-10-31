@@ -163,7 +163,7 @@ exports.checkAvailabilityExist = checkAvailabilityExist;
 const getAvailability = async (user) => {
     const result = await pool.query(
         `SELECT * FROM evenement
-        WHERE user_account_id = $1 AND id_type_evenement = 1
+        WHERE user_account_id = $1 AND id_type_evenement = 1 AND date_heure_evenement >= NOW()
         ORDER BY date_heure_evenement ASC`,
         [user]
     );

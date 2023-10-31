@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col cols="5">
-                <v-card width="610" color="lime-lighten-2">
+                <v-card :width="pageWidth" color="lime-lighten-2">
                     <v-card-title class="justify-center text-center">
                         {{ txtTitle }}
                         <v-pagination v-if="step == 1" :total-visible="7" :length="this.pagination"
@@ -17,18 +17,18 @@
                         <v-window-item :value="1">
                             <div class="justify-left ma-2 bg-lime-lighten-4" height="400">
                                 <v-row>
-                                    <v-col cols="2" class="mx-2 mb-n4" bg-color="lime-lighten-4"
+                                    <v-col :cols="colWidth" class="mx-2 mb-n4" bg-color="lime-lighten-4"
                                         v-for="(day, index)  in this.availability.slice(this.currentIndex, this.currentIndex + this.totalDayToDisplay)"
                                         v-bind:key="index">
                                         <p class=" justify-center text-subtitle-2" width="100">{{ day.date }}</p>
                                     </v-col>
                                 </v-row>
                                 <v-row>
-                                    <v-col cols="2" class="mx-2" bg-color="lime-lighten-4"
+                                    <v-col :cols="colWidth" class="mx-2" bg-color="lime-lighten-4"
                                         v-for="(day, index) in this.availability.slice(this.currentIndex, this.currentIndex + this.totalDayToDisplay)"
                                         v-bind:key="index">
 
-                                        <v-virtual-scroll :items="day.block" :height="400">
+                                        <v-virtual-scroll :items="day.block" :height="virtualHeight">
                                             <template v-slot:default="{ item }">
                                                 <v-btn class="my-1" @click="btnAddTime(item)">{{
                                                     item.time }}</v-btn>
@@ -44,7 +44,7 @@
                         </v-window-item>
 
                         <v-window-item :value="3">
-                            <div class="justify-left ma-2 pa-2 bg-lime-lighten-4" height="400">
+                            <div class="justify-left ma-2 pa-2 bg-lime-lighten-4" height="300">
                                 <div v-if="this.vehicule"> Vehicule: {{ this.vehicule }}<br></div>
                                 Date: {{ this.selectedTimeSlot.date }} {{ this.selectedTimeSlot.time }}<br>
                                 Nom: {{ this.store.nomClient }}<br>
@@ -60,7 +60,7 @@
 
                         <v-window-item :value="4">
                             <div v-if="submitted">
-                                <div class="justify-left ma-2 pa-2 bg-lime-lighten-4" height="400">
+                                <div class="justify-left ma-2 pa-2 bg-lime-lighten-4" height="300">
                                     <div v-if="this.vehicule"> Vehicule: {{ this.vehicule }}<br></div>
                                     Date: {{ this.selectedTimeSlot.date }} {{ this.selectedTimeSlot.time }}<br>
                                     Nom: {{ this.store.nomClient }}<br>
@@ -78,7 +78,7 @@
                                 <v-progress-circular :width="18" :size="100" color="amber"
                                     indeterminate></v-progress-circular>
                             </div>
-                            <div v-else class="text-center ma-2 pa-2 bg-lime-lighten-4" height="400">
+                            <div v-else class="text-center ma-2 pa-2 bg-lime-lighten-4" height="300">
                                 <p class="ma-2 font-weight-bold">ERREUR LORS DE LA SOUMISSION</p>
                                 <p>{{ this.errorMsg }}</p>
                                 <v-btn append-icon="mdi-sync" block @click="this.submitAppointment">Réesayer</v-btn>
@@ -136,7 +136,6 @@ export default {
             currentIndex: 0,
             session: session,
             page: 1,
-            totalDayToDisplay: 5,
             availability: [],
             receivedAvailability: [],
             myAvailability: [],
@@ -258,6 +257,18 @@ export default {
                     return this.submitted ? 'Envoyé' : 'Confirmer';
             }
         },
+        pageWidth() {
+            return (this.$vuetify.display.smAndUp)? 610 : 300;
+        },
+        colWidth() {
+            return (this.$vuetify.display.smAndUp)? 2 : 4;
+        },
+        totalDayToDisplay() {
+            return (this.$vuetify.display.smAndUp)? 5 : 2;
+        },
+        virtualHeight() {
+            return (this.$vuetify.display.smAndUp)? 400 : 300;
+        },
 
     },
     watch: {
@@ -270,7 +281,9 @@ export default {
         step() {
             this.btnNextValid = this.NextValid();
             this.step === 4 ? this.submitAppointment() : null;
-        }
+        },
+
+
     },
     mounted() {
         this.init();

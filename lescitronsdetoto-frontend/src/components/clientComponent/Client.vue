@@ -17,8 +17,8 @@
                     </v-col>
 
                     <v-row v-if="mode === 'reservation'">
-                        <p class="ml-10">Méthode de contact</p>
-                        <v-radio-group v-model="inline" inline>
+                        <p class="ml-6">Méthode de contact</p>
+                        <v-radio-group class="ml-6" v-model="inline" inline>
                             <v-radio label="Téléphone" :value="0"></v-radio>
                             <v-radio label="Courriel" :value="1"></v-radio>
                         </v-radio-group>
