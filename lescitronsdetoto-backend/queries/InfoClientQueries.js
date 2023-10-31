@@ -99,7 +99,7 @@ const createInfoClient = async (infoClient, clientParam) => {
 
         client.query('COMMIT');
         const NewInfoClient = getInfoClient(result.rows[0].id_client, client);
-
+        console.log("infoclient is success");
         return NewInfoClient;
     } catch (err) {
         await client.query("ROLLBACK");

@@ -101,10 +101,11 @@
                             </tr>
                     </v-col>
                     <v-col md="4">
-                    <v-text-field class="no-spinner" v-model="prix_evenement" label="Prix $" density="compact" type="number" step="1" min = "0" :rules="[rules.required]"
+                    <v-text-field class="no-spinner" v-model="this.storeTrans.prix_evenement" label="Prix $" density="compact" type="number" step="1" min = "0" :rules="[rules.required]"
                         ></v-text-field>
                     </v-col>
                 </v-row>
+                <v-btn @click="validateNext">Valider</v-btn>
             </v-form>
         </v-sheet>
     </v-container>
@@ -115,6 +116,7 @@ import session from '../../session'
 import { useClientStore } from '@/store/client';
 import { useEmployeStore } from '@/store/employe'
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
+import { useAchatVenteStore } from '@/store/achatVente';
 export default {
     props: {
         id: String,
@@ -126,6 +128,7 @@ export default {
             storeVehicule: useActualyAVehiculeStore(),
             session: session,
             storeEmploye: useEmployeStore(),
+            storeTrans: useAchatVenteStore(),
             prix_evenement: null,
             rules: {
                 required: value => !!value || "Le champ est requis",
@@ -141,6 +144,15 @@ export default {
                 return trimmedAmount;
             } else {
                 return amount;
+            }
+        },
+        async validateNext(){
+            const formValid = await this.$refs.vehiculform.validate();
+            if (!formValid.valid) {
+                this.storeTrans.isValidate3 = false;
+                return;
+            } else {
+                this.storeTrans.isValidate3 = true;
             }
         }
     },

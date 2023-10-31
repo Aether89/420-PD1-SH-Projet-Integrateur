@@ -10,8 +10,11 @@ const HttpError = require("../HttpError");
 
 const vehiculeQuerie = require("../queries/VehiculeQueries");
 const evenementQueries = require("../queries/EvenementQueries");
+const clientQueries = require("../queries/InfoClientQueries");
+
 const fetchVIN = require("../vpic/VINAPI");
-const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
+//const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
+
 
 module.exports = router;
 
@@ -42,7 +45,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         console.log("req.body : ",req.body);
         
         const user = req.user;
-        if (!user || !user.isAdmin) {
+        if (!user) {
             return next(new HttpError(403, 'Droit administrateur requis'));
         }
   
@@ -68,7 +71,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             return next(new HttpError(400, 'Veillez associer un client à la transaction'));
         }
 
-        const fetchedVehicule = await fetchVIN(vin);
+        */const fetchedVehicule = await fetchVIN(vin);
         if (fetchedVehicule.ErrorCode !== "0") {
           return next(new HttpError(404, `Veillez rentrer un vin existant!`));
         }
@@ -89,15 +92,26 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             promotion: req.body.promotion.replace(/\s/g, ''),
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
-            selectedAccessoire:[] + req.body.selectedAccessoire,
+            //selectedAccessoire:[] + req.body.selectedAccessoire,
         };
+        const newClient = {
+            nomClient: req.body.nomClient,
+            prenomClient: req.body.prenomClient,
+            telephoneClient: req.body.telephoneClient,
+            numeroCivic: req.body.numeroCivic,
+            numeroAppartement: req.body.numeroAppartement,
+            nomRue: req.body.nomRue,
+            nomVille: req.body.nomVille,
+            nomProvince: req.body.nomProvince,
+            codePostal: req.body.codePostal
+        }
        
         
         const vehiculeExcite = await vehiculeQuerie.getVehiculeByVin(vin);
         if (vehiculeExcite) {
           return next(new HttpError(409, `Le véhicule avec ce VIN ${vin} existe déjà.`));
         }
-        
+        /*
         if(newVehicule.couleur.length > 32 || newVehicule.description_courte.length > 64 || newVehicule.description_longue.length > 512)
         {
             return next(new HttpError(400, `Un champ n'est pas valide`));
@@ -116,42 +130,43 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         }
         const currentTime = new Date();
         console.log("currentTime", currentTime.toISOString())
-        const newAchat = {
-            prix_evenement: req.body.prix_evenement.replace(/\s/g, ''),
-            etat_vue: null,
-            id_type_evenement: 2,
-            id_client: req.body.id_client,
-            date_heure_evenement: currentTime.toISOString(),
-            user_account_id: user.userAccountId
-        }
-
-        
         
 
-        console.log("newEvent : ", newAchat);
-        console.log("newVehicule", newVehicule);
-        const evenementId = await evenementQueries.insertEvenement(newAchat);
-        vehiculeQuerie.addVehicule(newVehicule);
-
-        if (
-            newVehicule.selectedAccessoire) {
+        /*if (newVehicule.selectedAccessoire) {
             const accessoire = await accessoireVehiculeQuerie.addAccessoireVehicule(newVehicule.selectedAccessoire, vin);
             if (!accessoire) {
                 return next(new HttpError(404, `Accessoire ${id} introuvable`));
             }
+        }*/
+
+        const clientNouveu = await clientQueries.createInfoClient(newClient);
+        console.log("clientNouveu", clientNouveu)
+        const newAchat = {
+            prix_evenement: req.body.prix_evenement.replace(/\s/g, ''),
+            etat_vue: null,
+            id_type_evenement: 2,
+            id_client: clientNouveu.idClient,
+            date_heure_evenement: currentTime.toISOString(),
+            user_account_id: user.userAccountId
         }
-        res.json(newVehicule);
+        const evenementId = await evenementQueries.insertEvenement(newAchat);
 
         console.log("evenementId", evenementId);
+
+        const autoVin = await vehiculeQuerie.addVehicule(newVehicule);
+
         const newEvenementVehicule ={
             id_evenement: evenementId,
             vin: vin
         }
         console.log("newEvenementVehicule : ", newEvenementVehicule);
+        console.log("newEvent : ", newAchat);
+        console.log("newVehicule", newVehicule);
+        
         evenementQueries.insertAutoEvenement(newEvenementVehicule);
 
         res.json(newVehicule);
-        return vehiculeQuerie.getVehiculeByVin(vin);
+        //return vehiculeQuerie.getVehiculeByVin(vin);
     } catch(err) {
         next(err);
     }
@@ -162,7 +177,7 @@ passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         try {
             const user = req.user;
-            if (!user || !user.isAdmin) {
+            if (!user) {
                 return next(new HttpError(403, "Droit administrateur requis"));
             }
             

@@ -65,7 +65,10 @@
         
         <v-btn
           v-if="step === 3"
-          prepend-icon="mdi-car-search" color="green-lighten-2"  variant="flat">Envoyé
+          :disabled="this.storeTrans.isValidate3 === false"
+          prepend-icon="mdi-car-search" color="green-lighten-2"  variant="flat"
+          @click="jouter"
+          >Envoyé
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -103,14 +106,18 @@
 <script>
   import { useClientStore } from '@/store/client';
   import { useActualyAVehiculeStore } from '@/store/actualyAVehicule'
-import { reactive } from 'vue'
+  import { useAchatVenteStore } from '@/store/achatVente'
+  import { useEmployeStore } from '@/store/employe'
+  import { reactive } from 'vue'
   //import rules from '@/regles';
   export default {
     data: () => ({
       step: 1,
       session: session,
       storeClient: useClientStore(),
-      storeVehicule: useActualyAVehiculeStore()
+      storeVehicule: useActualyAVehiculeStore(),
+      storeTrans: useAchatVenteStore(),
+      storeEmploye: useEmployeStore()
     }),
     props: ['mode', 'id', 'rules'],
     computed: {
@@ -138,6 +145,53 @@ import { reactive } from 'vue'
         }
         console.log("step ", this.step)
       },
+      jouter() {
+        const transAchat = {
+          vin: this.storeVehicule.vin,
+          id_etat: 1,
+          couleur: this.storeVehicule.couleur,
+          nombre_kilometre: this.storeVehicule.nombre_kilometre,
+          prix_annonce: this.storeVehicule.prix_annonce,
+          promotion: this.storeVehicule.promotion,
+          description_courte: this.storeVehicule.description_courte,
+          description_longue: this.storeVehicule.description_longue,
+          prix_evenement: this.storeTrans.prix_evenement,
+          idEmploye: this.storeEmploye.idEmploye,
+          nomClient: this.storeClient.nomClient,
+          prenomClient: this.storeClient.prenomClient,
+          telephoneClient: this.storeClient.telephoneClient,
+          numeroCivic: this.storeClient.numeroCivic,
+          numeroAppartement: this.storeClient.numeroAppartement,
+          nomRue: this.storeClient.nomRue,
+          nomVille: this.storeClient.nomVille,
+          nomProvince: this.storeClient.nomProvince,
+          codePostal: this.storeClient.codePostal
+        }
+        fetch("/api/vehicule",{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+          },
+          body: JSON.stringify(transAchat)
+        }).then((response) => {
+          console.log("response : ", response)
+          if (response.ok) {
+            this.$router.push(`/vehicle/${transAchat.vin}`);
+          } else {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes("application/json")) {
+              response.json().then((body) => {
+              alert("Erreur: " + body.message);
+              });
+            } else {
+              throw new Error(`Erreur ${response.status}`);
+            }
+          }
+        }).catch((error) => {
+          console.error("Erreur", error);
+        });
+      }
     },
     created() {
       console.log('Mode reçu en props :', this.mode);

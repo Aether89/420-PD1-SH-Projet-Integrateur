@@ -38,10 +38,10 @@
                     </div>
                 </v-card>
 
-                <v-card v-if="session.user" color="lime-lighten-1" class="pa-2 text-center mt-4">
+                <v-card v-if="session.user.isAdmin" color="lime-lighten-1" class="pa-2 text-center mt-4">
                     <v-btn class="ma-2" type="button" prepend-icon="mdi-file-edit-outline" color="amber-lighten-3"
                         aria-label="Éditer" :to="editionURL" router-link>Éditer</v-btn>
-                    <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression" aria-label="Supprimer"
+                    <v-btn v-if="session.user" class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression" aria-label="Supprimer"
                         color="red-lighten-3">Supprimer</v-btn>
                 </v-card>
 

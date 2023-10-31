@@ -10,6 +10,7 @@ const HttpError = require("../HttpError");
 
 const evenementQueries = require("../queries/EvenementQueries");
 const vehiculeQueries = require("../queries/VehiculeQueries");
+const clientQueries = require("../queries/InfoClientQueries");
 
 module.exports = router;
 
@@ -41,6 +42,100 @@ router.get('/:id', (req, res, next) => {
     }).catch(err => {
         return next(err);
     });
+});
+
+router.post('/', passport.authenticate('basic', { session: false }), async (req, res, next) => {
+    try {
+        console.log("req.body : ",req.body);
+        
+        const user = req.user;
+        if (!user) {
+            return next(new HttpError(403, 'Droit administrateur requis'));
+        }
+  
+        const vin = req.body.vin;
+        if (!vin || vin === '') {
+            return next(new HttpError(400, 'Le champ vin est requis'));
+        }
+        
+        const prixDAchat = req.body.prix_evenement;
+        
+        const fetchedVehicule = await fetchVIN(vin);
+        if (fetchedVehicule.ErrorCode !== "0") {
+          return next(new HttpError(404, `Veillez rentrer un vin existant!`));
+        }
+
+        const marque = fetchedVehicule.Make;
+        const modele = fetchedVehicule.Model;
+        const annee = fetchedVehicule.ModelYear;
+
+        const newVehicule = {
+            vin: req.body.vin,
+            id_etat: req.body.id_etat,
+            marque: marque,
+            modele: modele,
+            annee: annee,
+            couleur: "" + req.body.couleur,
+            nombre_kilometre: req.body.nombre_kilometre,
+            prix_annonce: req.body.prix_annonce.replace(/\s/g, ''),
+            promotion: req.body.promotion.replace(/\s/g, ''),
+            description_courte: "" + req.body.description_courte,
+            description_longue: "" + req.body.description_longue,
+        };
+        const newClient = {
+            nomClient: req.body.nomClient,
+            prenomClient: req.body.prenomClient,
+            telephoneClient: req.body.telephoneClient,
+            numeroCivic: req.body.numeroCivic,
+            numeroAppartement: req.body.numeroAppartement,
+            nomRue: req.body.nomRue,
+            nomVille: req.body.nomVille,
+            nomProvince: req.body.nomProvince,
+            codePostal: req.body.codePostal
+        }
+       
+        
+        const vehiculeExcite = await vehiculeQuerie.getVehiculeByVin(vin);
+        if (!vehiculeExcite) {
+          return next(new HttpError(409, `Le véhicule avec ce VIN ${vin} n'existe pas.`));
+        }
+
+        if(newVehicule.promotion <= 0) {
+            newVehicule.promotion = null;
+        }
+        const currentTime = new Date();
+        console.log("currentTime", currentTime.toISOString())
+
+        const clientNouveu = await clientQueries.createInfoClient(newClient);
+        console.log("clientNouveu", clientNouveu)
+        const newAchat = {
+            prix_evenement: req.body.prix_evenement.replace(/\s/g, ''),
+            etat_vue: null,
+            id_type_evenement: 2,
+            id_client: clientNouveu.idClient,
+            date_heure_evenement: currentTime.toISOString(),
+            user_account_id: user.userAccountId
+        }
+        const evenementId = await evenementQueries.insertEvenement(newAchat);
+
+        console.log("evenementId", evenementId);
+
+        const autoVin = await vehiculeQueries.addVehicule(newVehicule);
+
+        const newEvenementVehicule ={
+            id_evenement: evenementId,
+            vin: vin
+        }
+        console.log("newEvenementVehicule : ", newEvenementVehicule);
+        console.log("newEvent : ", newAchat);
+        console.log("newVehicule", newVehicule);
+        
+        evenementQueries.insertAutoEvenement(newEvenementVehicule);
+
+        res.json(newVehicule);
+    } catch(err) {
+        next(err);
+    }
 });
 
 router.put('/:id',
