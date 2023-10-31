@@ -44,8 +44,10 @@ const createUserAccount = async (userAccountId, idEmploye, courrielCompteEmploye
              VALUES ($1, $2, $3, $4, $5, true, false,true)`,
       [userAccountId, idEmploye, courrielCompteEmploye, passwordHash, passwordSalt]
     );
-
-    const userAccount = getLoginByUserAccountId(result.userAccountId, client);
+    if (!result) {
+      throw new HttpError(500, `Impossible de créer le compte ${userAccountId}`);
+    }
+    const userAccount = await getLoginByUserAccountId(userAccountId, client);
 
     client.query('COMMIT');
 
@@ -88,3 +90,4 @@ const changeMDP = async (userAccountId, passwordHash, passwordSalt) => {
     client.release();
   }
 };
+exports.changeMDP = changeMDP;
