@@ -39,7 +39,7 @@ const getEmploye = async (idEmploye, clientParam) => {
         }
 
         const result = await client.query(
-            `SELECT id_employe, nom_employe, prenom_employe, poste_employe, telephone_employe, code_postal
+            `SELECT *
          FROM employe
          WHERE id_employe = $1`,
             [idEmploye]

@@ -45,7 +45,7 @@ async function convertToEmploye(jsonEmploye) {
  * @returns Promesse permettant d'obtenir la liste des Employes
  */
 export async function fetchEmploye() {
-    const response = await fetch('/api/employes');
+    const response = await axios('/api/employes');
     if (response.ok) {
         const respJson = await response.json();
         return respJson;
@@ -58,7 +58,9 @@ export async function fetchEmploye() {
 export async function fetchemploye(idEmploye) {
     const response = await fetch(`/api/employes/${idEmploye}`);
     if (response.status === 200) {
+      
         return convertToEmploye(response.data);
+        
     } else {
         throw await createServiceError(response);
     }
