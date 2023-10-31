@@ -25,7 +25,7 @@
 
             <template v-slot:append>
               <v-btn @click="(this.employeStore.chargerEmploye(item.idEmploye))" size="small" variant="tonal">
-                View User
+                Détails
 
                 <v-icon color="orange-darken-4" end>
                   mdi-open-in-new
