@@ -45,8 +45,9 @@ const createUserAccount = async (userAccountId, idEmploye, courrielCompteEmploye
       [userAccountId, idEmploye, courrielCompteEmploye, passwordHash, passwordSalt]
     );
 
-    const userAccount = getLoginByUserAccountId(result.userAccountId, client);
+    const userAccount = await getLoginByUserAccountId(userAccountId, client);
 
+    console.log("userAccount", userAccount)
     client.query('COMMIT');
 
     return userAccount;

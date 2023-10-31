@@ -58,30 +58,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             return next(new HttpError(400, 'Le champ vin est requis'));
         }
         
-        const prixDAchat = req.body.prix_evenement;
         
-        const fetchedVehicule = await fetchVIN(vin);
-        if (fetchedVehicule.ErrorCode !== "0") {
-          return next(new HttpError(404, `Veillez rentrer un vin existant!`));
-        }
-
-        const marque = fetchedVehicule.Make;
-        const modele = fetchedVehicule.Model;
-        const annee = fetchedVehicule.ModelYear;
-
-        const newVehicule = {
-            vin: req.body.vin,
-            id_etat: req.body.id_etat,
-            marque: marque,
-            modele: modele,
-            annee: annee,
-            couleur: "" + req.body.couleur,
-            nombre_kilometre: req.body.nombre_kilometre,
-            prix_annonce: req.body.prix_annonce.replace(/\s/g, ''),
-            promotion: req.body.promotion.replace(/\s/g, ''),
-            description_courte: "" + req.body.description_courte,
-            description_longue: "" + req.body.description_longue,
-        };
         const newClient = {
             nomClient: req.body.nomClient,
             prenomClient: req.body.prenomClient,
@@ -95,14 +72,11 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         }
        
         
-        const vehiculeExcite = await vehiculeQuerie.getVehiculeByVin(vin);
+        const vehiculeExcite = await vehiculeQueries.getVehiculeByVin(vin);
         if (!vehiculeExcite) {
           return next(new HttpError(409, `Le véhicule avec ce VIN ${vin} n'existe pas.`));
         }
 
-        if(newVehicule.promotion <= 0) {
-            newVehicule.promotion = null;
-        }
         const currentTime = new Date();
         console.log("currentTime", currentTime.toISOString())
 

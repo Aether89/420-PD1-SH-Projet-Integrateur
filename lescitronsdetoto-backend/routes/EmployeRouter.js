@@ -144,6 +144,8 @@ router.post('/',
                     const userAccountWithPasswordHash = await userAccountQueries.createUserAccount(newAccountName, newEmploye.idEmploye, newAccountCouriel,
                         passwordHashBase64, salt);
 
+                        console.log("userAccountWithPasswordHash", userAccountWithPasswordHash)
+
                     const userDetails = {
                         userAccountId: userAccountWithPasswordHash.userAccountId,
                         idEmploye: userAccountWithPasswordHash.idEmploye,

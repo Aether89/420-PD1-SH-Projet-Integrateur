@@ -33,6 +33,7 @@ export const useEmployeStore = defineStore('employe', {
           this.codePostal = result.codePostal;
           this.isArchive = result.isArchive;
         })
+        console.log(idEmploye)
     },
     newEmploye() {
       this.isNew = true;
