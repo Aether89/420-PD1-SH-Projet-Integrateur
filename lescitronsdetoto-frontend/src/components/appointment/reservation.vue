@@ -187,7 +187,7 @@ export default {
         prenomClient: "" + this.store.prenomClient,
         posteClient: "" + this.store.posteClient,
         telephoneClient: "" + this.store.telephoneClient,
-        numeroCivic: "" + this.store.numeroCivic,
+        numeroCivic: this.store.numeroCivic,
         numeroAppartement: "" + this.store.numeroAppartement,
         nomRue: "" + this.store.nomRue,
         nomVille: "" + this.store.nomVille,
