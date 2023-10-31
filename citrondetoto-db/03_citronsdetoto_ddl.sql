@@ -120,17 +120,8 @@ CREATE TABLE user_account (
 CREATE TABLE evenement (
 	id_evenement serial PRIMARY KEY NOT NULL,
 	id_type_evenement serial NOT NULL REFERENCES type_evenement (id_type_evenement),
-<<<<<<< HEAD
-<<<<<<< HEAD
 	id_client serial NOT NULL REFERENCES client (id_client),
-=======
-	id_client serial REFERENCES client (id_client),
->>>>>>> origin/dev
 	user_account_id text NOT NULL REFERENCES user_account (user_account_id),
-=======
-	id_client serial REFERENCES client (id_client),
-	user_account_id text REFERENCES user_account (user_account_id),
->>>>>>> ec8a0a2272e4d0b20822e3acedebb970aafb783c
 	prix_evenement money,
 	date_heure_evenement timestamptz NOT NULL,
 	etat_vue_evenement boolean

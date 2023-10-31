@@ -116,8 +116,19 @@
                     </v-col>
 
                     <v-col cols="12" sm="8">
+                        <v-card v-if="this.local.selectedAccessoire" rounded="t-xl">
+                            <v-sheet class="pa-3 bg-primary text-center">
+                                Listes des accessoires
+                            </v-sheet>
+                            <div>
+                                <v-chip v-for="name in this.names">
 
-                        <v-card class="pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}</v-card>
+                                    {{ name }}
+                                </v-chip>
+                            </div>
+                        </v-card>
+                        <v-card class=" pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}
+                        </v-card>
 
                     </v-col>
                 </v-row>
@@ -133,31 +144,45 @@ import { useVehiclesStore } from '@/store/vehicles';
 import { useAppStore } from '@/store/app';
 import { priceFormatting } from '@/services/common';
 import { deleteVehicule } from '@/services/vehicule';
+import { useAccessoireStore } from '@/store/accessoire';
+import { fetchAccessoireById } from '@/services/AccessoireService';
+import { reactive } from 'vue';
+
+
 import session from '@/session';
 import FooterBar from '@/layouts/default/FooterBar.vue';
 
-const appStore = useAppStore();
-const store = useVehiclesStore();
+
+
+
+
+
 export default {
     components: {
         FooterBar: FooterBar
     },
     props: {
         id: String,
-        isDialog: Boolean
+        isDialog: Boolean,
+
     },
-    data: function () {
+    data() {
         return {
+            page: 1,
             session: session,
             load: true,
+            Accessoires: useAccessoireStore(),
+            store: useVehiclesStore(),
+            appStore: useAppStore(),
+            names: [],
         };
     },
     computed: {
         local() {
-            return store.vehicle.local;
+            return this.store.vehicle.local;
         },
         api() {
-            return store.vehicle.api;
+            return this.store.vehicle.api;
         },
         regPrice() {
             return this.local.price;
@@ -172,21 +197,37 @@ export default {
             return "/vehicles/" + this.id;
         },
         colourPrimary() {
-            return appStore.colourPrimary;
+            return this.appStore.colourPrimary;
         },
         colourSecondary() {
-            return appStore.colourSecondary;
+            return this.appStore.colourSecondary;
         },
         editionURL() {
             return "/vehicle/" + this.id + "/edition";
-        }
+        },
     },
     methods: {
+        async nomAccessoire() {
+            const names = [];
+            for (let i = 0; i < this.local.selectedAccessoire.length; i++) {
+                const temp = await fetchAccessoireById(this.local.selectedAccessoire[i]);
+                const name = temp.nomAccessoire;
+                names.push(name);
+            }
+            console.log(names);
+            return names;
+
+
+        },
+
         async loadData() {
             this.load = true;
-            await store.getVehicle(this.id);
+            await this.store.getVehicle(this.id);
+            this.Accessoires.getAccessoires();
+            this.names = await this.nomAccessoire();
             this.load = false;
             console.log(JSON.stringify(this.local.price, null, "  "));
+
 
         },
         async suppression() {
@@ -203,6 +244,8 @@ export default {
     },
     mounted() {
         this.loadData();
+
+
     },
     watch: {
         id(newId) {
@@ -210,4 +253,5 @@ export default {
         },
     }
 }
+
 </script>

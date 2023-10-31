@@ -7,6 +7,11 @@ const routes = [
     component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
+    path: '/changepassword',
+    name: 'ChangePassword',
+    component: () => import('@/views/ChangePassword.vue'),
+  },
+      {
         path: '',
         name: 'Home',
         // route level code-splitting

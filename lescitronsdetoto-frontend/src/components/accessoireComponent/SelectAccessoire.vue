@@ -71,6 +71,7 @@ export default {
             });
         },
 
+
         accessoires() {
             return this.accessoireStore.accessoires;
         },
