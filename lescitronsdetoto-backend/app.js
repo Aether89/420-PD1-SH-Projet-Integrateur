@@ -26,15 +26,15 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', citronRouter)
-app.use('/vehicule', vehiculeRouter);
-app.use('/employes', EmployeRouter);
-app.use('/transaction', transactionRouter);
-app.use('/clients', ClientRouter);
-app.use('/interventions', interventionRouter);
-app.use('/accessoires', accessoireRouter);
-app.use('/availability', AvailabilityRouter);
-app.use('/rendezvous', RendezVousRouter);
+app.use('/api', citronRouter)
+app.use('/api/vehicule', vehiculeRouter);
+app.use('/api/employes', EmployeRouter);
+app.use('/api/transaction', transactionRouter);
+app.use('/api/clients', ClientRouter);
+app.use('/api/interventions', interventionRouter);
+app.use('/api/accessoires', accessoireRouter);
+app.use('/api/apiavailability', AvailabilityRouter);
+app.use('/api/rendezvous', RendezVousRouter);
 
 
 class BasicStrategyModified extends BasicStrategy {
@@ -75,7 +75,7 @@ passport.use(new BasicStrategyModified((username, password, cb) => {
   });
 }));
 
-app.get('/login',
+app.get('/api/login',
   passport.authenticate('basic', { session: false }),
   (req, res, next) => {
 
@@ -102,7 +102,7 @@ app.get('/login',
   }
 );
 
-app.post('/login',
+app.post('/api/login',
   (req, res, next) => {
 
     
@@ -145,7 +145,7 @@ app.post('/login',
   }
 );
 
-app.put('/changepassword',
+app.put('/api/changepassword',
   passport.authenticate('basic', { session: false }),
   async (req, res, next) => {
     try {

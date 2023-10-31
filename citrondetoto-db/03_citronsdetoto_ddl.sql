@@ -80,7 +80,7 @@ CREATE TABLE client (
 
 CREATE TABLE vehicule_intervention (
 	vin varchar(17) NOT NULL REFERENCES vehicule (vin),
-	id_accessoire serial NOT NULL REFERENCES intervention (id_intervention)
+	id_intervention serial NOT NULL REFERENCES intervention (id_intervention)
 );
 
 

@@ -7,11 +7,6 @@ const routes = [
     component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
-    path: '/changepassword',
-    name: 'ChangePassword',
-    component: () => import('@/views/ChangePassword.vue'),
-  },
-      {
         path: '',
         name: 'Home',
         // route level code-splitting
@@ -58,12 +53,6 @@ const routes = [
         path: 'vehicle/:id',
         name: 'Informations du Véhicule',
         component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
-        props: true,
-      },
-      {
-        path: 'newappointment/:id',
-        name: 'Prise de rendez-vous',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/NewAppointment.vue'),
         props: true,
       },
       {
