@@ -79,7 +79,7 @@ validateClient(req.body);
             nomClient: "" + req.body.nomClient,
             prenomClient: "" + req.body.prenomClient,
             telephoneClient: "" + req.body.telephoneClient,
-            numeroCivic:  + req.body.numeroCivic,
+            numeroCivic:  req.body.numeroCivic,
             numeroAppartement: "" + req.body.numeroAppartement,
             nomRue: "" + req.body.nomRue,
             nomVille: "" + req.body.nomVille,
