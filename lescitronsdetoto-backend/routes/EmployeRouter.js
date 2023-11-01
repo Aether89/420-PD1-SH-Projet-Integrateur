@@ -203,11 +203,13 @@ router.put('/:id',
                 isArchive: "" + req.body.isArchive,
             }
 
-
+            console.log("avant la query modifier")
             EmployeQueries.updateEmploye(employe).then(result => {
                 if (!result) {
+                    console.log("apres la query modifier")
                     return next(new HttpError(404, `Employe ${id} introuvable`));
                 }
+                
 
             }).catch(err => {
                 return next(err);

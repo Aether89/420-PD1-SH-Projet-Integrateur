@@ -134,12 +134,16 @@ import { priceFormatting } from '@/services/common';
 import { deleteVehicule } from '@/services/vehicule';
 import session from '@/session';
 import FooterBar from '@/layouts/default/FooterBar.vue';
+import {useActualyAVehiculeStore} from '@/store/actualyAVehicule'
 
 const appStore = useAppStore();
 const store = useVehiclesStore();
+const vehiculeStore = useActualyAVehiculeStore();
 export default {
     components: {
-FooterBar: FooterBar
+        
+FooterBar: FooterBar,
+   
     },
     props: {
         id: String,
@@ -192,7 +196,7 @@ FooterBar: FooterBar
             await deleteVehicule(this.id);
             this.$router.push(`/`);
             //test
-        }
+        },
     },
     mounted() {
         this.loadData();
