@@ -29,6 +29,7 @@ export default {
             console.log("this.storeVehicule.vin", this.storeVehicule.vin)
 
             const vehiculeFind = await getVehiculefr(this.storeVehicule.vin);
+
             console.log("vehiculeFind.vin", vehiculeFind.vin)
             if (this.storeVehicule.vin === '') {
                 return;
@@ -36,8 +37,19 @@ export default {
                 this.errorMessages = ['Aucun véhicule trouvé!'];
             } else {   
                 this.storeVehicule.isValidate2 = true;
+                this.storeVehicule.vin = vehiculeFind.vin;
+                this.storeVehicule.id_etat = vehiculeFind.id_etat
+                this.storeVehicule.couleur = vehiculeFind.couleur
+                this.storeVehicule.nombre_kilometre = vehiculeFind.nombre_kilometre
+                this.storeVehicule.prix_annonce = vehiculeFind.prix_annonce
+                this.storeVehicule.promotion = vehiculeFind.promotion
+                this.storeVehicule.description_courte = vehiculeFind.description_courte
+                this.storeVehicule.description_longue = vehiculeFind.description_longue
+                this.storeVehicule.marque = vehiculeFind.marque
+                this.storeVehicule.modele = vehiculeFind.modele
+                this.storeVehicule.annee = vehiculeFind.annee
             }
-            
+            console.log("vehiculeFind", vehiculeFind)
         }
     },
     computed: {

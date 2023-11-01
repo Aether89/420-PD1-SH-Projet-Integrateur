@@ -318,10 +318,11 @@ export default {
     mounted() {
         this.autoVin();
         this.refreshVehicule(this.vehiculeVin);
-        this.resetStore();
+        //this.resetStore();
     },
     created() {
         console.log('Mode reçu en props :', this.mode);
+        this.storeVehicule.newVehicule();
     },
 }
 </script>

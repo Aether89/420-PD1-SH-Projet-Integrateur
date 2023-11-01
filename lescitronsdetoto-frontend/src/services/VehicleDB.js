@@ -239,6 +239,9 @@ export const convertToVehiculefr = jsonVehicule => {
     description_longue: jsonVehicule.description_longue,
     prix_annonce: jsonVehicule.prix_annonce,
     promotion: jsonVehicule.promotion,
+    marque: jsonVehicule.marque,
+    modele: jsonVehicule.modele,
+    annee: jsonVehicule.annee,
     nombre_kilometre: jsonVehicule.nombre_kilometre,
     couleur: jsonVehicule.couleur
   }

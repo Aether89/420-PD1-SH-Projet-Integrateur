@@ -6,4 +6,11 @@ export const useAchatVenteStore = defineStore('achatVente', {
     prix_evenement: '',
     vin: ''
   }),
+  actions: {
+    newTrans() {
+      this.isValidate3 = false;
+      this.prix_evenement = null;
+      this.vin = null;
+    }
+  }
 })

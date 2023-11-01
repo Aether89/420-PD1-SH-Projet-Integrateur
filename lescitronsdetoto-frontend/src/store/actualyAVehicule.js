@@ -39,5 +39,20 @@ export const useActualyAVehiculeStore = defineStore('vehicule', {
 
         })
     },
+        newVehicule() {
+          this.isNew = false;
+          this.vin = null;
+          this.isValidate2 = false;
+          this.id_etat = '';
+          this.couleur = '';
+          this.nombre_kilometre = 0;
+          this.prix_annonce = 0;
+          this.promotion = 0;
+          this.description_courte = '';
+          this.description_longue = '';
+          this.marque = '';
+          this.modele = '';
+          this.annee = '';
+    }
   }
 })

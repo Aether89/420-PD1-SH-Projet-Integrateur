@@ -41,6 +41,7 @@
         >
           Précédent
         </v-btn>
+        
         -->
         <v-spacer></v-spacer>
         <v-btn
@@ -168,6 +169,7 @@
         }).catch((error) => {
           console.error("Erreur", error);
         });
+        
       }
     },
     created() {
@@ -175,6 +177,8 @@
       console.log('Session :', this.session.user)
       //console.log('Admin :', session.user.isAdmin);
       console.log("step", this.step)
+      this.storeVehicule.newVehicule();
+      this.storeTrans.newTrans();
     },
     mounted() {
       

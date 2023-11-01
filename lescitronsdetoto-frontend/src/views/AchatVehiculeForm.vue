@@ -199,6 +199,8 @@
       //console.log('Admin :', session.user.isAdmin);
       console.log("step", this.step)
       console.log("Validate", this.storeClient.isValidate)
+      this.storeVehicule.newVehicule();
+      this.storeTrans.newTrans();
     },
   }
 </script>
