@@ -17,9 +17,11 @@ function validateClient(client) {
     if (client.prenomClient!=="") { if (!rules.prenom.test(client.prenomClient)) {
         throw new HttpError(400, "Format du prénom invalide");
     }	}
-    if (client.telephone!=='') { if (!rules.telephone.test(client.telephoneClient)) {
+
+    if (client.telephone!=="") { if (!rules.telephone.test(client.telephoneClient)) {
         throw new HttpError(400, "Format du numéro de téléphone invalid");
     }}
+
     if (client.numeroCivic!=='') { if (!rules.numeroCivic.test(client.numeroCivic)) {
         throw new HttpError(400, "Format du numéro civic invalid");
     }}
@@ -37,6 +39,9 @@ function validateClient(client) {
     }}
     if (client.codePostal!=="") { if (!rules.codePostal.test(client.codePostal)) {
         throw new HttpError(400, "Format du code postal invalide");
+    }}
+    if (client.courriel && client.courriel !=="") { if (!rules.email.test(client.courriel)) {
+        throw new HttpError(400, "Format du courriel invalide");
     }}
 }
 
@@ -66,26 +71,28 @@ router.get("/:id", (req, res, next) => {
 });
 
 router.post('/',
-    passport.authenticate('basic', { session: false }),
+    // passport.authenticate('basic', { session: false }),
     (req, res, next) => {
-        const user = req.user;
 
-        if (!user || !user.isAdmin) {
-            return next(new HttpError(403, "Droit administrateur requis"));
-        }
+        // à retirer si on veut que utilisateur peuve s'ajouter
+        // const user = req.user;
+
+        // if (!user || !user.isAdmin) {
+        //     return next(new HttpError(403, "Droit administrateur requis"));
+        // }
 
 validateClient(req.body);   
         const InfoClient = {
             nomClient: "" + req.body.nomClient,
             prenomClient: "" + req.body.prenomClient,
             telephoneClient: "" + req.body.telephoneClient,
-            numeroCivic:  + req.body.numeroCivic,
+            numeroCivic:  req.body.numeroCivic,
             numeroAppartement: "" + req.body.numeroAppartement,
             nomRue: "" + req.body.nomRue,
             nomVille: "" + req.body.nomVille,
             nomProvince: "" + req.body.nomProvince,
             codePostal: "" + req.body.codePostal,
-
+            courrielClient: "" + req.body.courriel,
         }
 
 
@@ -109,14 +116,14 @@ router.put('/:id',
     passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         const idClient = req.params.id; // Utilisation d'une dénomination constante
-
+console.log(req.body);
         try {
             // Data validation - Vérification de la présence des champs requis et de leurs types
             if (!idClient || idClient === '') {
                 throw new HttpError(400, 'Le paramètre id est requis');
             }
 
-            if (idClient !== req.body.idClient) {
+            if (idClient != req.body.idClient) {
                 throw new HttpError(400, `Le paramètre spécifie l'id ${idClient} alors que l'utilisateur fourni a l'id ${req.body.idClient}`);
             }
             validateClient(req.body);
@@ -134,6 +141,7 @@ router.put('/:id',
                 nomProvince: req.body.nomProvince,
                 codePostal: req.body.codePostal,
                 isArchive: req.body.isArchive,
+                courrielClient: req.body.courrielClient
             };
 
             // Mettre à jour les informations du client

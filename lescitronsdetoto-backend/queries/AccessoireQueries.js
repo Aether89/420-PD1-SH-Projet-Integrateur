@@ -21,50 +21,11 @@ const getAllAccessoires = async () => {
 
 exports.getAllAccessoires = getAllAccessoires;
 
-const addAccessoireVehicule = async ( vin,idAccessoire, clientParam) => {
-    const client = clientParam || (await pool.connect());
-    try {
-        if (!clientParam) {
-            await client.query('BEGIN');
-        }
-        const result = await client.query(
-            `INSERT INTO vehicule_accessoire (vin, id_vehicule) 
-                         VALUES ($1, $2 )
-                         RETURNING id_accessoire`,
-            [
-                vin,
-                idAccessoire
-            ]
-        );
-                    await client.query('COMMIT');
-       
-        const newAccessoire = await getAccessoire(result.rows[0].vin, client);
-  
 
-        return newAccessoire;
-    } catch (err) {
-        if (!client) {
-            await client.query('ROLLBACK');
-        }
-        throw new HttpError("Une erreur est survenue lors de la création de l'accessoire", 500);
-    } finally {
-        if (!client) {
-            client.release();
-        }
-    }
-};
-exports.addAccessoireVehicule = addAccessoireVehicule;
 
-const getAccessoire = async (idAccessoire, clientParam) => {
-    const client = clientParam || (await pool.connect());
+const getAccessoire = async (idAccessoire) => {
 
-    try {
-        if (!clientParam) {
-
-            await client.query("BEGIN");
-        }
-
-        const result = await client.query(
+        const result = await pool.query(
             `SELECT id_accessoire, nom_accessoire
          FROM accessoire
          WHERE id_accessoire = $1`,
@@ -82,16 +43,7 @@ const getAccessoire = async (idAccessoire, clientParam) => {
 
             return accessoire;
         };
-    } catch (err) {
-        if (!clientParam) {
-            await client.query("ROLLBACK");
-        }
-        throw err;
-    } finally {
-        if (!clientParam) {
-            client.release();
-        }
-    }
+ 
 };
 exports.getAccessoire = getAccessoire;
 

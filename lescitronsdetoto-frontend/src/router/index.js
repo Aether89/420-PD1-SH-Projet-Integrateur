@@ -15,6 +15,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
       },
       {
+        path: 'changePassword',
+        name: 'changePassword',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/MustChangePass.vue'),
+      },
+      {
         path: 'login',
         name: 'Connection',
         component: () => import(/* webpackChunkName: "home" */ '@/views/LoginForm.vue'),
@@ -53,12 +58,6 @@ const routes = [
         path: 'vehicle/:id',
         name: 'Informations du Véhicule',
         component: () => import(/* webpackChunkName: "home" */ '@/views/DetailledVehicle.vue'),
-        props: true,
-      },
-      {
-        path: 'newappointment/:id',
-        name: 'Prise de rendez-vous',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/NewAppointment.vue'),
         props: true,
       },
       {
@@ -102,7 +101,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/EditionTransaction.vue'),
         props: true
       },
-{
+   {
         path: 'manage/availability',
         name: 'Gestion des disponibilités',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Manage.vue'),

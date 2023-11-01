@@ -16,6 +16,7 @@ const fetchVIN = require("../vpic/VINAPI");
 //const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
 
 
+
 module.exports = router;
 
 router.get('/', (req, res, next) => {
@@ -54,8 +55,8 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             return next(new HttpError(400, 'Le champ vin est requis'));
         }
         
+        
         const prixDAchat = req.body.prix_evenement;
-        /*const prixDAchat = req.body.prixEvenement;
         if(!prixDAchat || prixDAchat <= 0) {
             return next(new HttpError(400, 'Le champ prix d\'achat est requis et doit être supérieur à 0'));
         }
@@ -111,33 +112,6 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if (vehiculeExcite) {
           return next(new HttpError(409, `Le véhicule avec ce VIN ${vin} existe déjà.`));
         }
-        /*
-        if(newVehicule.couleur.length > 32 || newVehicule.description_courte.length > 64 || newVehicule.description_longue.length > 512)
-        {
-            return next(new HttpError(400, `Un champ n'est pas valide`));
-        }
-
-        if (newVehicule.id_etat === null || newVehicule.id_etat < 1 || newVehicule.id_etat > 3) {
-            newVehicule.id_etat = 1;
-        }
-
-        /*if (newVehicule.prix_annonce <= 0){
-            newVehicule.prix_annonce = null;
-        } */ //a voir avec la bd
-
-        if(newVehicule.promotion <= 0) {
-            newVehicule.promotion = null;
-        }
-        const currentTime = new Date();
-        console.log("currentTime", currentTime.toISOString())
-        
-
-        /*if (newVehicule.selectedAccessoire) {
-            const accessoire = await accessoireVehiculeQuerie.addAccessoireVehicule(newVehicule.selectedAccessoire, vin);
-            if (!accessoire) {
-                return next(new HttpError(404, `Accessoire ${id} introuvable`));
-            }
-        }*/
 
         const clientNouveu = await clientQueries.createInfoClient(newClient);
         console.log("clientNouveu", clientNouveu)
@@ -151,22 +125,28 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         }
         const evenementId = await evenementQueries.insertEvenement(newAchat);
 
-        console.log("evenementId", evenementId);
+        const result = await vehiculeQuerie.addVehicule(newVehicule);
+        if (result) {
+            return next(new HttpError(500, "Une erreur est survenue lors de l'ajout du véhicule"));
+        }
+        if (
+            newVehicule.selectedAccessoire) {
+            const accessoire = await accessoireVehiculeQuerie.addAccessoireVehicule(newVehicule.selectedAccessoire, vin);
+            console.log("accessoire", accessoire);
+            if (!accessoire) {
+                return next(new HttpError(404, `Accessoire ${id} introuvable`));
+            }
+        }
 
         const autoVin = await vehiculeQuerie.addVehicule(newVehicule);
-
         const newEvenementVehicule ={
             id_evenement: evenementId,
             vin: vin
         }
-        console.log("newEvenementVehicule : ", newEvenementVehicule);
-        console.log("newEvent : ", newAchat);
-        console.log("newVehicule", newVehicule);
         
         evenementQueries.insertAutoEvenement(newEvenementVehicule);
 
         res.json(newVehicule);
-        //return vehiculeQuerie.getVehiculeByVin(vin);
     } catch(err) {
         next(err);
     }
@@ -204,6 +184,7 @@ passport.authenticate('basic', { session: false }),
                     : req.body.promotion,
                 description_courte: "" + req.body.description_courte,
                 description_longue: "" + req.body.description_longue,
+                selectedAccessoire:[] + req.body.selectedAccessoire,
             };
             console.log("updated Vehicule : ", updateVehicule);
 

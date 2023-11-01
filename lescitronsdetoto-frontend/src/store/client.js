@@ -14,6 +14,7 @@ export const useClientStore = defineStore('client', {
     telephoneClient: "",
     numeroCivic: "",
     numeroAppartement: "",
+    courriel: "",
     nomRue: "",
     nomVille: "",
     nomProvince: "",
@@ -39,6 +40,7 @@ export const useClientStore = defineStore('client', {
           this.nomProvince = result.nomProvince;
           this.codePostal = result.codePostal;
           this.isArchive = result.isArchive;
+          this.courriel = result.courrielClient;
 
         })
     },
@@ -51,13 +53,14 @@ export const useClientStore = defineStore('client', {
       this.prenomClient = "";
       this.posteClient = "";
       this.telephoneClient = "";
-      this.numeroCivic = "";
+      this.numeroCivic = null;
       this.numeroAppartement = "";
       this.nomRue = "";
       this.nomVille = "";
       this.nomProvince = "";
       this.codePostal = "";
       this.isArchive = "";
+      this.courriel = "";
 
     },
     getClients() {

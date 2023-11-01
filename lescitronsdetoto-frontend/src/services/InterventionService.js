@@ -21,8 +21,8 @@ async function createServiceError(response) {
     return new ServiceError(response.status, await getResponseMessage(response));
 }
 
-export async function createIntervention(Intervention) {
-    const response = await fetch(`/api/interventions`, {
+export async function createIntervention(Intervention, vin) {
+    const response = await fetch(`/api/interventions/wvin/:vin`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -62,6 +62,14 @@ export async function fetchIntervention() {
     }
 }
 
+export async function fetchInterventionByVIN(vin) {
+    const response = await axios(`/api/interventions/vin/${vin}`);
+    if (response.status === 200) {
+        return convertToIntervention(response.data);
+    } else {
+        throw await createServiceError(response);
+    }
+};
 
 export async function fetchInterventionById(idIntervention) {
     const response = await axios(`/api/interventions/${idIntervention}`);
@@ -91,13 +99,15 @@ export async function updateIntervention(Intervention) {
 
 
 
-export async function updateInterventionImage(idIntervention, formData) {
-    const response = await fetch(`/api/interventions/${idIntervention}/image`, {
-        method: "POST",
+
+
+export async function deleteIntervention(idIntervention) {
+    const response = await fetch(`/api/interventions/${idIntervention}`, {
+        method: "DELETE",
         headers: {
+            "Content-Type": "application/json",
             ...session.getAuthHeaders()
         },
-        body: formData
     });
 
     if (response.ok) {
@@ -107,8 +117,19 @@ export async function updateInterventionImage(idIntervention, formData) {
     }
 }
 
-export async function deleteIntervention(idIntervention) {
-    const response = await fetch(`/api/interventions/${idIntervention}`, {
+export async function fetchInterventionWvinById(idIntervention,vin) {
+    const response = await axios(`/api/interventions/${idIntervention}/${vin}`);
+    if (response.status === 200) {
+        return convertToIntervention(response.data);
+    } else {
+        throw await createServiceError(response);
+    }
+};
+
+
+
+export async function deleteInterventionWvin(idIntervention,vin) {
+    const response = await fetch(`/api/interventions/${idIntervention}/${vin}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

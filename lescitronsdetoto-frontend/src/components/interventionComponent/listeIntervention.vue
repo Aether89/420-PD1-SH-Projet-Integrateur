@@ -1,18 +1,18 @@
 <template>
-    <v-card max-width="400" min-width="400" height="auto">
+    <v-card max-width="400" min-width="400" height="650">
         <v-card-item class="bg-orange-darken-4">
             <v-card-title>
                 Liste des interventions
             </v-card-title>
 
             <template v-slot:append>
-                <v-btn :disabled="!(this.session.user.isAdmin)" color="white" icon="mdi-plus" size="small"
-                    @click="interventionStore.newIntervention()"></v-btn>
+                <v-btn :disabled="!(this.session.user && this.session.user.isAdmin)" color="white" icon="mdi-plus"
+                    size="small" @click="interventionStore.newIntervention()"></v-btn>
             </template>
         </v-card-item>
         <v-divider></v-divider>
         <div v-if="!this.interventionStore.loading">
-            <v-virtual-scroll :items="items" height="auto" item-height="50">
+            <v-virtual-scroll :items="items" height="590" item-height="50">
                 <template v-slot:default="{ item }">
                     <v-list-item>
                         <template v-slot:prepend>

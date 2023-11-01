@@ -19,7 +19,7 @@ const getLoginByUserAccountId = async (userAccountId, client) => {
       passwordHash: row.password_hash,
       passwordSalt: row.password_salt,
       isActive: row.is_active,
-      isAdmin: row.is_admin
+      isAdmin: row.is_admin,
     };
   }
   return undefined;
@@ -45,6 +45,9 @@ const createUserAccount = async (userAccountId, idEmploye, courrielCompteEmploye
       [userAccountId, idEmploye, courrielCompteEmploye, passwordHash, passwordSalt]
     );
 
+    if (!result) {
+      throw new HttpError(500, `Impossible de créer le compte ${userAccountId}`);
+    }
     const userAccount = await getLoginByUserAccountId(userAccountId, client);
 
     console.log("userAccount", userAccount)
@@ -89,3 +92,4 @@ const changeMDP = async (userAccountId, passwordHash, passwordSalt) => {
     client.release();
   }
 };
+exports.changeMDP = changeMDP;

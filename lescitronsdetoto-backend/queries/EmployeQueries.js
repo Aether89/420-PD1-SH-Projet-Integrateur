@@ -130,7 +130,6 @@ exports.createEmploye = createEmploye;
 
 const updateEmploye = async (employe) => {
     const client = await pool.connect();
-    console.log("avant le try de la querie")
     try {
         await client.query('BEGIN');
 
@@ -155,15 +154,14 @@ const updateEmploye = async (employe) => {
             ]
         );
         if (result.rowCount === 0) {
-            throw new HttpError(`Impossible de trouver l'employé avec id_employe ${employe.idEmploye}`, 404);
+            throw new HttpError(`Impossible de trouver l'employé avec id_employe ${employe.idEmploye}, 404`);
         }
 
         await client.query("COMMIT");
-        console.log("query", result)
         return employe;
     } catch (err) {
         await client.query("ROLLBACK");
-        throw new HttpError(`Une erreur est survenue lors de la mise à jour de l'employé avec id_employe ${employe.idEmploye}`, 500);
+        throw new HttpError(`Une erreur est survenue lors de la mise à jour de l'employé avec id_employe ${employe.idEmploye}, 500`);
     } finally {
         client.release();
     }

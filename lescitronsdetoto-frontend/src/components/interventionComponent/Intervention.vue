@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mx-auto" max-width="600">
+    <v-card class="mx-auto" maxHeight="650" max-width="600">
         <v-toolbar class="bg-orange-darken-4">
             <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
         </v-toolbar>
@@ -38,6 +38,7 @@ import rules from '@/regles';
 
 
 export default {
+    props: ['vin'],
     data() {
         return {
             isNew: true,
@@ -64,7 +65,7 @@ export default {
 
             try {
 
-                if (this.store.isNew) { await createIntervention(Intervention); } else { await updateIntervention(Intervention); }
+                if (this.store.isNew) { await createIntervention(Intervention, vin); } else { await updateIntervention(Intervention); }
 
             } catch (err) {
                 console.error(err);
@@ -78,7 +79,7 @@ export default {
         },
         async supprimer() {
             try {
-                await deleteIntervention(this.store.idIntervention);
+                await deleteIntervention(this.store.idIntervention, vin);
                 this.store.getInterventions();
                 this.store.newIntervention();
             } catch (err) {

@@ -1,1 +1,2 @@
 ALTER TABLE evenement ALTER COLUMN id_client DROP NOT NULL;
+ALTER TABLE vehicule_intervention RENAME COLUMN id_accessoire TO id_intervention;

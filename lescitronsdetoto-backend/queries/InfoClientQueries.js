@@ -4,7 +4,7 @@ const pool = require('./DBPool');
 const getAllInfoClients = async () => {
     const result = await pool.query(
         `SELECT id_client, nom_client, prenom_client, telephone_client, numero_civic, numero_appartement, nom_rue,
-        nom_ville, nom_province, code_postal, is_archive
+        nom_ville, nom_province, code_postal, is_archive, courriel_client
          FROM client
          ORDER BY id_client`,
     );
@@ -21,7 +21,8 @@ const getAllInfoClients = async () => {
             nomVille: row.nom_ville,
             nomProvince: row.nom_province,
             codePostal: row.code_postal,
-            isArchive: row.is_archive
+            isArchive: row.is_archive,
+            courrielClient: row.courriel_client
         };
 
         return infoClient;
@@ -39,7 +40,7 @@ const getInfoClient = async (idInfoClient, clientParam) => {
 
         const result = await client.query(
             `SELECT id_client, nom_client, prenom_client, telephone_client, numero_civic, numero_appartement, nom_rue,
-            nom_ville, nom_province, code_postal, is_archive
+            nom_ville, nom_province, code_postal, is_archive, courriel_client
          FROM client
          WHERE id_client = $1`,
             [idInfoClient]
@@ -58,7 +59,8 @@ const getInfoClient = async (idInfoClient, clientParam) => {
                 nomVille: row.nom_ville,
                 nomProvince: row.nom_province,
                 codePostal: row.code_postal,
-                isArchive: row.is_archive
+                isArchive: row.is_archive,
+                courrielClient: row.courriel_client
             }
 
 
@@ -88,11 +90,11 @@ const createInfoClient = async (infoClient, clientParam) => {
         }
         const result = await client.query(
             `INSERT INTO client (nom_client, prenom_client, telephone_client, numero_civic, numero_appartement, nom_rue,
-                nom_ville, nom_province, code_postal, is_archive ) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,false )
+                nom_ville, nom_province, code_postal, is_archive ,courriel_client) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,false, $10)
              RETURNING id_client`,
             [infoClient.nomClient, infoClient.prenomClient, infoClient.telephoneClient, infoClient.numeroCivic, infoClient.numeroAppartement,
-            infoClient.nomRue, infoClient.nomVille, infoClient.nomProvince, infoClient.codePostal]
+            infoClient.nomRue, infoClient.nomVille, infoClient.nomProvince, infoClient.codePostal, infoClient.courrielClient]
         );
 
 
@@ -110,6 +112,9 @@ const createInfoClient = async (infoClient, clientParam) => {
 };
 exports.createInfoClient = createInfoClient;
 
+
+
+
 const updateInfoClient = async (infoClient) => {
     const client = await pool.connect();
 
@@ -118,10 +123,10 @@ const updateInfoClient = async (infoClient) => {
 
         const result = await client.query(
             `UPDATE client SET nom_client = $2, prenom_client = $3, telephone_client = $4 ,numero_civic = $5, numero_appartement = $6, nom_rue = $7,
-             nom_ville = $8, nom_province = $9, code_postal = $10, is_archive = $11
+             nom_ville = $8, nom_province = $9, code_postal = $10, is_archive = $11, courriel_client = $12
             WHERE id_client = $1`,
             [infoClient.idClient, infoClient.nomClient, infoClient.prenomClient, infoClient.telephoneClient, infoClient.numeroCivic, infoClient.numeroAppartement,
-            infoClient.nomRue, infoClient.nomVille, infoClient.nomProvince, infoClient.codePostal, infoClient.isArchive]
+            infoClient.nomRue, infoClient.nomVille, infoClient.nomProvince, infoClient.codePostal, infoClient.isArchive, infoClient.courrielClient]
         );
         if (result.rowCount === 0) {
             throw new Error(`Impossible de trouver le client avec id_client ${infoClient.idClient}`);

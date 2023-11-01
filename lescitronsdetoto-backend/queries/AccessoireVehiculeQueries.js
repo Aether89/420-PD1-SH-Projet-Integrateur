@@ -2,50 +2,58 @@ const HttpError = require('../HttpError');
 const pool = require('./DBPool');
 const accessoireQuerie = require('./AccessoireQueries');
 
-const addAccessoireVehicule = async ( idAccessoire,vin, clientParam) => {
-    const client = clientParam || (await pool.connect());
-    try {
-        if (!clientParam) {
-            await client.query('BEGIN');
+const addAccessoireVehicule = async (idAccessoire, vin) => {
+    console.log("idAccessoire", idAccessoire , idAccessoire.length);
+    console.log("vin", vin);
+    let resultat = [];
+    let i=0;
+      while (i < idAccessoire.length) {
+    if (isNaN(idAccessoire[i])) {
+      console.log(`L'élément à l'index ${i} n'est pas un chiffre.`);
+    i++;
+  }
+        console.log("idAccessoire", idAccessoire[i]);
+        console.log("vin", vin);
+        
+            if (isNaN(idAccessoire[i])) { i++; }
+        
+            console.log("idAccessoire", idAccessoire[i]);
+            console.log("vin", vin);
+            const result = await pool.query(
+                `INSERT INTO vehicule_accessoire (vin, id_accessoire) 
+                VALUES ($1, $2)
+                RETURNING id_accessoire`,
+                [vin, idAccessoire[i]]
+          );
+          if (result.rows.length === 0) {
+              throw new HttpError(`Impossible de trouver le véhicule avec id_accessoire ${idAccessoire}`, 404);
+            }
+          resultat.push(idAccessoire[i] );
+            i++;
         }
-        const result = await client.query(
-            `INSERT INTO vehicule_accessoire (vin, id_accessoire) 
-                         VALUES ($1, $2 )
-                         RETURNING id_accessoire`,
-            [
-                vin,
-                idAccessoire
-            ]
-        );
-                    await client.query('COMMIT');
-       
-        const newAccessoire = await accessoireQuerie.getAccessoire(result.rows.map, client);
-  
 
-        return newAccessoire;
-    } catch (err) {
-        if (!client) {
-            await client.query('ROLLBACK');
-        }
-        throw new HttpError("Une erreur est survenue lors de la création de l'accessoire", 500);
-    } finally {
-        if (!client) {
-            client.release();
-        }
+    console.log("resultat", resultat);
+    
+
+    // Déclarez newAccessoire en dehors de la boucle for
+    let newAccessoire = [];
+
+    for (let i = 0; i < resultat.length; i++) {
+        const row = resultat[i];
+        const accessoire = await accessoireQuerie.getAccessoire(row);
+        newAccessoire.push(accessoire);
     }
+
+    return newAccessoire;
 };
+
+
 exports.addAccessoireVehicule = addAccessoireVehicule;
 
-const getAccessoireVehicule = async (vin, clientParam) => {
-    const client = clientParam || (await pool.connect());
+const getAccessoireVehicule = async (vin) => {
 
-    try {
-        if (!clientParam) {
 
-            await client.query("BEGIN");
-        }
-
-        const listeAccessoire = await client.query(
+        const listeAccessoire = await pool.query(
             `SELECT id_accessoire
          FROM vehicule_accessoire
          WHERE vin = $1`,
@@ -61,34 +69,20 @@ const getAccessoireVehicule = async (vin, clientParam) => {
          WHERE id_accessoire = $1`,
             [listeAccessoire.rows[0].id_accessoire]
         );
-        return result.rows.map((row) => {
+    return result.rows.map((row) => {
         const accessoire = {
             idAccessoire: row.id_accessoire,
             nomAccessoire: row.nom_accessoire
         };
 
-        return accessoire;
-        });
-    } catch (err) {
-        if (!clientParam) {
-            await client.query("ROLLBACK");
-        }
-        throw err;
-    } finally {
-        if (!clientParam) {
-            client.release();
-        }
-    }
+    });
+
 };
 exports.getAccessoireVehicule = getAccessoireVehicule;
 
 const updateAccessoireVehicule = async (vin,idAccessoire) => {
-    const client = await pool.connect();
-
-    try {
-        await client.query('BEGIN');
-
-        const result = await client.query(
+ 
+        const result = await pool.query(
             `UPDATE accessoireVehicule SET  id_accessoire = $2
             WHERE vin = $1`,
             [idAccessoire, vin]
@@ -99,23 +93,13 @@ const updateAccessoireVehicule = async (vin,idAccessoire) => {
 
         await client.query("COMMIT");
         return result.rows[0].id_accessoir;
-    } catch (err) {
-        await client.query("ROLLBACK");
-        throw new HttpError(`Une erreur est survenue lors de la mise à jour de le vehicule avec id_accessoire ${idAccessoire}`, 500);
-    } finally {
-        client.release();
-    }
+
 };
 exports.updateAccessoireVehicule = updateAccessoireVehicule;
 
-const deleteAccessoireVehicule = async (vin,idAccessoire, clientParam) => {
-    const client = clientParam || (await pool.connect());
-
-    try {
-        if (!clientParam) {
-            await client.query('BEGIN');
-        }
-        const result = await client.query(
+const deleteAccessoireVehicule = async (vin,idAccessoire) => {
+   
+        const result = await pool.query(
             `DELETE FROM vehicule_accessoire
             WHERE vin = $1 and id_accessoire = $2`,
             [vin,idAccessoire]
@@ -128,16 +112,6 @@ const deleteAccessoireVehicule = async (vin,idAccessoire, clientParam) => {
         }
 
         return {};
-
-
-    } catch (err) {
-        await client.query('ROLLBACK');
-        throw err;
-    } finally {
-        if (!clientParam) {
-            client.release();
-        }
-    }
 };
 
 exports.deleteAccessoireVehicule = deleteAccessoireVehicule;

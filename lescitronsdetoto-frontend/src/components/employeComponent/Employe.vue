@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mx-auto" max-width="600">
+    <v-card class="mx-auto" maxHeight="650" max-width="600">
         <v-toolbar class="bg-orange-darken-4">
             <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
         </v-toolbar>
@@ -8,44 +8,44 @@
             <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="employeform">
                 <v-row>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomEmploye" label="Nom employé" :rules="[rules.nom]"
+                        <v-text-field v-model="this.store.prenomEmploye" label="Prenom employé" maxlength="64" :rules="[rules.prenom]"
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.prenomEmploye" label="Prenom employé" :rules="[rules.prenom]"
+                        <v-text-field v-model="this.store.nomEmploye" label="Nom employé" maxlength="64" :rules="[rules.nom]"
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field :disabled="!(this.session.user && this.session.user.isAdmin)"
-                            v-model="this.store.posteEmploye" label="Poste de l'employé" :rules="[rules.posteEmploye]"
+                            v-model="this.store.posteEmploye" label="Poste de l'employé" maxlength="64" :rules="[rules.posteEmploye]"
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field type="number" class="no-spinner" v-model="this.store.telephoneEmploye"
-                            label="Téléphone de l'employé" :rules="[rules.telephone]" dense></v-text-field></v-col>
+                        <v-text-field v-model="this.store.telephoneClient" label="Téléphone"
+                                :rules="[rules.telephone]" class="no-spinner" dense maxlength="16"></v-text-field></v-col>
                     <v-col cols="12" md="3">
                         <v-text-field type="number" class="no-spinner" v-model="this.store.numeroCivic"
-                            :rules="[rules.numeroCivic]" label="# Civic" dense></v-text-field>
+                        maxlength="10" :rules="[rules.numeroCivic]" label="# Civic" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="this.store.numeroAppartement" label="Appt."
-                            :rules="[rules.numeroAppartement]" dense></v-text-field>
+                        maxlength="6" :rules="[rules.numeroAppartement]" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomRue" label="Nom rue" :rules="[rules.nomRue]"
+                        <v-text-field v-model="this.store.nomRue" label="Nom rue" maxlength="64" :rules="[rules.nomRue]"
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomVille" label="Ville" :rules="[rules.nomVille]"
+                        <v-text-field v-model="this.store.nomVille" label="Ville" maxlength="64" :rules="[rules.nomVille]"
                             dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-text-field v-model="this.store.nomProvince" label="Province" :rules="[rules.nomProvince]"
-                            dense></v-text-field>
+                        <v-select v-model="this.store.nomProvince" :items="this.province" maxlength="64" label="Province"
+                                dense></v-select>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-text-field v-model="this.store.codePostal" label="Code postal de l'employe"
-                            :rules="[rules.codePostal]" dense></v-text-field>
+                        maxlength="6" :rules="[rules.codePostal]" dense></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-checkbox v-if="!this.store.isNew && this.session.user.isAdmin" v-model="this.store.isArchive"
@@ -78,7 +78,22 @@ export default {
             isNew: true,
             session: session,
             store: useEmployeStore(),
-            rules: rules
+            rules: rules,
+            province: [
+  "Alberta",
+  "Colombie-Britannique",
+  "Île-du-Prince-Édouard",
+  "Manitoba",
+  "Nouveau-Brunswick",
+  "Nouvelle-Écosse",
+  "Ontario",
+  "Québec",
+  "Saskatchewan",
+  "Terre-Neuve-et-Labrador",
+  "Territoires du Nord-Ouest", 
+  "Nunavut", 
+  "Yukon"
+],
         };
     },
     methods: {

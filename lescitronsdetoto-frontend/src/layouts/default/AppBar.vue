@@ -12,22 +12,37 @@
         <div v-if="session.user">
           <menulist></menulist>
         </div>
-        <div>
 
-          <v-btn v-if="session.user" to="/" @click="session.disconnect()"
-            :prepend-icon="session.user && session.user.isAdmin ? 'mdi-car-key' : 'mdi-car'"><template v-slot:prepend>
-              <v-icon v-if="session.user && session.user.isAdmin" color="yellow-lighten-3"></v-icon>
-              <v-icon v-else color="white"></v-icon>
-            </template>
-            Déconnexion
-          </v-btn>
-          <v-btn v-else to="/login" prepend-icon="mdi-account">
+        <v-menu
+        v-if="session.user"
+        v-model="menu"
+        :close-on-content-click="false"
+        location="bottom"
+      >
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-if="isSM" v-bind="props" :append-icon="accountIcon" variant="text">Bienvenue, {{ this.session.user.userAccountId }}</v-btn>
+            <v-btn
+            v-else v-bind="props" :icon="accountIcon" variant="text"></v-btn>
+        </template>
+  
+        <v-card min-width="300">
+          <v-card-title v-if="!isSM">Bienvenue, {{ this.session.user.userAccountId }}</v-card-title>
+            <v-list nav>
+              <v-list-item prepend-icon="mdi-cog" density="compact" to="/EditerEmploye" title="Éditer Compte" />
+              <v-list-item prepend-icon="mdi-calendar-month" density="compact" to="/manage/availability"
+        title="Gestion des disponibilités" />            </v-list>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="red" text @click="session.disconnect()">Déconnexion</v-btn>
+            </v-card-actions>
+        </v-card>
+      </v-menu>
+      <v-btn v-else to="/login" prepend-icon="mdi-account">
             Espace employé
           </v-btn>
-        </div>
-        <div class="text-body-2 text-center" v-if="session.user">
-          Bienvenue, {{ this.session.user.userAccountId }}
-        </div>
+      
+
       </template>
     </v-app-bar>
   </header>
@@ -42,11 +57,19 @@ export default {
   },
   data: function () {
     return {
+      menu: false,
       session: session
 
     };
   },
-
+computed: {
+  accountIcon() {
+    return (this.session.user.isAdmin) ? 'mdi-account-supervisor-circle' : 'mdi-account-circle';
+  },
+  isSM() {
+            return this.$vuetify.display.smAndUp;
+        },
+}
 
 };
 </script>
