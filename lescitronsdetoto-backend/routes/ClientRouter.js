@@ -80,7 +80,6 @@ router.post('/',
         // if (!user || !user.isAdmin) {
         //     return next(new HttpError(403, "Droit administrateur requis"));
         // }
-console.log(req.body);
 validateClient(req.body);   
         const InfoClient = {
             nomClient: "" + req.body.nomClient,
