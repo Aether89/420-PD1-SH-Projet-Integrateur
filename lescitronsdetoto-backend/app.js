@@ -149,16 +149,17 @@ app.put('/api/changepassword',
   passport.authenticate('basic', { session: false }),
   async (req, res, next) => {
     try {
-      const userAccountId = req.user.userAccountId;
+      const userAccountId = req;
       const oldPassword = req.body.oldPassword;
       const newPassword = req.body.newPassword;
-
+console.log("userAccountId: ", userAccountId);
       // Vérifiez si l'ancien mot de passe est correct avant de le modifier
       const user = await userAccountQueries.getLoginByUserAccountId(userAccountId);
       if (!user) {
         return next(new HttpError(404, 'Utilisateur introuvable'));
       }
 
+      
       const iterations = 100000;
       const keylen = 64;
       const digest = 'sha512';

@@ -130,7 +130,7 @@ exports.createEmploye = createEmploye;
 
 const updateEmploye = async (employe) => {
     const client = await pool.connect();
-
+    
     try {
         await client.query('BEGIN');
 
@@ -139,17 +139,31 @@ const updateEmploye = async (employe) => {
             `UPDATE employe SET nom_employe = $2, prenom_employe = $3, poste_employe = $4, telephone_employe = $5 ,numero_civic = $6, numero_appartement = $7, nom_rue = $8,
              nom_ville = $9, nom_province = $10, code_postal = $11, is_archive = $12
             WHERE id_employe = $1`,
-            [employe.idEmploye, employe.nomEmploye, employe.prenomEmploye, employe.posteEmploye, employe.telephoneEmploye, employe.codePostalEmploye]
+            [
+                employe.idEmploye,
+                employe.nomEmploye,
+                employe.prenomEmploye,
+                employe.posteEmploye,
+                employe.telephoneEmploye,
+                employe.numeroCivic,
+                employe.numeroAppartement,
+                employe.nomRue,
+                employe.nomVille,
+                employe.nomProvince,
+                employe.codePostal,
+                employe.isArchive
+            ]
         );
         if (result.rowCount === 0) {
-            throw new HttpError(`Impossible de trouver l'employé avec id_employe ${employe.idEmploye}`, 404);
+            throw new HttpError(`Impossible de trouver l'employé avec id_employe ${employe.idEmploye}, 404`);
         }
 
         await client.query("COMMIT");
+        
         return employe;
     } catch (err) {
         await client.query("ROLLBACK");
-        throw new HttpError(`Une erreur est survenue lors de la mise à jour de l'employé avec id_employe ${employe.idEmploye}`, 500);
+        throw new HttpError(`Une erreur est survenue lors de la mise à jour de l'employé avec id_employe ${employe.idEmploye}, 500`);
     } finally {
         client.release();
     }

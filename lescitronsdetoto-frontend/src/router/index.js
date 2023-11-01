@@ -15,6 +15,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
       },
       {
+        path: 'changePassword',
+        name: 'changePassword',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/MustChangePass.vue'),
+      },
+      {
         path: 'login',
         name: 'Connection',
         component: () => import(/* webpackChunkName: "home" */ '@/views/LoginForm.vue'),

@@ -21,8 +21,8 @@ const addAccessoireVehicule = async (idAccessoire, vin) => {
             console.log("vin", vin);
             const result = await pool.query(
                 `INSERT INTO vehicule_accessoire (vin, id_accessoire) 
-VALUES ($1, $2)
-RETURNING id_accessoire`,
+                VALUES ($1, $2)
+                RETURNING id_accessoire`,
                 [vin, idAccessoire[i]]
           );
           if (result.rows.length === 0) {
@@ -75,7 +75,6 @@ const getAccessoireVehicule = async (vin) => {
             nomAccessoire: row.nom_accessoire
         };
 
-        return accessoire;
     });
 
 };

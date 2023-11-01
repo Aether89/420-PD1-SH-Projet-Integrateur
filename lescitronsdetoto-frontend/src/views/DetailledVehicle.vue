@@ -51,10 +51,9 @@
                             <v-card-title>Ce véhicule m'interesse</v-card-title>
                             <v-btn v-bind="props" size="large" @click="dialog = !dialog">Prendre un<br>rendez-vous</v-btn>
 
-                            <v-dialog v-model="dialog" persistent
-                            transition="dialog-bottom-transition"
-                            width="auto">
-                                <reservation-form :vin="this.local.vin" :vehicule="concatName" @close-Reservation-Dialog="this.dialog = !this.dialog"/>
+                            <v-dialog v-model="dialog" persistent transition="dialog-bottom-transition" width="auto">
+                                <reservation-form :vin="this.local.vin" :vehicule="concatName"
+                                    @close-Reservation-Dialog="this.dialog = !this.dialog" />
                             </v-dialog>
                         </v-card>
 
@@ -124,13 +123,12 @@
                     </v-col>
 
                     <v-col cols="12" sm="8">
-                        <v-card v-if="this.local.selectedAccessoire" rounded="t-xl">
+                        <v-card v-if="this.local.selectedAccessoire" class=" mb-8" rounded="t-lg">
                             <v-sheet class="pa-3 bg-primary text-center">
                                 Listes des accessoires
                             </v-sheet>
                             <div>
-                                <v-chip v-for="name in this.names">
-
+                                <v-chip class="ma-2" v-for="name in this.names">
                                     {{ name }}
                                 </v-chip>
                             </div>
@@ -172,6 +170,7 @@ export default {
         id: String,
         isDialog: Boolean,
 
+
     },
     data() {
         return {
@@ -183,6 +182,7 @@ export default {
             store: useVehiclesStore(),
             appStore: useAppStore(),
             names: [],
+
         };
     },
     computed: {

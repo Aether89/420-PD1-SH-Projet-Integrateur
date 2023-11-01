@@ -53,12 +53,15 @@ const session = reactive({
             headers: {
                 ... this.getAuthHeaders()
             }
+            
         });
 
         if (response.ok) {
             const user = await response.json();
             this.user = user;
+            console.log(user);
             return user;
+
         } else {
             this.user = null;
             if (response.status === 401) {
@@ -107,8 +110,9 @@ const session = reactive({
             }
         }
     },
-    async changePassword(userAccountId, oldPassword, newPassword) {
-  try {
+    async changePassword( oldPassword, newPassword) {
+        try {
+      
     const response = await fetch('/api/changepassword', {
       method: 'PUT',
       headers: {
@@ -116,10 +120,10 @@ const session = reactive({
         ...this.getAuthHeaders()
       },
       body: JSON.stringify({
-        userAccountId,
-        oldPassword,
-        newPassword
-      })
+                
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            })
     });
 
     if (response.status === 200) {

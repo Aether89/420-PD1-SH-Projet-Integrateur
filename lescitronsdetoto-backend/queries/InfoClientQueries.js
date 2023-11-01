@@ -112,6 +112,9 @@ const createInfoClient = async (infoClient, clientParam) => {
 };
 exports.createInfoClient = createInfoClient;
 
+
+
+
 const updateInfoClient = async (infoClient) => {
     const client = await pool.connect();
 
@@ -123,7 +126,7 @@ const updateInfoClient = async (infoClient) => {
              nom_ville = $8, nom_province = $9, code_postal = $10, is_archive = $11, courriel_client = $12
             WHERE id_client = $1`,
             [infoClient.idClient, infoClient.nomClient, infoClient.prenomClient, infoClient.telephoneClient, infoClient.numeroCivic, infoClient.numeroAppartement,
-            infoClient.nomRue, infoClient.nomVille, infoClient.nomProvince, infoClient.codePostal, infoClient.isArchive. infoClient.courrielClient]
+            infoClient.nomRue, infoClient.nomVille, infoClient.nomProvince, infoClient.codePostal, infoClient.isArchive, infoClient.courrielClient]
         );
         if (result.rowCount === 0) {
             throw new Error(`Impossible de trouver le client avec id_client ${infoClient.idClient}`);

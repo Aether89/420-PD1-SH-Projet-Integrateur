@@ -116,14 +116,14 @@ router.put('/:id',
     passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         const idClient = req.params.id; // Utilisation d'une dénomination constante
-
+console.log(req.body);
         try {
             // Data validation - Vérification de la présence des champs requis et de leurs types
             if (!idClient || idClient === '') {
                 throw new HttpError(400, 'Le paramètre id est requis');
             }
 
-            if (idClient !== req.body.idClient) {
+            if (idClient != req.body.idClient) {
                 throw new HttpError(400, `Le paramètre spécifie l'id ${idClient} alors que l'utilisateur fourni a l'id ${req.body.idClient}`);
             }
             validateClient(req.body);
@@ -141,6 +141,7 @@ router.put('/:id',
                 nomProvince: req.body.nomProvince,
                 codePostal: req.body.codePostal,
                 isArchive: req.body.isArchive,
+                courrielClient: req.body.courrielClient
             };
 
             // Mettre à jour les informations du client

@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mx-auto" max-width="600">
+    <v-card class="mx-auto" maxHeight="650" max-width="600">
         <div v-if="mode !== 'vehicule'">
             <v-toolbar v-if="mode !== 'reservation'" class="bg-orange-darken-4">
                 <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
@@ -220,7 +220,7 @@ export default {
             this.validate();
         },
         inline(newVal, oldVal) {
-            (newVal === 0 ) ? this.store.courriel = "" : this.store.telephoneClient = "";
+            (newVal === 0) ? this.store.courriel = "" : this.store.telephoneClient = "";
             this.store.isValidate = false;
         },
 

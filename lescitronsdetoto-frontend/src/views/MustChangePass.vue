@@ -5,7 +5,7 @@
         </v-toolbar>
         <v-spacer></v-spacer>
         <v-form @submit.prevent="changePassword" validate-on="submit lazy" ref="changePasswordForm">
-            <v-text-field v-model="oldPassword" label="Ancien mot de passe" :rules="[rules.required, rules.passwordValid]"
+            <v-text-field v-model="oldPassword" label="Ancien mot de passe" :rules="[rules.required]"
                 density="compact"></v-text-field>
             <v-text-field v-model="newPassword" label="Nouveau mot de passe" type="password"
                 :rules="[rules.required, rules.passwordValid]" density="compact"></v-text-field>
@@ -39,7 +39,7 @@ export default {
                 if (this.newPassword === this.newPasswordValidation) {
                     // Vous pouvez appeler une fonction de service pour changer le mot de passe
                     // Assurez-vous de gérer la logique de mise à jour du mot de passe côté serveur
-                    const result = await session.changePassword(this.oldPassword, this.newPassword);
+                    const result = await session.changePassword(this.user, this.oldPassword, this.newPassword);
 
                     if (result.success) {
                         this.$router.push("login")

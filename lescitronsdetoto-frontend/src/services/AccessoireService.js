@@ -51,7 +51,7 @@ async function convertToAccessoire(jsonAccessoire) {
  * @returns Promesse permettant d'obtenir la liste des Accessoires
  */
 export async function fetchAccessoire() {
-    const response = await fetch('/api/accessoires');
+    const response = await fetch(`/api/accessoires`);
     if (response.ok) {
         const respJson = await response.json();
         return respJson;
@@ -120,3 +120,56 @@ export async function deleteAccessoire(idAccessoire) {
         throw await createServiceError(response);
     }
 }
+
+export async function addAccessoire(Accessoire, vin) {
+    const response = await fetch(`/api/accessoires/add/${vin}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(Accessoire)
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
+export async function deleteAccessoireWvin(idAccessoire, vin) {
+    const response = await fetch(`/api/accessoires/${idAccessoire}/${vin}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+    });
+
+    if (response.ok) {
+        return;
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
+export async function fetchAccessoireWvin(vin) {
+    const response = await fetch(`/api/accessoires/Wvin/${vin}`);
+    if (response.ok) {
+        const respJson = await response.json();
+        return respJson;
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
+
+export async function fetchAccessoireWvinById(idAccessoire,vin) {
+    const response = await axios(`/api/accessoires/${vin}/${idAccessoire}`);
+    if (response.status === 200) {
+        return convertToAccessoire(response.data);
+    } else {
+        throw await createServiceError(response);
+    }
+};

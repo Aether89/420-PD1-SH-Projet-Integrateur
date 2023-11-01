@@ -19,7 +19,7 @@ const getLoginByUserAccountId = async (userAccountId, client) => {
       passwordHash: row.password_hash,
       passwordSalt: row.password_salt,
       isActive: row.is_active,
-      isAdmin: row.is_admin
+      isAdmin: row.is_admin,
     };
   }
   return undefined;

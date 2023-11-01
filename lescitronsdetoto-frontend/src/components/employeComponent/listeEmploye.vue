@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="400" min-width="400" height="auto">
+  <v-card max-width="400" min-width="400" height="650">
     <v-card-item class="bg-orange-darken-4">
       <v-card-title>
         Liste des employés
@@ -12,7 +12,7 @@
     </v-card-item>
     <v-divider></v-divider>
     <div v-if="!this.employeStore.loading">
-      <v-virtual-scroll :items="items" height="auto" item-height="50">
+      <v-virtual-scroll :items="items" height="590" item-height="50">
         <template v-slot:default="{ item }">
           <v-list-item>
             <template v-slot:prepend>

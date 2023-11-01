@@ -25,11 +25,16 @@
                             density="compact" maxlength="64"></v-text-field>
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
-
-                        <SelectAccessoire v-if="mode === 'vehicule'" @selectedEventIDs="receiveEmit" />
+                        <SelectAccessoire @selectedEventIDs="receiveEmit" />
+                        <interventionForm :vin="this.storeVehicule.vin" />
+                        <div v-for="intervention in interventions">
+                            {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
+                                v-model="this.storeIntervention.etatIntervention" label="Fait" dense></v-checkbox>
+                        </div>
 
                     </v-col>
                 </v-row>
+
                 <v-row>
                     <v-col cols="12" sm="4">
                         <v-table>
@@ -76,11 +81,16 @@
 
 <script>
 import session from '../session';
+import { useInterventionStore } from '@/store/intervention';
+import { createIntervention, updateIntervention, deleteIntervention, fetchIntervention } from '@/services/InterventionService';
 import { useVehiclesStore } from '@/store/vehicles';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 import { createVehicule, udpateVoiture, getVehiculefr } from '../services/vehicule';
 import { fetchVIN } from '../services/VINAPI';
+import interventionForm from '@/components/interventionComponent/Intervention.vue';
+import interventionList from '@/components/interventionComponent/Intervention.vue';
 import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.vue';
+
 
 
 
@@ -88,16 +98,17 @@ import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.
 const store = useVehiclesStore();
 export default {
     components: {
-        SelectAccessoire: SelectAccessoire
-
+        SelectAccessoire: SelectAccessoire,
+        interventionForm: interventionForm
     },
-    props: ['mode', 'id'],
+    props: ['mode', 'id', 'vehiculeVin'],
     data() {
         return {
             //nombre_kilometre: null,
             errorMessagesPrixAnnonce: [],
             errorMessages: [],
             errorMessagesPromotion: [],
+            storeIntervention: useInterventionStore(),
             storeVehicule: useActualyAVehiculeStore(),
             session: session,
             loading: true,
@@ -306,6 +317,20 @@ export default {
         }
     },
     computed: {
+        items() {
+            fet
+            let num = 0;
+            return Array.from({ length: this.accessoires.length }, () => {
+                const name = this.accessoires[num].nomAccessoire;
+                const id = this.accessoires[num].idAccessoire;
+                num++;
+                return {
+                    color: this.colors[this.genRandomIndex(colorsLength)],
+                    name: `${name} `,
+                    idAccessoire: `${id}`,
+                };
+            });
+        },
 
         nouveauvehicule() {
             return this.mode === 'vehicule';
