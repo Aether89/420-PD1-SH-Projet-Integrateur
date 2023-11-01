@@ -120,6 +120,9 @@ export default {
         };
     },
     methods: {
+        resetStore() {
+            this.storeVehicule = null;
+        },
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
                 console.log("promo", this.storeVehicule.promotion)
@@ -315,6 +318,7 @@ export default {
     mounted() {
         this.autoVin();
         this.refreshVehicule(this.vehiculeVin);
+        this.resetStore();
     },
     created() {
         console.log('Mode reçu en props :', this.mode);

@@ -34,18 +34,18 @@
       <v-divider></v-divider>
   
       <v-card-actions>
-        <v-btn
+        <!--<v-btn
           v-if="step > 1"
           variant="text"
           @click="step--"
         >
           Précédent
         </v-btn>
-        
+        -->
         <v-spacer></v-spacer>
         <v-btn
           v-if="step === 1"
-          :disabled="!this.storeClient.nomClient || !this.storeClient.prenomClient || !this.storeClient.telephoneClient"
+          :disabled="this.storeClient.isValidate === false"
           color="primary"
           variant="flat"
           @click="step++"
@@ -55,7 +55,7 @@
 
         <v-btn
           v-if="step === 2"
-
+          :disabled="this.storeVehicule.isValidate2 === false"
           color="primary"
           variant="flat"
           @click="step++"
@@ -65,7 +65,10 @@
         
         <v-btn
           v-if="step === 3"
-          prepend-icon="mdi-car-search" color="green-lighten-2"  variant="flat">Envoyé
+          :disabled="this.storeTrans.isValidate3 === false"
+          prepend-icon="mdi-car-search" color="green-lighten-2"  variant="flat"
+          @click="jouter"
+          >Envoyé
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -103,12 +106,18 @@
   
 <script>
   import { useClientStore } from '@/store/client';
+  import { useActualyAVehiculeStore } from '@/store/actualyAVehicule'
+  import { useAchatVenteStore } from '@/store/achatVente'
+  import { useEmployeStore } from '@/store/employe'
   //import rules from '@/regles';
   export default {
     data: () => ({
       step: 1,
       session: session,
       storeClient: useClientStore(),
+      storeVehicule: useActualyAVehiculeStore(),
+      storeTrans: useAchatVenteStore(),
+      storeEmploye: useEmployeStore()
     }),
     props: ['mode', 'id', 'rules'],
     computed: {
@@ -121,6 +130,45 @@
             return;
         }
       },
+      jouter() {
+        const transVente = {
+          vin: this.storeVehicule.vin,
+          prix_evenement: this.storeTrans.prix_evenement,
+          idEmploye: this.storeEmploye.idEmploye,
+          nomClient: this.storeClient.nomClient,
+          prenomClient: this.storeClient.prenomClient,
+          telephoneClient: this.storeClient.telephoneClient,
+          numeroCivic: this.storeClient.numeroCivic,
+          numeroAppartement: this.storeClient.numeroAppartement,
+          nomRue: this.storeClient.nomRue,
+          nomVille: this.storeClient.nomVille,
+          nomProvince: this.storeClient.nomProvince,
+          codePostal: this.storeClient.codePostal
+        }
+        fetch ('/api/transaction/vente/vehicule',{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+          },
+          body: JSON.stringify(transVente)
+        }).then((response) => {
+          if (response.ok) {
+            this.$router.push(`/transaction`);
+          } else {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes("application/json")) {
+              response.json().then((body) => {
+              alert("Erreur: " + body.message);
+              });
+            } else {
+              throw new Error(`Erreur ${response.status}`);
+            }
+          }
+        }).catch((error) => {
+          console.error("Erreur", error);
+        });
+      }
     },
     created() {
       console.log('Mode reçu en props :', this.mode);
@@ -128,5 +176,8 @@
       //console.log('Admin :', session.user.isAdmin);
       console.log("step", this.step)
     },
+    mounted() {
+      
+    }
   }
 </script>

@@ -131,14 +131,15 @@ passport.authenticate('basic', { session: false }),
                 throw new HttpError(404, `Une transaction avec le id ${id} n'existe pas`);
             }
             console.log("evenement", evenement)
-
+            const currentTime = new Date();
             const updateEvenement = {
                 id_evenement: id,
                 prix_evenement: req.body.prix_evenement.replace(/\s/g, ''),
                 etat_vue: null,
                 id_type_evenement: evenement.id_type_evenement,
                 id_client: req.body.id_client,
-                user_account_id: user.userAccountId
+                user_account_id: user.userAccountId,
+                date_heure_evenement: currentTime.toISOString(),
             };
             console.log("updateEvenement", updateEvenement)
                 
@@ -151,7 +152,7 @@ passport.authenticate('basic', { session: false }),
     }
 );
 
-router.put('/vente/:id',
+router.post('/vente/vehicule',
 passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         try {
@@ -181,14 +182,8 @@ passport.authenticate('basic', { session: false }),
 
             //const evenement = await evenementQueries.getautoEvenementIdByViv(vin);
             //const getEvenement = await evenementQueries.getEvenementById(evenement.id_evenement);
-            const prix_evenement = vehiculeSell.promotion !== null ? vehiculeSell.promotion : vehiculeSell.prix_annonce;
-            const venteEvenement = {
-                prix_evenement: prix_evenement,
-                etat_vue: null,
-                id_type_evenement: 3,
-                id_client: req.body.id_client,
-                user_account_id: user.userAccountId
-            };
+            //const prix_evenement = vehiculeSell.promotion !== null ? vehiculeSell.promotion : vehiculeSell.prix_annonce;
+            
             
             console.log("vin", vin);
 
@@ -199,9 +194,33 @@ passport.authenticate('basic', { session: false }),
                 nombre_kilometre: vehiculeSell.nombre_kilometre,
                 prix_annonce: vehiculeSell.prix_annonce,
                 promotion: vehiculeSell.promotion,
-                description_courte: vehiculeSell.description_courte,
-                description_longue: vehiculeSell.description_longue,
+                description_courte: "vendu",
+                description_longue: "vendu",
             };
+
+            const newClient = {
+                nomClient: req.body.nomClient,
+                prenomClient: req.body.prenomClient,
+                telephoneClient: req.body.telephoneClient,
+                numeroCivic: req.body.numeroCivic,
+                numeroAppartement: req.body.numeroAppartement,
+                nomRue: req.body.nomRue,
+                nomVille: req.body.nomVille,
+                nomProvince: req.body.nomProvince,
+                codePostal: req.body.codePostal
+            }
+
+            const clientNouveu = await clientQueries.createInfoClient(newClient);
+            const currentTime = new Date();
+            const venteEvenement = {
+                prix_evenement: req.body.prix_evenement.replace(/\s/g, ''),
+                etat_vue: null,
+                id_type_evenement: 3,
+                id_client: clientNouveu.idClient,
+                user_account_id: user.userAccountId,
+                date_heure_evenement: currentTime.toISOString()
+            };
+
             const EvenementUpdated = await evenementQueries.insertEvenement(venteEvenement);
             await vehiculeQueries.updateVehicule(updateVehicule);
             console.log("vehiculeSell", vehiculeSell);
