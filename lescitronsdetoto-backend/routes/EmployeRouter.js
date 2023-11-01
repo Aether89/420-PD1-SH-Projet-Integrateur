@@ -145,7 +145,7 @@ router.post('/',
 
                     const userAccountWithPasswordHash = await userAccountQueries.createUserAccount(newAccountName, newEmploye.idEmploye, newAccountCouriel,
                         passwordHashBase64, salt);
-console.log("userAccountWithPasswordHash : ", userAccountWithPasswordHash);
+                  
                     const userDetails = {
                         userAccountId: userAccountWithPasswordHash.userAccountId,
                         idEmploye: userAccountWithPasswordHash.idEmploye,
@@ -203,11 +203,13 @@ router.put('/:id',
                 isArchive: "" + req.body.isArchive,
             }
 
-
+            console.log("avant la query modifier")
             EmployeQueries.updateEmploye(employe).then(result => {
                 if (!result) {
+                    console.log("apres la query modifier")
                     return next(new HttpError(404, `Employe ${id} introuvable`));
                 }
+                
 
             }).catch(err => {
                 return next(err);

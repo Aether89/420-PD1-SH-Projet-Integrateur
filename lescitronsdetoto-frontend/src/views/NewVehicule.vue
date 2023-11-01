@@ -138,6 +138,8 @@ export default {
         };
     },
     methods: {
+        resetStore() {
+            this.storeVehicule = null;
         receiveEmit() {
             this.selectedAccessoire = selectedEventIDs;
         },
@@ -181,10 +183,12 @@ export default {
                 });*/
 
                 const formatter = new Intl.NumberFormat('en-US');
-
-                const vehicule = await getVehiculefr(this.id);
+                console.log("yolo")
+                console.log("couleur modif :", this.storeVehicule.couleur)
+                
+                /*const vehicule = await getVehiculefr(this.id);
                 console.log("refresh vehicule", vehicule)
-                this.vin = vehicule.vin;
+                this.vin = this.storeVehicule.vin;
                 this.id_etat = vehicule.id_etat;
                 this.donneesApi.marque = vehicule.marque;
                 this.donneesApi.modele = vehicule.modele;
@@ -196,7 +200,7 @@ export default {
                 this.description_courte = vehicule.description_courte;
                 this.description_longue = vehicule.description_longue;
                 this.loading = false;
-                console.log("this.prix_annonce", this.prix_annonce)
+                console.log("this.prix_annonce", this.prix_annonce)*/
             } else {
                 this.vehicule = {
                     vin: null,
@@ -225,6 +229,9 @@ export default {
                 this.storeVehicule.marque = this.donneesApi.Make
                 this.storeVehicule.modele = this.donneesApi.Model
                 this.storeVehicule.annee = this.donneesApi.ModelYear
+                await this.storeVehicule.chargerVehicle(this.vehiculeVin)
+                console.log("this.storeVehicule.couleur", this.storeVehicule.couleur)
+                console.log("this.storeVehicule.prix_annonce", this.storeVehicule.prix_annonce)
             }
         },
         async validateNext() {
@@ -288,20 +295,20 @@ export default {
         },
         async mettreAJourVehicule() {
             const formatter = new Intl.NumberFormat('fr-FR');
-            const prix = this.prix_annonce;
-            const promo = this.promotion;
+            const prix = this.storeVehicule.prix_annonce;
+            const promo = this.storeVehicule.promotion;
             const prixFormate = formatter.format(prix);
             const promoFormate = formatter.format(promo);
 
             const vehicule = {
                 vin: this.id,
-                id_etat: this.id_etat,
-                couleur: this.couleur,
-                nombre_kilometre: this.nombre_kilometre,
+                id_etat: this.storeVehicule.id_etat,
+                couleur: this.storeVehicule.couleur,
+                nombre_kilometre: this.storeVehicule.nombre_kilometre,
                 prix_annonce: prixFormate,
                 promotion: promoFormate,
-                description_courte: this.description_courte,
-                description_longue: this.description_longue
+                description_courte: this.storeVehicule.description_courte,
+                description_longue: this.storeVehicule.description_longue
             };
 
             console.log("cest lequel", this.id);
@@ -348,9 +355,11 @@ export default {
     mounted() {
         this.autoVin();
         this.refreshVehicule(this.vehiculeVin);
+        //this.resetStore();
     },
     created() {
         console.log('Mode reçu en props :', this.mode);
+        this.storeVehicule.newVehicule();
     },
 }
 </script>

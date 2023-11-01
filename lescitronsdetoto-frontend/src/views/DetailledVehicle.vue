@@ -246,6 +246,7 @@ export default {
         },
         async suppression() {
             await deleteVehicule(this.id);
+
             this.$router.push('/');
         },
         partager() {

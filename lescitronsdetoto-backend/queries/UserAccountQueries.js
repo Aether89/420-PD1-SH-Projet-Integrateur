@@ -44,11 +44,13 @@ const createUserAccount = async (userAccountId, idEmploye, courrielCompteEmploye
              VALUES ($1, $2, $3, $4, $5, true, false,true)`,
       [userAccountId, idEmploye, courrielCompteEmploye, passwordHash, passwordSalt]
     );
+
     if (!result) {
       throw new HttpError(500, `Impossible de créer le compte ${userAccountId}`);
     }
     const userAccount = await getLoginByUserAccountId(userAccountId, client);
 
+    console.log("userAccount", userAccount)
     client.query('COMMIT');
 
     return userAccount;

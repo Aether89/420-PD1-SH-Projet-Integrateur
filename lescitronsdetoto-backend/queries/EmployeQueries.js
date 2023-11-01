@@ -130,7 +130,6 @@ exports.createEmploye = createEmploye;
 
 const updateEmploye = async (employe) => {
     const client = await pool.connect();
-    
     try {
         await client.query('BEGIN');
 
@@ -159,7 +158,6 @@ const updateEmploye = async (employe) => {
         }
 
         await client.query("COMMIT");
-        
         return employe;
     } catch (err) {
         await client.query("ROLLBACK");
