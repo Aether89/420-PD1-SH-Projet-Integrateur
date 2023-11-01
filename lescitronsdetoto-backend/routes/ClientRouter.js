@@ -18,11 +18,11 @@ function validateClient(client) {
         throw new HttpError(400, "Format du prénom invalide");
     }	}
 
-    if (client.telephone!=="") { if (!rules.telephone.test(client.telephoneClient)) {
+    if (client.telephone) { if (!rules.telephone.test(client.telephoneClient)) {
         throw new HttpError(400, "Format du numéro de téléphone invalid");
     }}
 
-    if (client.numeroCivic!=='') { if (!rules.numeroCivic.test(client.numeroCivic)) {
+    if (client.numeroCivic) { if (!rules.numeroCivic.test(client.numeroCivic)) {
         throw new HttpError(400, "Format du numéro civic invalid");
     }}
     if (client.numeroAppartement!=="") { if (!rules.numeroAppartement.test(client.numeroAppartement)) {
@@ -80,7 +80,7 @@ router.post('/',
         // if (!user || !user.isAdmin) {
         //     return next(new HttpError(403, "Droit administrateur requis"));
         // }
-
+console.log(req.body);
 validateClient(req.body);   
         const InfoClient = {
             nomClient: "" + req.body.nomClient,

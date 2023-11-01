@@ -31,6 +31,7 @@ export async function createClient(InfoClient) {
         body: JSON.stringify(InfoClient)
     });
 
+    console.log(response);
     if (response.ok) {
         return response.json();
     } else {

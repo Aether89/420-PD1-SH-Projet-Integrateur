@@ -72,7 +72,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             return next(new HttpError(400, 'Veillez associer un client à la transaction'));
         }
 
-        */const fetchedVehicule = await fetchVIN(vin);
+        const fetchedVehicule = await fetchVIN(vin);
         if (fetchedVehicule.ErrorCode !== "0") {
           return next(new HttpError(404, `Veillez rentrer un vin existant!`));
         }
