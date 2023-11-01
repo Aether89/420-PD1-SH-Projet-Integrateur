@@ -33,7 +33,7 @@ app.use('/api/transaction', transactionRouter);
 app.use('/api/clients', ClientRouter);
 app.use('/api/interventions', interventionRouter);
 app.use('/api/accessoires', accessoireRouter);
-app.use('/api/apiavailability', AvailabilityRouter);
+app.use('/api/availability', AvailabilityRouter);
 app.use('/api/rendezvous', RendezVousRouter);
 
 
