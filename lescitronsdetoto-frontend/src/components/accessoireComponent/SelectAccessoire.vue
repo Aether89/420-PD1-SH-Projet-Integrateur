@@ -1,14 +1,15 @@
 <template>
     <v-row justify="center">
         <v-col cols="12" sm="7" md="6" lg="5">
-            <v-sheet elevation="10" rounded="xl" maxHeight="650" max-width="600">
+            <v-sheet class="mx-auto" elevation="10" rounded="xl" maxHeight="650" max-width="600">
                 <v-sheet class="pa-3 bg-primary text-center" rounded="t-xl">
                     Listes des accessoires
                     <v-pagination :total-visible="1" :length="this.pagination" v-model="page"></v-pagination>
                 </v-sheet>
 
                 <div class="pa-4">
-                    <v-chip-group v-model="selectedEventIDs" multiple selected-class="text-primary" column>
+                    <v-chip-group v-model="selectedEventIDs" v-on:child-to-parent="receiveDataFromChild" multiple
+                        selected-class="text-primary" column>
                         <v-chip v-for="item in items.slice(this.currentIndex, (this.currentIndex + this.contentOfPage))"
                             :key="item.idAccessoire">
                             {{ item.name }}
@@ -23,6 +24,7 @@
 <script>
 import { useAccessoireStore } from '@/store/accessoire';
 import session from '@/session';
+
 import { reactive } from 'vue';
 
 export default {
@@ -40,6 +42,7 @@ export default {
         };
     },
     methods: {
+
         genRandomIndex(length) {
             return Math.ceil(Math.random() * (length - 1));
         },
@@ -48,13 +51,20 @@ export default {
         },
     },
     computed: {
+        itemTooLoad() {
+            this.selectedEventIDs.push(this.items.idAccessoire);
+
+        },
+
         pagination() {
             return Math.ceil(this.items.length / this.contentOfPage);
         },
         formState() {
-            reactive({
+            return reactive({
                 selectedEventIDs: [],
-            })
+
+            });
+
         },
         items() {
             const colorsLength = this.colors.length;
@@ -77,9 +87,14 @@ export default {
         },
     },
     watch: {
-        selectedEventIDs() {
-            this.$emit('selectedEventIDs', this.selectedEventIDs);
+        selectedEventIDs(newVal, oldVal) {
+            this.$emit('child-to-parent', newVal);
         },
+
+        page(newIndex, oldIndex) {
+            // existing code...
+        },
+
         page(newIndex, oldIndex) {
             this.currentIndex = this.contentOfPage * (this.page - 1);
         }

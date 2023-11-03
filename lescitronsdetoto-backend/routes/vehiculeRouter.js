@@ -13,7 +13,7 @@ const evenementQueries = require("../queries/EvenementQueries");
 const clientQueries = require("../queries/InfoClientQueries");
 
 const fetchVIN = require("../vpic/VINAPI");
-//const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
+const accessoireVehiculeQuerie = require("../queries/AccessoireVehiculeQueries");
 
 
 
@@ -93,7 +93,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             promotion: req.body.promotion.replace(/\s/g, ''),
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
-            //selectedAccessoire:[] + req.body.selectedAccessoire,
+            selectedAccessoire:[] + req.body.selectedAccessoire,
         };
         const newClient = {
             nomClient: req.body.nomClient,
@@ -211,7 +211,14 @@ passport.authenticate('basic', { session: false }),
             
 
             const vehiculeUpdated = await vehiculeQuerie.updateVehicule(updateVehicule);
-            //console.log("vehiculeUpdated", vehiculeUpdated);
+            if (!vehiculeUpdated) {
+                return next(new HttpError(404, `Vehicule ${vin} introuvable`));
+            }
+            const accessoire = await accessoireVehiculeQuerie.getAccessoireVehicule(vin);
+            if (accessoire!== undefined && accessoire.length > 0) {
+                accessoireVehiculeQuerie.deleteAccessoireAllVehicule(vin);
+            }
+            accessoireVehiculeQuerie.addAccessoireVehicule(updateVehicule.selectedAccessoire, vin);
             res.json(vehiculeUpdated);
         } catch (error) {
             next(error);

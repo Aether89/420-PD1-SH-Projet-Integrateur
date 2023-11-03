@@ -21,8 +21,25 @@ async function createServiceError(response) {
     return new ServiceError(response.status, await getResponseMessage(response));
 }
 
-export async function createIntervention(Intervention, vin) {
-    const response = await fetch(`/api/interventions/wvin/:vin`, {
+export async function createInterventionWvin(Intervention, vin) {
+    const response = await fetch(`/api/interventions/wvin/${vin}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(Intervention)
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+};
+
+export async function createIntervention(Intervention) {
+    const response = await fetch(`/api/interventions`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -63,7 +80,7 @@ export async function fetchIntervention() {
 }
 
 export async function fetchInterventionByVIN(vin) {
-    const response = await axios(`/api/interventions/vin/${vin}`);
+    const response = await axios(`/api/interventions/wvin/${vin}`);
     if (response.status === 200) {
         return convertToIntervention(response.data);
     } else {
@@ -97,6 +114,22 @@ export async function updateIntervention(Intervention) {
     }
 }
 
+export async function updateInterventionWvin(Intervention,vin) {
+    const response = await fetch(`/api/interventions/wvin/${Intervention.idIntervention}/${vin}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(Intervention)
+    });
+
+    if (response.ok) {
+        return convertToIntervention(await response.json());
+    } else {
+        throw await createServiceError(response);
+    }
+}
 
 
 
@@ -118,7 +151,7 @@ export async function deleteIntervention(idIntervention) {
 }
 
 export async function fetchInterventionWvinById(idIntervention,vin) {
-    const response = await axios(`/api/interventions/${idIntervention}/${vin}`);
+    const response = await axios(`/api/interventions/wvin/${idIntervention}/${vin}`);
     if (response.status === 200) {
         return convertToIntervention(response.data);
     } else {
@@ -129,7 +162,7 @@ export async function fetchInterventionWvinById(idIntervention,vin) {
 
 
 export async function deleteInterventionWvin(idIntervention,vin) {
-    const response = await fetch(`/api/interventions/${idIntervention}/${vin}`, {
+    const response = await fetch(`/api/interventions/wvin/${idIntervention}/${vin}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

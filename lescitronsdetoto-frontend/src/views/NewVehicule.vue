@@ -25,9 +25,10 @@
                             density="compact" maxlength="64"></v-text-field>
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
-                        <SelectAccessoire @selectedEventIDs="receiveEmit" />
-                        <interventionForm :vin="this.storeVehicule.vin" />
-                        <div v-for="intervention in interventions">
+                        <!-- <SelectAccessoire :vin="this.storeVehicule.vin" @child-to-parent="receiveDataFromChild" -->
+                        class="mb-4 flex-wrap" />
+                        <interventionForm :vin="this.storeVehicule.vin" v-if="!nouveauvehicule" />
+                        <div v-for=" intervention  in  interventions ">
                             {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
                                 v-model="this.storeIntervention.etatIntervention" label="Fait" dense></v-checkbox>
                         </div>
@@ -82,13 +83,12 @@
 <script>
 import session from '../session';
 import { useInterventionStore } from '@/store/intervention';
-import { createIntervention, updateIntervention, deleteIntervention, fetchIntervention } from '@/services/InterventionService';
+import { createIntervention, updateIntervention, deleteIntervention, fetchIntervention, fetchInterventionByVIN } from '@/services/InterventionService';
 import { useVehiclesStore } from '@/store/vehicles';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 import { createVehicule, udpateVoiture, getVehiculefr } from '../services/vehicule';
 import { fetchVIN } from '../services/VINAPI';
 import interventionForm from '@/components/interventionComponent/Intervention.vue';
-import interventionList from '@/components/interventionComponent/Intervention.vue';
 import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.vue';
 
 
@@ -101,7 +101,7 @@ export default {
         SelectAccessoire: SelectAccessoire,
         interventionForm: interventionForm
     },
-    props: ['mode', 'id', 'vehiculeVin'],
+    props: ['mode', 'id'],
     data() {
         return {
             //nombre_kilometre: null,
@@ -121,6 +121,7 @@ export default {
                 modele: '',
                 annee: ''
             },
+            Item: [],
             selectedAccessoire: [],
             couleur: '',
             nombre_kilometre: 0,
@@ -138,10 +139,14 @@ export default {
         };
     },
     methods: {
-        resetStore() {
-            this.storeVehicule = null;
-        receiveEmit() {
-            this.selectedAccessoire = selectedEventIDs;
+        receiveDataFromChild(data) {
+            console.log(data);
+            Item.push(data);// 'Some data'
+        },
+
+        handleSelectedAccessoire(selectedAccessoire) {
+            // handle the selectedAccessoire here
+            console.log(selectedAccessoire);
         },
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
@@ -168,39 +173,11 @@ export default {
             this.recette = null;
 
             if (!this.nouveauvehicule) {
-                /*console.log("refresh vehiculeVin", this.vehiculeVin)
-                //const vehiculepatate = await getVehiculefr(this.vehiculeVin);
-                //console.log("vehiculepatate", vehiculepatate)
-                getVehiculefr(this.vehiculeVin).then(vehicule => {
-                    this.vehicule = vehicule;
-                    this.loading = false;
-                    console.log("refresh", this.vehicule)
-                }).catch(err => {
-                    this.recette = null;
-                    this.loadError = true;
-                    this.loading = false;
-                    this.errorMessage = err.message;
-                });*/
 
                 const formatter = new Intl.NumberFormat('en-US');
                 console.log("yolo")
                 console.log("couleur modif :", this.storeVehicule.couleur)
-                
-                /*const vehicule = await getVehiculefr(this.id);
-                console.log("refresh vehicule", vehicule)
-                this.vin = this.storeVehicule.vin;
-                this.id_etat = vehicule.id_etat;
-                this.donneesApi.marque = vehicule.marque;
-                this.donneesApi.modele = vehicule.modele;
-                this.donneesApi.annee = vehicule.annee;
-                this.couleur = vehicule.couleur;
-                this.nombre_kilometre = vehicule.nombre_kilometre;
-                this.prix_annonce = parseFloat(vehicule.prix_annonce.replace(/\s+/g, '').replace(',', '.'));
-                this.promotion = parseFloat(vehicule.promotion.replace(/\s+/g, '').replace(',', '.'));
-                this.description_courte = vehicule.description_courte;
-                this.description_longue = vehicule.description_longue;
-                this.loading = false;
-                console.log("this.prix_annonce", this.prix_annonce)*/
+
             } else {
                 this.vehicule = {
                     vin: null,
@@ -308,7 +285,8 @@ export default {
                 prix_annonce: prixFormate,
                 promotion: promoFormate,
                 description_courte: this.storeVehicule.description_courte,
-                description_longue: this.storeVehicule.description_longue
+                description_longue: this.storeVehicule.description_longue,
+                selectedAccessoire: this.selectedAccessoire
             };
 
             console.log("cest lequel", this.id);
@@ -321,23 +299,12 @@ export default {
                 console.error(err);
                 alert(err.message);
             }
-        }
+        },
+        async rafraichirIntervention() {
+            return await fetchInterventionByVIN(this.vehiculeVin);
+        },
     },
     computed: {
-        items() {
-            fet
-            let num = 0;
-            return Array.from({ length: this.accessoires.length }, () => {
-                const name = this.accessoires[num].nomAccessoire;
-                const id = this.accessoires[num].idAccessoire;
-                num++;
-                return {
-                    color: this.colors[this.genRandomIndex(colorsLength)],
-                    name: `${name} `,
-                    idAccessoire: `${id}`,
-                };
-            });
-        },
 
         nouveauvehicule() {
             return this.mode === 'vehicule';
@@ -355,6 +322,7 @@ export default {
     mounted() {
         this.autoVin();
         this.refreshVehicule(this.vehiculeVin);
+        ;
         //this.resetStore();
     },
     created() {

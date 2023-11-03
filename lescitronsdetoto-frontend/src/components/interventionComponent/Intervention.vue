@@ -33,7 +33,7 @@
 
 import session from '../../session.js';
 import { useInterventionStore } from '@/store/intervention';
-import { createIntervention, deleteIntervention, updateIntervention } from '@/services/InterventionService';
+import { createInterventionWvin, createIntervention, deleteIntervention, updateIntervention, updateInterventionWvin, fetchInterventionWvin } from '@/services/InterventionService';
 import rules from '@/regles';
 
 
@@ -50,6 +50,8 @@ export default {
     methods: {
         async submit() {
 
+            const vin = this.vin;
+
             const formValid = await this.$refs.interventionform.validate();
 
             if (!formValid.valid) {
@@ -61,26 +63,37 @@ export default {
                 valeurIntervention: this.store.valeurIntervention,
                 etatIntervention: this.store.etatIntervention
             };
-            if (!this.store.isNew) { Intervention.idIntervention = this.store.idIntervention };
+            if (!this.store.isNew && !vin) { Intervention.idIntervention = this.store.idIntervention };
+
 
             try {
 
-                if (this.store.isNew) { await createIntervention(Intervention, vin); } else { await updateIntervention(Intervention); }
+                if (this.store.isNew) {
+                    if (vin) { await createInterventionWvin(Intervention, vin); } else { await createIntervention(Intervention); }
+                } else {
+                    if (vin) { await updateInterventionWvin(Intervention, vin); } else { await updateIntervention(Intervention); }
+                }
+                if (vin) { await fetchInterventionWvin(vin); } else { await this.store.getInterventions(); }
 
+                this.store.newIntervention();
             } catch (err) {
                 console.error(err);
                 alert(err.message);
-                if (err.status === 409) {
-                    this.$refs.interventionform.validate();
-                }
             }
-            this.store.getInterventions()
-            this.store.newIntervention();
         },
         async supprimer() {
             try {
-                await deleteIntervention(this.store.idIntervention, vin);
+                if (vin) { await deleteInterventionWvin(this.store.idIntervention, vin); } else { await deleteIntervention(this.store.idIntervention); }
                 this.store.getInterventions();
+                this.store.newIntervention();
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
+        },
+        async rafraichirIntervention() {
+            try {
+                await fetchInterventionWvinById(vin);
                 this.store.newIntervention();
             } catch (err) {
                 console.error(err);

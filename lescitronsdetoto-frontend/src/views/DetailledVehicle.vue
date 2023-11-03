@@ -132,6 +132,10 @@
                                     {{ name }}
                                 </v-chip>
                             </div>
+                            <div v-if="this.session.user" v-for="intervention in interventions">
+                                {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
+                                    v-model="this.storeIntervention.etatIntervention" label="Fait" dense></v-checkbox>
+                            </div>
                         </v-card>
                         <v-card class=" pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}
                         </v-card>

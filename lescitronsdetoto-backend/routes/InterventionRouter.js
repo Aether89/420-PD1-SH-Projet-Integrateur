@@ -32,7 +32,7 @@ function validateIntervention(intervention) {
     }
 }
 
-router.get("/Wvin/:vin", (req, res, next) => {
+router.get("/wvin/:vin", (req, res, next) => {
     const vin = req.params.vin;
     InterventionQueries.getInterventionByVin(vin)
         .then((intervention) => {
@@ -62,7 +62,7 @@ router.get("/:id", (req, res, next) => {
         });
 });
 
-router.post('/Wvin/:vin',
+router.post('/wvin/:vin',
     passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         const user = req.user;
@@ -91,6 +91,36 @@ const newInterventionSuccess = await InterventionQueries.getIntervention(newInte
         }
     }
 );
+
+router.post('/',
+    passport.authenticate('basic', { session: false }),
+    async (req, res, next) => {
+        const user = req.user;
+
+        if (!user || !user.isAdmin) {
+            return next(new HttpError(403, "Droit administrateur requis"));
+        }
+
+        try {
+            validateIntervention(req.body);
+
+            const intervention = {
+                typeIntervention: req.body.typeIntervention,
+                valeurIntervention: parseFloat(req.body.valeurIntervention.replace(/\s+/g, '').replace(',', '.')),
+            }
+
+            const newIntervention = await InterventionQueries.createIntervention(intervention);
+
+            if (!newIntervention) {
+                return next(new HttpError(404, `Intervention introuvable`));
+            }
+
+            res.json(newIntervention);
+        } catch (err) {
+            return next(err);
+        }
+    }
+); 
 
 router.put('/:id',
     passport.authenticate('basic', { session: false }),
@@ -133,13 +163,14 @@ router.put('/:id',
     }
 );
 
-router.put('/:id/:vin',
+router.put('/wvin/:id/:vin',
+   
     passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         const id = req.params.id;
         const vin = req.params.vin;
         const user = req.user;
-
+       
         if (!user || (!user.isAdmin && user.id !== id)) {
             return next(new HttpError(403, "Droit administrateur requis ou être titulaire du compte"));
         }
@@ -179,7 +210,7 @@ router.put('/:id/:vin',
 );
 
 router.delete(
-    '/:id/:vin',
+    '/wvin/:id/:vin',
     passport.authenticate("basic", { session: false }),
     async (req, res, next) => {
         const user = req.user;

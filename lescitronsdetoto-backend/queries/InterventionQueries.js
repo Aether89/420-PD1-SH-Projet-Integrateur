@@ -36,7 +36,7 @@ const getInterventionByVin = async (vin) => {
         if (!listeIntervention) {
             throw new HttpError(404, `Accessoire ${vin} introuvable`);
         }
-        const result = await client.query(
+        const intervention = await client.query(
             `SELECT id_intervention, nom_intervention
          FROM intervention
          WHERE id_intervention = $1`,
@@ -44,8 +44,8 @@ const getInterventionByVin = async (vin) => {
         );
  
 
-        return result.rows.map((row) => {
-            const intervention = {
+        return intervention.rows.map((row) => {
+            return {
                 idIntervention: row.id_intervention,
                 typeIntervention: row.type_intervention,
                 valeurIntervention: row.valeur_intervention,
