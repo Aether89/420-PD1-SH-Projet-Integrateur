@@ -132,9 +132,13 @@
                                     {{ name }}
                                 </v-chip>
                             </div>
-                            <div v-if="this.session.user" v-for="intervention in interventions">
-                                {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
-                                    v-model="this.storeIntervention.etatIntervention" label="Fait" dense></v-checkbox>
+                        </v-card>
+                        <v-card v-if="(this.session.user && (this.interventions.length > 0))" class=" mb-8" rounded="t-lg">
+
+                            <div v-for="intervention in  this.interventions ">
+                                {{ intervention.typeIntervention }}{{ intervention.valeurIntervention }}
+
+                                <!-- <v-checkbox v-model="intervention.etatIntervention" label="Fait" dense></v-checkbox> -->
                             </div>
                         </v-card>
                         <v-card class=" pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}
@@ -151,15 +155,18 @@
   
 <script>
 import { useVehiclesStore } from '@/store/vehicles';
+
 import { useAppStore } from '@/store/app';
 import { deleteVehicule } from '@/services/vehicule';
 import { useAccessoireStore } from '@/store/accessoire';
 import { fetchAccessoireById } from '@/services/AccessoireService';
+import { fetchInterventionByVIN } from '@/services/InterventionService';
 import { reactive } from 'vue';
 
 
 import session from '@/session';
 import reservationForm from '@/components/appointment/reservation.vue';
+import { vModelCheckbox } from 'vue';
 
 
 
@@ -185,7 +192,9 @@ export default {
             Accessoires: useAccessoireStore(),
             store: useVehiclesStore(),
             appStore: useAppStore(),
+
             names: [],
+            interventions: [],
 
         };
     },
@@ -239,10 +248,14 @@ export default {
         },
 
         async loadData() {
+            console.log(this.id);
             this.load = true;
             await this.store.getVehicle(this.id);
             this.Accessoires.getAccessoires();
             this.names = await this.nomAccessoire();
+            this.interventions = await fetchInterventionByVIN(this.id);
+            console.log("liste interventions", this.interventions);
+            console.log(this.interventions);
             this.load = false;
             console.log(JSON.stringify(this.local.price, null, "  "));
 

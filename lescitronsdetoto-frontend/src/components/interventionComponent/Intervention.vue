@@ -33,7 +33,7 @@
 
 import session from '../../session.js';
 import { useInterventionStore } from '@/store/intervention';
-import { createInterventionWvin, createIntervention, deleteIntervention, updateIntervention, updateInterventionWvin, fetchInterventionWvin } from '@/services/InterventionService';
+import { createInterventionWvin, createIntervention, deleteIntervention, updateIntervention, updateInterventionWvin, fetchInterventionByVIN } from '@/services/InterventionService';
 import rules from '@/regles';
 
 
@@ -73,7 +73,7 @@ export default {
                 } else {
                     if (vin) { await updateInterventionWvin(Intervention, vin); } else { await updateIntervention(Intervention); }
                 }
-                if (vin) { await fetchInterventionWvin(vin); } else { await this.store.getInterventions(); }
+                if (vin) { await fetchInterventionByVIN(vin); } else { await this.store.getInterventions(); }
 
                 this.store.newIntervention();
             } catch (err) {

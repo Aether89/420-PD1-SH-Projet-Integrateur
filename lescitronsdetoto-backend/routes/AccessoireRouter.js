@@ -17,7 +17,7 @@ router.get("/", (req, res, next) => {
     AccessoireQueries
         .getAllAccessoires()
         .then((accessoires) => {
-            res.json(accessoires);
+            res.json(accessoires.data);
         })
         .catch((err) => {
             return next(err);
@@ -116,7 +116,7 @@ const result = await AccessoireQueries.updateAccessoire(accessoire);
             }
 
             // Récupérer et renvoyer les informations mises à jour du client
-            const updatedAccessoire = await AccessoireQueries.getAccessoire(accessoire);
+            const updatedAccessoire = await AccessoireQueries.getAccessoire(result.idAccessoire);
 
             if (updatedAccessoire) {
                 res.json(updatedAccessoire);

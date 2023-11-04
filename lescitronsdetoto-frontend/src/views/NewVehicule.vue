@@ -25,8 +25,7 @@
                             density="compact" maxlength="64"></v-text-field>
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
-                        <!-- <SelectAccessoire :vin="this.storeVehicule.vin" @child-to-parent="receiveDataFromChild" -->
-                        class="mb-4 flex-wrap" />
+                        <SelectAccessoire :vin="this.storeVehicule.vin" :creat="this.creat" class="mb-4 flex-wrap" />
                         <interventionForm :vin="this.storeVehicule.vin" v-if="!nouveauvehicule" />
                         <div v-for=" intervention  in  interventions ">
                             {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
@@ -134,20 +133,13 @@ export default {
                 vinIdUnique: () => this.vinIdUnique || "Ce véhicule existe déjà dans le systeme",
                 //validateNumer: value => !!value || "Le champs doit être supérieur de 0"
             },
-            vinIdUnique: true
+            vinIdUnique: true,
+            interventions: [],
 
         };
     },
     methods: {
-        receiveDataFromChild(data) {
-            console.log(data);
-            Item.push(data);// 'Some data'
-        },
 
-        handleSelectedAccessoire(selectedAccessoire) {
-            // handle the selectedAccessoire here
-            console.log(selectedAccessoire);
-        },
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
                 console.log("promo", this.storeVehicule.promotion)
@@ -170,7 +162,7 @@ export default {
             this.loadError = false;
             this.loading = true;
             this.errorMessage = null;
-            this.recette = null;
+
 
             if (!this.nouveauvehicule) {
 
@@ -195,6 +187,8 @@ export default {
                     description_longue: null,
                     selectedAccessoire: []
                 }
+                this.interventions.push(this.fetchInterventionByVIN(this.vehiculeVin));
+                console.log("interventions", this.interventions);
                 this.loading = false;
             }
         },
@@ -276,6 +270,7 @@ export default {
             const promo = this.storeVehicule.promotion;
             const prixFormate = formatter.format(prix);
             const promoFormate = formatter.format(promo);
+            this.interventions = await fetchInterventionByVIN(this.vehiculeVin);
 
             const vehicule = {
                 vin: this.id,
@@ -289,7 +284,7 @@ export default {
                 selectedAccessoire: this.selectedAccessoire
             };
 
-            console.log("cest lequel", this.id);
+            console.log("cest lequel", this.interventions);
             console.log("couleur", vehicule.couleur);
 
             try {

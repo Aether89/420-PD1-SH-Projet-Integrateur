@@ -52,7 +52,7 @@ export default {
     },
     computed: {
         itemTooLoad() {
-            this.selectedEventIDs.push(this.items.idAccessoire);
+            this.selectedEventIDs.push(item.idAccessoire);
 
         },
 
@@ -87,9 +87,6 @@ export default {
         },
     },
     watch: {
-        selectedEventIDs(newVal, oldVal) {
-            this.$emit('child-to-parent', newVal);
-        },
 
         page(newIndex, oldIndex) {
             // existing code...
