@@ -11,7 +11,7 @@
                     <v-chip-group v-model="selectedEventIDs" v-on:child-to-parent="receiveDataFromChild" multiple
                         selected-class="text-primary" column>
                         <v-chip v-for="item in items.slice(this.currentIndex, (this.currentIndex + this.contentOfPage))"
-                            :key="item.idAccessoire">
+                            :key="item.idAccessoire" :value="item.idAccessoire">
                             {{ item.name }}
                         </v-chip>
                     </v-chip-group>

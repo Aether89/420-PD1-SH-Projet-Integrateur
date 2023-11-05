@@ -17,7 +17,7 @@ router.get("/", (req, res, next) => {
     AccessoireQueries
         .getAllAccessoires()
         .then((accessoires) => {
-            res.json(accessoires.data);
+            res.json(accessoires);
         })
         .catch((err) => {
             return next(err);
