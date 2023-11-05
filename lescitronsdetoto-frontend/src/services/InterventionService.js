@@ -71,8 +71,10 @@ async function convertToIntervention(jsonIntervention) {
  */
 export async function fetchIntervention() {
     const response = await fetch('/api/interventions');
+    const data = await response.json();
+
     if (response.ok) {
-      return convertToIntervention(response);
+      return data;
     } else {
         throw await createServiceError(response);
     }
@@ -80,7 +82,6 @@ export async function fetchIntervention() {
 
 export async function fetchInterventionByVIN(vin) {
     const response = await fetch(`/api/interventions/wvin/${vin}`);
-    console.log(response);
     if (response.ok) {
        return ( response.json());
     } else {

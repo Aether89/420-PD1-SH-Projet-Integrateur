@@ -12,6 +12,8 @@ const rules = require('./regles.js');
 router.get("/", (req, res, next) => {
     InterventionQueries.getAllInterventions()
         .then((interventions) => {
+            console.log("LISTE INTERVENTION", JSON.stringify(interventions, null, 2));
+
             res.json(interventions);
         })
         .catch((err) => {
@@ -34,7 +36,6 @@ function validateIntervention(intervention) {
 
 router.get("/wvin/:vin", (req, res, next) => {
     const vin = req.params.vin;
-    console.log(vin);
      InterventionQueries.getInterventionByVin(vin)
         .then((intervention) => {
             if (intervention) {

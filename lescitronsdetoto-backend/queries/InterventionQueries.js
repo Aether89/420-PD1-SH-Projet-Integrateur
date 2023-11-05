@@ -37,7 +37,6 @@ const getInterventionByVin = async (vin) => {
     listeIntervention.rows.map((row) => {
          row.id_intervention
     });
-    console.log(listeIntervention.rows);
     for (const row of listeIntervention.rows) {
         const interventionResult = await pool.query(
             `SELECT id_intervention, type_intervention, valeur_intervention, etat_intervention
@@ -57,7 +56,6 @@ const getInterventionByVin = async (vin) => {
           intervention.push(interventionsResult);
         });
   };
-  console.log(intervention);
     return intervention;
 
 };
@@ -154,7 +152,6 @@ const deleteIntervention = async (idIntervention, clientParam) => {
 const createInterventionWvin = async (intervention, vin) => {
   const client = await pool.connect();
     
-    console.log(vin);
   try {
     await client.query('BEGIN');
 

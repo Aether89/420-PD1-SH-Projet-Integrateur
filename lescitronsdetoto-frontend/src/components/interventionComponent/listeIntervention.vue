@@ -94,6 +94,7 @@ export default {
     mounted() {
 
         this.interventionStore.getInterventions();
+        console.log(JSON.stringify(this.interventionStore.interventions,null,2));
 
     },
 
