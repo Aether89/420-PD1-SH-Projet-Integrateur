@@ -31,7 +31,6 @@
                             {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
                                 v-model="this.storeIntervention.etatIntervention" label="Fait" dense></v-checkbox>
                         </div>
-
                     </v-col>
                 </v-row>
 
@@ -103,7 +102,7 @@ export default {
     props: ['mode', 'id'],
     data() {
         return {
-            //nombre_kilometre: null,
+
             errorMessagesPrixAnnonce: [],
             errorMessages: [],
             errorMessagesPromotion: [],
@@ -167,8 +166,7 @@ export default {
             if (!this.nouveauvehicule) {
 
                 const formatter = new Intl.NumberFormat('en-US');
-                console.log("yolo")
-                console.log("couleur modif :", this.storeVehicule.couleur)
+
 
             } else {
                 this.vehicule = {
@@ -187,22 +185,21 @@ export default {
                     description_longue: null,
                     selectedAccessoire: []
                 }
-                this.interventions.push(this.fetchInterventionByVIN(this.vehiculeVin));
-                console.log("interventions", this.interventions);
+                this.rafraichirIntervention();
+
                 this.loading = false;
             }
         },
         async autoVin() {
             if (this.vehiculeVin !== '') {
-                console.log(this.vehiculeVin);
+
                 this.donneesApi = await fetchVIN(this.vehiculeVin);
-                console.log("this.donneesApi", this.donneesApi.Make)
+
                 this.storeVehicule.marque = this.donneesApi.Make
                 this.storeVehicule.modele = this.donneesApi.Model
                 this.storeVehicule.annee = this.donneesApi.ModelYear
                 await this.storeVehicule.chargerVehicle(this.vehiculeVin)
-                console.log("this.storeVehicule.couleur", this.storeVehicule.couleur)
-                console.log("this.storeVehicule.prix_annonce", this.storeVehicule.prix_annonce)
+
             }
         },
         async validateNext() {
@@ -254,6 +251,7 @@ export default {
                 await createVehicule(vehicule);
                 this.vinIdUnique = true;
                 this.$router.push(`/vehicle/${vehicule.vin}`);
+                this.rafraichirIntervention();
             } catch (err) {
                 console.error(err);
                 alert(err.message);
@@ -270,7 +268,7 @@ export default {
             const promo = this.storeVehicule.promotion;
             const prixFormate = formatter.format(prix);
             const promoFormate = formatter.format(promo);
-            this.interventions = await fetchInterventionByVIN(this.vehiculeVin);
+
 
             const vehicule = {
                 vin: this.id,
@@ -284,19 +282,18 @@ export default {
                 selectedAccessoire: this.selectedAccessoire
             };
 
-            console.log("cest lequel", this.interventions);
-            console.log("couleur", vehicule.couleur);
 
             try {
                 await udpateVoiture(vehicule);
                 this.$router.push(`/vehicle/${vehicule.vin}`);
+                this.rafraichirIntervention();
             } catch (err) {
                 console.error(err);
                 alert(err.message);
             }
         },
         async rafraichirIntervention() {
-            return await fetchInterventionByVIN(this.vehiculeVin);
+            return this.interventions = await fetchInterventionByVIN(this.vehiculeVin);
         },
     },
     computed: {
@@ -316,9 +313,8 @@ export default {
     },
     mounted() {
         this.autoVin();
-        this.refreshVehicule(this.vehiculeVin);
-        ;
-        //this.resetStore();
+        this.rafraichirIntervention();
+        this.rafraichirIntervention();
     },
     created() {
         console.log('Mode reçu en props :', this.mode);

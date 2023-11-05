@@ -50,6 +50,7 @@ router.get("/wvin/:vin", (req, res, next) => {
 
 router.get("/:id", (req, res, next) => {
     const id = req.params.id;
+    
     InterventionQueries.getIntervention(id)
         .then((intervention) => {
             if (intervention) {

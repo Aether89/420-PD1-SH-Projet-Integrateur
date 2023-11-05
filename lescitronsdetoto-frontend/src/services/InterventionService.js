@@ -72,17 +72,17 @@ async function convertToIntervention(jsonIntervention) {
 export async function fetchIntervention() {
     const response = await fetch('/api/interventions');
     if (response.ok) {
-        const respJson = await response.json();
-        return respJson;
+      return convertToIntervention(response);
     } else {
         throw await createServiceError(response);
     }
 }
 
 export async function fetchInterventionByVIN(vin) {
-    const response = await axios(`/api/interventions/wvin/${vin}`);
-    if (response.status === 200) {
-        return convertToIntervention(response.data);
+    const response = await fetch(`/api/interventions/wvin/${vin}`);
+    console.log(response);
+    if (response.ok) {
+       return ( response.json());
     } else {
         throw await createServiceError(response);
     }
@@ -91,7 +91,7 @@ export async function fetchInterventionByVIN(vin) {
 export async function fetchInterventionById(idIntervention) {
     const response = await axios(`/api/interventions/${idIntervention}`);
     if (response.status === 200) {
-        return convertToIntervention(response.data);
+        return convertToIntervention(response);
     } else {
         throw await createServiceError(response);
     }

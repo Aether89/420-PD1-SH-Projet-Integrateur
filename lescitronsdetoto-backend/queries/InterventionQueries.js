@@ -20,41 +20,47 @@ const getAllInterventions = async () => {
 };
 
 const getInterventionByVin = async (vin) => {
-  const interventions = [];
-  const listeIntervention = await pool.query(
-    `SELECT id_intervention
+  const intervention = [];
+ 
+    const listeIntervention = await pool.query(
+        `SELECT id_intervention
      FROM vehicule_intervention
      WHERE vin = $1`,
-    [vin]
-  );
+        [vin]
+    );
 
-  if (listeIntervention.rows.length === 0) {
-    return interventions; // Return an empty array when there are no interventions.
-  }
+    if (listeIntervention.rows.length === 0) {
+        return intervention; // Return an empty array when there are no interventions.
+    }
  
   
     listeIntervention.rows.map((row) => {
-        
-        const interventionResult = pool.query(
+         row.id_intervention
+    });
+    console.log(listeIntervention.rows);
+    for (const row of listeIntervention.rows) {
+        const interventionResult = await pool.query(
             `SELECT id_intervention, type_intervention, valeur_intervention, etat_intervention
        FROM intervention
        WHERE id_intervention = $1`,
             [row.id_intervention]
         );
-        console.log(interventionResult.rows);
-      
-        return interventionResult.rows.map((row) => {
-            return {
-                idIntervention: row.id_intervention,
-                typeIntervention: row.type_intervention,
-                valeurIntervention: row.valeur_intervention,
-                etatIntervention: row.etat_intervention,
-            };
-    
+        
+   
+        interventionResult.rows.map((row) => {
+          const interventionsResult = {
+            idIntervention: row.id_intervention,
+            typeIntervention: row.type_intervention,
+            valeurIntervention: row.valeur_intervention,
+            etatIntervention: row.etat_intervention
+          };
+          intervention.push(interventionsResult);
         });
-    });
-};
+  };
+  console.log(intervention);
+    return intervention;
 
+};
 
 
 

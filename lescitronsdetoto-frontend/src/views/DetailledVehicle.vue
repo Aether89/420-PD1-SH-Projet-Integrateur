@@ -199,6 +199,7 @@ export default {
         };
     },
     computed: {
+
         local() {
             return this.store.vehicle.local;
         },
@@ -234,6 +235,10 @@ export default {
         },
     },
     methods: {
+        async getInterventions() {
+            this.interventions = await fetchInterventionByVIN(this.id);
+            console.log("lllllllllll", this.interventions);
+        },
         async nomAccessoire() {
             const names = [];
             for (let i = 0; i < this.local.selectedAccessoire.length; i++) {
@@ -252,10 +257,10 @@ export default {
             this.load = true;
             await this.store.getVehicle(this.id);
             this.Accessoires.getAccessoires();
+            await this.getInterventions();
             this.names = await this.nomAccessoire();
-            this.interventions = await fetchInterventionByVIN(this.id);
-            console.log("liste interventions", this.interventions);
-            console.log(this.interventions);
+
+
             this.load = false;
             console.log(JSON.stringify(this.local.price, null, "  "));
 
