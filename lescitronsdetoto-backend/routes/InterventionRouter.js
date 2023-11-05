@@ -70,7 +70,7 @@ router.post(`/wvin/:vin`,
         const user = req.user;
         const vin = req.params.vin;
 
-        if (!user || !user.isAdmin) {
+        if (!user || !user) {
             return next(new HttpError(403, "Droit administrateur requis"));
         }
 
