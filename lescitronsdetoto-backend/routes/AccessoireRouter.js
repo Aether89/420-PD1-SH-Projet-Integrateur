@@ -162,4 +162,37 @@ router.delete(
 
 );
 
+router.post(`/wvin/:vin`,
+    passport.authenticate('basic', { session: false }),
+    async (req, res, next) => {
+        const user = req.user;
+        const vin = req.params.vin;
+
+        if (!user || !user) {
+            return next(new HttpError(403, "Doit etre authentifié pour ajouter une accessoire"));
+        }
+
+        try {
+            validateAccessoire(req.body);
+          
+
+           const accessoire = {
+                idAccessoire: req.body.idAccessoire,
+                nomAccessoire: req.body.nomAccessoire
+                
+            }
+
+            const newAccessoire = await AccessoireQueries.createAccessoireWvin(accessoire,vin);
+
+            if (!newAccessoire) {
+                return next(new HttpError(404, `Accessoire introuvable`));
+            }
+
+            res.json(newAccessoire);
+        } catch (err) {
+            return next(err);
+        }
+    }
+);
+
 module.exports = router;

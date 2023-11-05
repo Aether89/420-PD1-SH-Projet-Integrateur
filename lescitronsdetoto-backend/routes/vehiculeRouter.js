@@ -93,7 +93,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             promotion: req.body.promotion.replace(/\s/g, ''),
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
-            selectedAccessoire:[] + req.body.selectedAccessoire,
+            
         };
         const newClient = {
             nomClient: req.body.client.nomClient,
@@ -129,14 +129,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
         if (result) {
             return next(new HttpError(500, "Une erreur est survenue lors de l'ajout du véhicule"));
         }
-        if (
-            newVehicule.selectedAccessoire) {
-            const accessoire = await accessoireVehiculeQuerie.addAccessoireVehicule(newVehicule.selectedAccessoire, vin);
-            console.log("accessoire", accessoire);
-            if (!accessoire) {
-                return next(new HttpError(404, `Accessoire ${id} introuvable`));
-            }
-        }
+       
 
         const autoVin = await vehiculeQuerie.addVehicule(newVehicule);
         const newEvenementVehicule ={

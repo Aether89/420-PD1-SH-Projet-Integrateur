@@ -123,7 +123,7 @@
                     </v-col>
 
                     <v-col cols="12" sm="8">
-                        <v-card v-if="this.local.selectedAccessoire" class=" mb-8" rounded="t-lg">
+                        <v-card v-if="this.local.selectedAccessoire.length" class=" mb-8" rounded="t-lg">
                             <v-sheet class="pa-3 bg-primary text-center">
                                 Listes des accessoires
                             </v-sheet>
@@ -133,13 +133,28 @@
                                 </v-chip>
                             </div>
                         </v-card>
-                        <v-card v-if="(this.session.user && (this.interventions.length > 0))" class=" mb-8" rounded="t-lg">
-
-                            <div v-for="intervention in  this.interventions ">
-                                {{ intervention.typeIntervention }}{{ intervention.valeurIntervention }}
-
-                                <!-- <v-checkbox v-model="intervention.etatIntervention" label="Fait" dense></v-checkbox> -->
-                            </div>
+                        <v-card v-if="(this.session.user && (this.interventions.length > 0))" class=" mb-8"
+                            color="transparent" rounded="t-lg">
+                            <v-col cols="12" sm="12">
+                                <v-table class="mb-8 bg-transparent">
+                                    <thead color="transparent">
+                                        <tr>
+                                            <th class="start">
+                                                Intervention
+                                            </th>
+                                            <th class="end">
+                                                Prix
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="intervention in  this.interventions">
+                                            <td class="start">{{ intervention.typeIntervention }}</td>
+                                            <td class="end">{{ intervention.valeurIntervention }}</td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+                            </v-col>
                         </v-card>
                         <v-card class=" pa-8 mb-8" :color="this.colourPrimary">{{ this.local.longDescription }}
                         </v-card>
@@ -192,7 +207,7 @@ export default {
             Accessoires: useAccessoireStore(),
             store: useVehiclesStore(),
             appStore: useAppStore(),
-
+            selectedAccessoire: [],
             names: [],
             interventions: [],
 
@@ -237,7 +252,10 @@ export default {
     methods: {
         async getInterventions() {
             this.interventions = await fetchInterventionByVIN(this.id);
-            console.log("lllllllllll", this.interventions);
+
+        },
+        async getAccessoires() {
+            this.selectedAccessoire = await this.Accessoires.fetchAccessoireByVIN();
         },
         async nomAccessoire() {
             const names = [];

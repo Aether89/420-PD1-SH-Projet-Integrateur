@@ -173,3 +173,21 @@ export async function fetchAccessoireWvinById(idAccessoire,vin) {
         throw await createServiceError(response);
     }
 };
+
+
+export async function createAccessoireWvin(Accessoire, vin) {
+    const response = await fetch(`/api/accessoires/wvin/${vin}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(Accessoire)
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+};

@@ -23,11 +23,13 @@
 
 <script>
 import { useAccessoireStore } from '@/store/accessoire';
+import { createAccessoireWvin } from '@/services/AccessoireService';
 import session from '@/session';
 
 import { reactive } from 'vue';
 
 export default {
+    props: ['vin', 'creat'],
 
     data() {
 
@@ -82,6 +84,9 @@ export default {
         },
     },
     watch: {
+        creat() {
+            this.createAccessoireWvin(Intervention, vin);
+        },
 
         page(newIndex, oldIndex) {
             // existing code...

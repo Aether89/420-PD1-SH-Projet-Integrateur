@@ -172,3 +172,42 @@ const deleteAccessoire = async (idAccessoire, clientParam) => {
 
 exports.deleteAccessoire = deleteAccessoire;
 
+const createAccessoireWvin = async (accessoire, vin) => {
+  const client = await pool.connect();
+    
+  try {
+    await client.query('BEGIN');
+
+    const result = await client.query(
+      `INSERT INTO accessoire (type_accessoire, valeur_accessoire, etat_accessoire)
+       VALUES ($1, $2::money, $3)
+       RETURNING id_accessoire`,
+      [accessoire.typeAccessoire, accessoire.valeurAccessoire, false]
+    );
+
+    if (result.rows.length === 0) {
+      throw new Error("Unable to create the accessoire");
+    }
+
+    const result2 = await client.query(
+      `INSERT INTO vehicule_accessoire (vin, id_accessoire)
+       VALUES ($1, $2)
+       RETURNING id_accessoire`,
+      [vin, result.rows[0].id_accessoire]
+    );
+
+    if (result2.rows.length === 0) {
+      throw new Error("Unable to associate the accessoire with the vehicle");
+    }
+
+    await client.query('COMMIT');
+
+    return result2.rows[0].id_accessoire;
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw new Error(`An error occurred while creating the transaction: ${err.message}`);
+  } finally {
+    client.release();
+  }
+};
+

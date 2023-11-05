@@ -245,11 +245,12 @@ export default {
                 promotion: promoFormate,
                 description_courte: this.description_courte,
                 description_longue: this.description_longue,
-                selectedAccessoire: this.selectedAccessoire
+
             };
             try {
                 await createVehicule(vehicule);
                 this.vinIdUnique = true;
+                this.creat = true;
                 this.$router.push(`/vehicle/${vehicule.vin}`);
                 this.rafraichirIntervention();
             } catch (err) {
