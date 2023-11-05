@@ -53,8 +53,8 @@ router.post('/',
     async (req, res, next) => {
         const user = req.user;
 
-        if (!user || !user.isAdmin) {
-            return next(new HttpError(403, "Droit administrateur requis"));
+        if (!user) {
+            return next(new HttpError(403, "Doit être authentifié pour ajouter un accessoire"));
         }
 
         validateAccessoire(req.body);
@@ -93,7 +93,7 @@ router.put('/:id',
         const id = req.params.id
         const user = req.user;
         console.log(user);
-        if (!user || !user.isAdmin ) {
+        if (!user ) {
             return next(new HttpError(403, "Droit ajout accessoire requis"));
         }
 
@@ -135,8 +135,8 @@ router.delete(
     (req, res, next) => {
         const user = req.user;
 
-        if (!user || !user.isAdmin) {
-            return next(HttpError(403, "Droit administrateur requis"));
+        if (!user) {
+            return next(HttpError(403, "Doit être authentifié pour supprimer un accessoire"));
         }
 
         const id = req.params.id;

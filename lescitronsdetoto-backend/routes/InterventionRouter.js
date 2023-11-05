@@ -71,7 +71,7 @@ router.post(`/wvin/:vin`,
         const vin = req.params.vin;
 
         if (!user || !user) {
-            return next(new HttpError(403, "Droit administrateur requis"));
+            return next(new HttpError(403, "Doit etre authentifié pour ajouter une intervention""));
         }
 
         try {
@@ -101,8 +101,8 @@ router.post('/',
     async (req, res, next) => {
         const user = req.user;
 
-        if (!user || !user.isAdmin) {
-            return next(new HttpError(403, "Droit administrateur requis"));
+        if (!user) {
+            return next(new HttpError(403, "Droit etre authentifié pour ajouter une intervention"));
         }
 
         try {
@@ -132,8 +132,8 @@ router.put('/:id',
         const id = req.params.id;
         const user = req.user;
 
-        if (!user || (!user.isAdmin && user.id !== id)) {
-            return next(new HttpError(403, "Droit administrateur requis ou être titulaire du compte"));
+        if (!user) {
+            return next(new HttpError(403, "Doit etre authentifié pour modifier une intervention""));
         }
 
         if (!id || id === '') {
@@ -175,8 +175,8 @@ router.put('/wvin/:id/:vin',
         const vin = req.params.vin;
         const user = req.user;
        
-        if (!user || (!user.isAdmin && user.id !== id)) {
-            return next(new HttpError(403, "Droit administrateur requis ou être titulaire du compte"));
+        if (!user) {
+            return next(new HttpError(403, "Doit etre authentifié pour modifier une intervention"""));
         }
 
         if (!id || id === '') {
@@ -220,8 +220,8 @@ router.delete(
         const user = req.user;
         const vin = req.params.vin;
 
-        if (!user || !user.isAdmin) {
-            return next(new HttpError(403, "Droit administrateur requis"));
+        if (!user) {
+            return next(new HttpError(403, "Doitetre authentifié pour supprimer une intervention""));
         }
 
         const id = req.params.id;
