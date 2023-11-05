@@ -20,7 +20,13 @@ export const useInterventionStore = defineStore('intervention', {
         .then((result) => {
           this.isNew = false;
           this.typeIntervention = result.typeIntervention;
-          this.valeurIntervention = result.valeurIntervention;
+          const valeurInterventionWithDollarSign = result.valeurIntervention;
+
+          const valeurInterventionWithoutDollarSign = valeurInterventionWithDollarSign.replace(/\$|,/g, '');
+          
+          const floatValue = parseFloat(valeurInterventionWithoutDollarSign);
+
+          this.valeurIntervention = floatValue;
           this.etatIntervention = result.etatIntervention;
         })
     },

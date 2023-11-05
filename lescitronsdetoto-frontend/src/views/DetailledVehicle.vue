@@ -40,7 +40,7 @@
 
                         <v-card v-if="session.user" color="lime-lighten-1" class="pa-2 text-center mt-4">
                             <v-btn class="ma-2" type="button" prepend-icon="mdi-shopping" color="green-lighten-3"
-                                aria-label="Éditer" :to="venteURL">Vendre</v-btn>
+                                aria-label="Éditer" @click="sell">Vendre</v-btn>
                             <v-btn class="ma-2" type="button" prepend-icon="mdi-file-edit-outline" color="amber-lighten-3"
                                 aria-label="Éditer" :to="editionURL" router-link>Éditer</v-btn>
                             <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression"
@@ -176,17 +176,11 @@ import { deleteVehicule } from '@/services/vehicule';
 import { useAccessoireStore } from '@/store/accessoire';
 import { fetchAccessoireById } from '@/services/AccessoireService';
 import { fetchInterventionByVIN } from '@/services/InterventionService';
-import { reactive } from 'vue';
+import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 
 
 import session from '@/session';
 import reservationForm from '@/components/appointment/reservation.vue';
-import { vModelCheckbox } from 'vue';
-
-
-
-
-
 
 export default {
     components: {
@@ -207,7 +201,7 @@ export default {
             Accessoires: useAccessoireStore(),
             store: useVehiclesStore(),
             appStore: useAppStore(),
-            selectedAccessoire: [],
+            AVehicule: useActualyAVehiculeStore(),
             names: [],
             interventions: [],
 
@@ -243,13 +237,19 @@ export default {
             return "/vehicle/" + this.id + "/edition";
         },
         venteURL() {
-            return "/vente/vehicule/" + this.id;
+            return "/vente/vehicule";
         },
         concatName() {
             return this.api.Make + " " + this.api.Model + " " + this.api.ModelYear;
         },
     },
     methods: {
+
+        sell() {
+            console.log("this.local.vin", this.id)
+            this.AVehicule.vin = this.id;
+            this.$router.push("/vente/vehicule");
+        },
         async getInterventions() {
             this.interventions = await fetchInterventionByVIN(this.id);
 
@@ -271,7 +271,6 @@ export default {
         },
 
         async loadData() {
-            console.log(this.id);
             this.load = true;
             await this.store.getVehicle(this.id);
             this.Accessoires.getAccessoires();
@@ -280,9 +279,6 @@ export default {
 
 
             this.load = false;
-            console.log(JSON.stringify(this.local.price, null, "  "));
-
-
         },
         async suppression() {
             await deleteVehicule(this.id);

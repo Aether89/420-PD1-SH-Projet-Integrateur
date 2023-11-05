@@ -56,10 +56,16 @@ export async function createIntervention(Intervention) {
 };
 
 async function convertToIntervention(jsonIntervention) {
+    const valeurInterventionWithDollarSign = jsonIntervention.valeurIntervention;
+
+    const valeurInterventionWithoutDollarSign = valeurInterventionWithDollarSign.replace(/\$|,/g, '');
+
+    const floatValue = parseFloat(valeurInterventionWithoutDollarSign);
+
     return {
         idIntervention: jsonIntervention.idIntervention,
         typeIntervention: jsonIntervention.typeIntervention,
-        valeurIntervention: jsonIntervention.valeurIntervention,
+        valeurIntervention: floatValue,
         etatIntervention: jsonIntervention.etatIntervention
     };
 };
@@ -90,9 +96,11 @@ export async function fetchInterventionByVIN(vin) {
 };
 
 export async function fetchInterventionById(idIntervention) {
-    const response = await axios(`/api/interventions/${idIntervention}`);
+    const response = await fetch(`/api/interventions/${idIntervention}`);
+        const data = await response.json();
+
     if (response.status === 200) {
-        return convertToIntervention(response);
+        return data;
     } else {
         throw await createServiceError(response);
     }

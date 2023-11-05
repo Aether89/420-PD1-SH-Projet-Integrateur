@@ -9,6 +9,6 @@ module.exports = {
     nomVille:/^(?:[A-Za-zÀ-ÿ\s]+)$/,
     nomProvince:/^(?:[A-Za-zÀ-ÿ\s]+)$/,
     codePostal: /^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/,
-    monetaire: /^\d+(\.?,?\d?d?)?$/,
+    monetaire: /^\d+(\.\d{1,2})?$/,
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 };

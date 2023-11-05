@@ -11,7 +11,7 @@ const rules = {
   nomProvince: (v) => ((!!v || "Champ requis") &&(/^(?:[A-Za-zÀ-ÿ\s]+)$/.test(v) || "Nom de province invalide")),
   codePostal: (v) => ((!!v || "Champ requis") &&(/^[A-Za-z][0-9][A-Za-z][0-9][A-Za-z][0-9]$/.test(v) || "Code postal invalide")),
   courriel: (v) => ((!!v || "Champ requis") &&(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || "Courriel invalide")),
-  monetaire: (v) => /^\d+(\.?,?\d?d?)?$/.test(v) || "Valeur monétaire invalide",
+  monetaire: (v) => /^\d+(\.\d{1,2})?$/.test(v) || "Valeur monétaire invalide",
 
 };
 

@@ -12,19 +12,20 @@
           >Annuler</v-btn>
             </router-link>
     </v-toolbar>
+
+    
       <v-window v-model="step">
         <v-window-item :value="1">
-            <v-card-text>
-                <NewClient :step="step" :mode="mode" :id="id"/>
-            </v-card-text>
-        </v-window-item>
-  
-
-      <v-window-item :value="2">
         <v-card-text>
             <entreVin :step="step" :mode="mode" :id="id "/>
         </v-card-text>
       </v-window-item>
+
+        <v-window-item :value="2">
+            <v-card-text>
+                <NewClient :step="step" :mode="mode" :id="id"/>
+            </v-card-text>
+        </v-window-item>
   
         <v-window-item :value="3">
           <Confirmation :step="step" :mode="mode" :id="id"/>
@@ -46,7 +47,7 @@
         <v-spacer></v-spacer>
         <v-btn
           v-if="step === 1"
-          :disabled="this.storeClient.isValidate === false"
+          :disabled="!isValidate2"
           color="primary"
           variant="flat"
           @click="step++"
@@ -56,7 +57,7 @@
 
         <v-btn
           v-if="step === 2"
-          :disabled="this.storeVehicule.isValidate2 === false"
+          :disabled="this.storeClient.isValidate === false"
           color="primary"
           variant="flat"
           @click="step++"
@@ -113,6 +114,7 @@
   //import rules from '@/regles';
   export default {
     data: () => ({
+      vin: "",
       step: 1,
       session: session,
       storeClient: useClientStore(),
@@ -122,7 +124,9 @@
     }),
     props: ['mode', 'id', 'rules'],
     computed: {
-        
+        isValidate2() {
+          return this.storeVehicule.isValidate2;
+        },
       },
     methods:{
       async validForm() {
@@ -170,6 +174,10 @@
           console.error("Erreur", error);
         });
         
+      },
+      vinAlreadyValidated() {
+        this.storeVehicule.vin = this.vin
+        this.storeVehicule.isValidate2 = true;
       }
     },
     created() {
@@ -177,8 +185,16 @@
       console.log('Session :', this.session.user)
       //console.log('Admin :', session.user.isAdmin);
       console.log("step", this.step)
+      this.vin = this.storeVehicule.vin;
+      console.log("VIN", this.vin);
       this.storeVehicule.newVehicule();
       this.storeTrans.newTrans();
+
+      if (this.vin !== '' && this.vin !== null) {
+        this.storeVehicule.isValidate2 = true;
+        this.storeVehicule.vin = this.vin;
+      }
+      
     },
     mounted() {
       
