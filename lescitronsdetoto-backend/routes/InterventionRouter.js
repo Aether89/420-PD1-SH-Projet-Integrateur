@@ -12,8 +12,6 @@ const rules = require('./regles.js');
 router.get("/", (req, res, next) => {
     InterventionQueries.getAllInterventions()
         .then((interventions) => {
-            console.log("LISTE INTERVENTION", JSON.stringify(interventions, null, 2));
-
             res.json(interventions);
         })
         .catch((err) => {
