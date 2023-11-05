@@ -17,17 +17,15 @@
                     <v-list-item>
                         <template v-slot:prepend>
                             <v-avatar :color="item.color" class="text-white" size="40">
-                                {{ item.type }}
+                                {{ item.idIntervention }}
                             </v-avatar>
                         </template>
-
-                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                        <v-list-item-title>{{ item.type }}</v-list-item-title>
 
                         <template v-slot:append>
                             <v-btn @click="(this.interventionStore.chargerIntervention(item.idIntervention))" size="small"
                                 variant="tonal">
-                                View User
-
+                                Éditer
                                 <v-icon color="orange-darken-4" end>
                                     mdi-open-in-new
                                 </v-icon>

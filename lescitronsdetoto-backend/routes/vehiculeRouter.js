@@ -67,8 +67,8 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             return next(new HttpError(400, 'Une transaction doit avoir un employé'));
         }
 
-        const clientId = req.body.id_client;
-        if(!clientId || clientId === null) {
+        const client = req.body.client;
+        if(!client || client === null) {
             return next(new HttpError(400, 'Veillez associer un client à la transaction'));
         }
 
@@ -96,15 +96,15 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             selectedAccessoire:[] + req.body.selectedAccessoire,
         };
         const newClient = {
-            nomClient: req.body.nomClient,
-            prenomClient: req.body.prenomClient,
-            telephoneClient: req.body.telephoneClient,
-            numeroCivic: req.body.numeroCivic,
-            numeroAppartement: req.body.numeroAppartement,
-            nomRue: req.body.nomRue,
-            nomVille: req.body.nomVille,
-            nomProvince: req.body.nomProvince,
-            codePostal: req.body.codePostal
+            nomClient: req.body.client.nomClient,
+            prenomClient: req.body.client.prenomClient,
+            telephoneClient: req.body.client.telephoneClient,
+            numeroCivic: req.body.client.numeroCivic,
+            numeroAppartement: req.body.client.numeroAppartement,
+            nomRue: req.body.client.nomRue,
+            nomVille: req.body.client.nomVille,
+            nomProvince: req.body.client.nomProvince,
+            codePostal: req.body.client.codePostal
         }
        
         
@@ -120,7 +120,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             etat_vue: null,
             id_type_evenement: 2,
             id_client: clientNouveu.idClient,
-            date_heure_evenement: currentTime.toISOString(),
+            date_heure_evenement: new Date().toISOString(),
             user_account_id: user.userAccountId
         }
         const evenementId = await evenementQueries.insertEvenement(newAchat);

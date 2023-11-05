@@ -59,13 +59,13 @@ passport.authenticate('basic', { session: false }),
                         id_client: null,
                         user_account_id: user,  
                         prix_evenement: null,
-                        time_stamp: day.date + " " + day.time,
+                        date_heure_evenement: day.date + " " + day.time,
                         etat_vue_evenement: false
                     };
 
-                    let resEvent = {timestamp: event.time_stamp, user: user};
+                    let resEvent = {timestamp: event.date_heure_evenement, user: user};
                     
-                    (!isValidDate(event.time_stamp))
+                    (!isValidDate(event.date_heure_evenement))
                         ? results.push({ code: 500, msg: "Date et/ou heure invalide pour l'insertion ", event: resEvent })
                         : (await evenementQueries.checkAvailabilityExist(event))
                             ? results.push({ code: 409, msg: "Disponibilité déja existante", event: resEvent })

@@ -51,11 +51,6 @@ export default {
         },
     },
     computed: {
-        itemTooLoad() {
-            this.selectedEventIDs.push(item.idAccessoire);
-
-        },
-
         pagination() {
             return Math.ceil(this.items.length / this.contentOfPage);
         },
@@ -94,7 +89,8 @@ export default {
 
         page(newIndex, oldIndex) {
             this.currentIndex = this.contentOfPage * (this.page - 1);
-        }
+        },
+
     },
     mounted() {
         this.accessoireStore.getAccessoires();

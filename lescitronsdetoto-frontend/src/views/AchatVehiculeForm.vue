@@ -157,6 +157,7 @@
           description_longue: this.storeVehicule.description_longue,
           prix_evenement: this.storeTrans.prix_evenement,
           idEmploye: this.storeEmploye.idEmploye,
+          client: {
           nomClient: this.storeClient.nomClient,
           prenomClient: this.storeClient.prenomClient,
           telephoneClient: this.storeClient.telephoneClient,
@@ -166,6 +167,7 @@
           nomVille: this.storeClient.nomVille,
           nomProvince: this.storeClient.nomProvince,
           codePostal: this.storeClient.codePostal
+          }
         }
         fetch("/api/vehicule",{
           method: "POST",
