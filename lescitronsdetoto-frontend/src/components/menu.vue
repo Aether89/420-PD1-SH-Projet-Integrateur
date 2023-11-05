@@ -16,15 +16,16 @@
                 <div v-if="session.user">
     <v-list-item prepend-icon="mdi-cart-plus" density="compact" to="/achat/vehicule" title="Achat véhicule" />
     <v-list-item prepend-icon="mdi-cart-minus" density="compact" to="/vente/vehicule" title="Vente véhicule" />
-    <v-list-item prepend-icon="mdi-car-wrench" density="compact" to="/listeInterventions"
-        title="Gestion des Interventions" />
-    <v-list-item prepend-icon="mdi-car-cog" density="compact" to="/listeAccessoires"
-        title="Gestion des Accessoires" />
 </div>
 <div v-if="session.user && session.user.isAdmin">
   <v-divider/>
   <v-list-item type="subheader" density="compact" title="Administration" />
-  <v-list-item prepend-icon="mdi-chart-line" density="compact" to="/transaction" title="Gestion des Transactions" />
+  <v-list-item prepend-icon="mdi-car-wrench" density="compact" to="/listeInterventions"
+        title="Gestion des Interventions" />
+    <v-list-item prepend-icon="mdi-car-cog" density="compact" to="/listeAccessoires"
+        title="Gestion des Accessoires" />
+        <v-list-item prepend-icon="mdi-chart-line" density="compact" to="/transaction" title="Gestion des Transactions" />
+        <v-divider/>
     <v-list-item prepend-icon="mdi-badge-account-horizontal-outline" density="compact" to="/listeEmployes" title="Gestion Employés" />
     <v-list-item prepend-icon="mdi-account-box-multiple-outline" density="compact" to="/listeClients" title="Gestion des Clients" />
 </div>
