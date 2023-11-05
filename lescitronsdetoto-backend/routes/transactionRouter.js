@@ -157,7 +157,7 @@ passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         try {
             const user = req.user;
-            if (!user || !user.isAdmin) {
+            if (!user) {
                 return next(new HttpError(403, "Droit administrateur requis"));
             }
             
