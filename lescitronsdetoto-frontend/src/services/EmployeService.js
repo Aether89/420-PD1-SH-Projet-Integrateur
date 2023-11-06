@@ -1,5 +1,4 @@
 import session from '../session';
-import axios from 'axios';
 
 class ServiceError extends Error {
     constructor(status, message) {
@@ -132,3 +131,21 @@ export async function deleteEmploye(idEmploye) {
         throw await createServiceError(response);
     }
 }
+
+export async function getEmployeID(userAccountID) {
+    const result = await fetch(`/api/employes/account/${userAccountID}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        ...session.getAuthHeaders()
+      }
+    });
+  
+    if (result.status === 200) {
+      const data = await result.json();
+      return data.idEmploye;
+    } else {
+      console.error(`Error: Status code ${result.status} lors de la récupération de l'employe`);
+    }
+  }
+  

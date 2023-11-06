@@ -26,7 +26,6 @@ const getLoginByUserAccountId = async (userAccountId, client) => {
 };
 exports.getLoginByUserAccountId = getLoginByUserAccountId;
 
-
 const createUserAccount = async (userAccountId, idEmploye, courrielCompteEmploye, passwordHash, passwordSalt) => {
 
   const client = await pool.connect();
@@ -93,3 +92,21 @@ const changeMDP = async (userAccountId, passwordHash, passwordSalt) => {
   }
 };
 exports.changeMDP = changeMDP;
+
+const getidEmploye = async (userAccountId) => {
+  const result = await pool.query(
+    `SELECT id_employe
+         FROM user_account
+         WHERE user_account_id = $1`,
+    [userAccountId]
+  );
+
+  const row = result.rows[0];
+  if (row) {
+    return {
+      idEmploye: row.id_employe,
+    };
+  }
+  return undefined;
+}
+exports.getidEmploye = getidEmploye;
