@@ -132,7 +132,8 @@ export default {
                 }
             }
             this.store.getEmployes()
-            this.store.newEmploye();
+            if (this.session.user.isAdmin) { this.store.newEmploye(); }
+            else { this.store.chargerEmploye(this.session.user.idEmploye); }
         },
         async supprimer() {
             try {
