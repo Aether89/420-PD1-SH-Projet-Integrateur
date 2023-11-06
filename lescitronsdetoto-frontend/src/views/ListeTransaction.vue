@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="transparent" class="ma-8">
+  <v-sheet @keydown.esc="refreshList" color="transparent" class="ma-8">
     <h1>Liste des transactions ({{ title }})</h1>
     <v-tabs v-model="tab" bg-color="lime" align-tabs="center">
       <v-tab value="achat" @click="afficherListeAchat">Achat</v-tab>
@@ -8,7 +8,7 @@
     <v-sheet :color="bgColour">
       <v-virtual-scroll :items="transactions" :height="400">
         <template v-slot:default="{ item }">
-          <transactionlistitem :colour="listColour" :item="item"></transactionlistitem>
+          <transactionlistitem :colour="listColour" :item="item" @refresh-list="refreshList"></transactionlistitem>
         </template>
       </v-virtual-scroll>
     </v-sheet>
@@ -52,6 +52,14 @@ export default {
       }
       this.title = "vente";
     },
+    refreshList() {
+      console.log("EMIT REFRESH LIST");
+      if (this.title === "vente") {
+        this.afficherListeVente();
+      } else {
+        this.afficherListeAchat();
+      }
+    }
   },
   
   computed: {

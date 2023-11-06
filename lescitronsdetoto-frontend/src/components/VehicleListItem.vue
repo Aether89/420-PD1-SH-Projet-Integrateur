@@ -24,7 +24,7 @@
             Voir plus
           </v-btn>
         </template>
-        <detailled-vehicle class="mb-8" :id="this.vin" :isDialog="true" @close-dialog="this.dialog = !this.dialog"></detailled-vehicle>
+        <detailled-vehicle @keydown.esc="refreshList" class="mb-8" :id="this.vin" :isDialog="true" @close-dialog="this.dialog = !this.dialog"></detailled-vehicle>
       </v-dialog>
       
   </v-card>

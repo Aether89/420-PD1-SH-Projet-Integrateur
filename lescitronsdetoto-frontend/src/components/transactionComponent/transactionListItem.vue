@@ -22,7 +22,7 @@
                 <v-dialog v-model="dialog" scrollable transition="dialog-bottom-transition" fullscreen>
                     <EditionTransaction :id_evenement="item.id_evenement" :strPrix="item.prix_evenement"
                         :idClient="item.id_client" :user_account_id="item.user_account_id"
-                        @close-Dialog="this.dialog = !this.dialog" />
+                        @close-Dialog="closeDialog" />
                 </v-dialog>
             </v-col>
         </v-row>
@@ -59,6 +59,10 @@ export default {
             //second: "2-digit"
             };
             return date.toLocaleString("fr-FR", options);
+        },
+        closeDialog() {
+            this.dialog = !this.dialog;
+            this.$emit('refresh-list')
         },
 },
 computed: {

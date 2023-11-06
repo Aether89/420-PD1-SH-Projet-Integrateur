@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar dark color="lime">
+  <v-toolbar dark color="lime" >
     <v-toolbar-title @click="$emit('closeDialog')">Les citrons de Toto</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items> <v-btn bg-color="error" icon dark @click="$emit('closeDialog')">
@@ -32,11 +32,11 @@
         </v-col>
         <!-- Bloc Client -->
         <v-col cols="4">
-          <clientForm mode="transaction" :id="this.idClient"></clientForm>
+          <clientForm @keydown.esc="$emit('closeDialog')" mode="transaction" :id="this.idClient"></clientForm>
         </v-col>
 
         <v-col cols="4">
-          <v-btn type="submit" size="x-large" block color="primary" @click="submitForm">Soumettre</v-btn>
+          <v-btn @keydown.esc="$emit('closeDialog')" type="submit" size="x-large" block color="primary" @click="submitForm">Soumettre</v-btn>
 
         </v-col>
       </v-row>
@@ -115,6 +115,9 @@ export default {
       console.error(`Error: Status code ${result.status} lors de la récupération de l'employe`);
     }
           },
+closeDialog() {
+      this.$emit('closeDialog');
+    },
   },
   watch: {
     vin(newVal,oldVal){
