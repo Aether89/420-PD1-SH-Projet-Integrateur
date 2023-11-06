@@ -1,7 +1,10 @@
 <template >
-    <v-container v-if="this.session.user && this.session.user.isAdmin"  class="d-flex block" justify="center">
+    <v-container v-if="this.session.user && this.session.user.isAdmin" class="d-flex block" justify="center">
+
+
         <listeEmploye />
         <EmployeVue />
+
     </v-container>
     <v-container v-else class="d-flex block" justify="center">
         vous n'avez pas les droits pour acceder à cette page

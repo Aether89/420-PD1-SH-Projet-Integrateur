@@ -19,7 +19,7 @@ const addAccessoireVehicule = async (idAccessoire, vin) => {
           if (result.rows.length === 0) {
               throw new HttpError(`Impossible de trouver le véhicule avec id_accessoire ${idAccessoire}`, 404);
             }
-          resultat.push(idAccessoire[i] );
+          resultat.push(result.rows[0].id_accessoire );
             i++;
         }
 
@@ -99,7 +99,7 @@ const deleteAccessoireVehicule = async (vin,idAccessoire) => {
             throw new HttpError(`Impossible de trouver le véhicule avec id_accessoire ${idAccessoire}`, 404);
         }
        
-            await client.query('COMMIT');
+        
         
 
         return {};
@@ -117,9 +117,7 @@ const deleteAccessoireAllVehicule = async (vin) => {
         if (result.rowCount === 0) {
             throw new HttpError(`Impossible de trouver le véhicule avec id_accessoire ${idAccessoire}`, 404);
         }
-        
-            await client.query('COMMIT');
-      
+              
 
         return {};
 };

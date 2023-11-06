@@ -25,7 +25,8 @@
                             density="compact" maxlength="64"></v-text-field>
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
-                        <SelectAccessoire :vin="this.storeVehicule.vin" :creat="this.creat" class="mb-4 flex-wrap" />
+                        <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"
+                            class="mb-4 flex-wrap" />
                         <interventionForm :vin="this.storeVehicule.vin" v-if="!nouveauvehicule" />
                         <div v-for=" intervention  in  interventions ">
                             {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
@@ -81,10 +82,10 @@
 <script>
 import session from '../session';
 import { useInterventionStore } from '@/store/intervention';
-import { createIntervention, updateIntervention, deleteIntervention, fetchIntervention, fetchInterventionByVIN } from '@/services/InterventionService';
+import { fetchInterventionByVIN } from '@/services/InterventionService';
 import { useVehiclesStore } from '@/store/vehicles';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
-import { createVehicule, udpateVoiture, getVehiculefr } from '../services/vehicule';
+import { createVehicule, udpateVoiture } from '../services/vehicule';
 import { fetchVIN } from '../services/VINAPI';
 import interventionForm from '@/components/interventionComponent/Intervention.vue';
 import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.vue';
@@ -133,7 +134,7 @@ export default {
                 //validateNumer: value => !!value || "Le champs doit être supérieur de 0"
             },
             vinIdUnique: true,
-            interventions: [],
+
 
         };
     },
@@ -141,8 +142,6 @@ export default {
 
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
-                console.log("promo", this.storeVehicule.promotion)
-                console.log("prix", this.storeVehicule.prix_annonce)
                 this.errorMessagesPromotion = ['Le prix de la promotion ne doit pas être supérieur ou égale au prix annoncé'];
                 return false;
             }
@@ -224,6 +223,9 @@ export default {
             this.vinIdUnique = true;
             const formatter = new Intl.NumberFormat('fr-FR');
             const prix = this.prix_annonce;
+            if (this.promotion === null) {
+                this.promotion = 0;
+            }
             const promo = this.promotion;
             const prixFormate = formatter.format(prix);
             const promoFormate = formatter.format(promo);
@@ -245,6 +247,7 @@ export default {
                 promotion: promoFormate,
                 description_courte: this.description_courte,
                 description_longue: this.description_longue,
+                selectedAccessoire: this.selectedAccessoire
 
             };
             try {
@@ -296,8 +299,17 @@ export default {
         async rafraichirIntervention() {
             return this.interventions = await fetchInterventionByVIN(this.vehiculeVin);
         },
+        async receiveEmit(data) {
+            this.selectedAccessoire = data;
+        },
+
     },
     computed: {
+        async interventions() {
+            const interventionsload = await fetchInterventionByVIN(this.vehiculeVin);
+            return interventionsload;
+
+        },
 
         nouveauvehicule() {
             return this.mode === 'vehicule';
@@ -320,6 +332,12 @@ export default {
     created() {
         console.log('Mode reçu en props :', this.mode);
         this.storeVehicule.newVehicule();
+    },
+    watch: {
+
+        selectedAccessoire() {
+            this.$emit('receiveDataFromChild', this.selectedAccessoire);
+        },
     },
 }
 </script>

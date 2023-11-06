@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const HttpError = require('./HttpError');
 
+
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
@@ -148,32 +149,35 @@ app.post('/api/login',
 app.put('/api/changepassword',
   passport.authenticate('basic', { session: false }),
   async (req, res, next) => {
-    try {
-      const userAccountId = req;
+      
+     const userAccountId = req.user.userAccountId;
       const oldPassword = req.body.oldPassword;
       const newPassword = req.body.newPassword;
-console.log("userAccountId: ", userAccountId);
+      
+    try {
+     
       // Vérifiez si l'ancien mot de passe est correct avant de le modifier
       const user = await userAccountQueries.getLoginByUserAccountId(userAccountId);
       if (!user) {
         return next(new HttpError(404, 'Utilisateur introuvable'));
       }
-
+console.log("oldPassword: ", oldPassword);  
+      console.log("user: ", user); 
       
       const iterations = 100000;
-      const keylen = 64;
-      const digest = 'sha512';
+    const keylen = 64;
+    const digest = "sha512";
 
-      crypto.pbkdf2(oldPassword, user.passwordSalt, iterations, keylen, digest, (err, hashedPassword) => {
-        if (err) {
-          return next(err);
-        }
+    crypto.pbkdf2(oldPassword, user.passwordSalt, iterations, keylen, digest, (err, hashedPassword) => {
+      if (err) {
+        return next(err);
+      }
 
-        const passwordHashBuffer = Buffer.from(user.passwordHash, 'base64');
+      const passwordHashBuffer = Buffer.from(user.passwordHash, 'base64');
 
-        if (!crypto.timingSafeEqual(passwordHashBuffer, hashedPassword)) {
-          return next(new HttpError(401, 'Mot de passe incorrect'));
-        }
+      if (!crypto.timingSafeEqual(passwordHashBuffer, hashedPassword)) {
+        return next(new HttpError(401, 'Mot de passe incorrect'));
+      }
 
         // Le mot de passe actuel est correct, générez un nouveau sel et mettez à jour le mot de passe
         const newSaltBuf = crypto.randomBytes(16);
@@ -186,7 +190,7 @@ console.log("userAccountId: ", userAccountId);
 
           const newPasswordHashBase64 = newDerivedKey.toString('base64');
 
-          const result = await userAccountQueries.updatePassword(userAccountId, newPasswordHashBase64, newSalt);
+          const result = await userAccountQueries.changeMDP(userAccountId, newPasswordHashBase64, newSalt);
           if (!result) {
             return next(new HttpError(500, 'Erreur lors de la mise à jour du mot de passe'));
           }

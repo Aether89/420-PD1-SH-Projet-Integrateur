@@ -110,17 +110,18 @@ const session = reactive({
             }
         }
     },
-    async changePassword( oldPassword, newPassword) {
+    async changePassword( userAccountId,oldPassword, newPassword) {
+       
         try {
       
     const response = await fetch('/api/changepassword', {
-      method: 'PUT',
+      method: "PUT",
       headers: {
         'Content-Type': 'application/json',
         ...this.getAuthHeaders()
       },
       body: JSON.stringify({
-                
+                userAccountId: userAccountId,
                 oldPassword: oldPassword,
                 newPassword: newPassword
             })

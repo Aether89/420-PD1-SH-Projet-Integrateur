@@ -96,12 +96,12 @@ CREATE TABLE employe (
 	prenom_employe varchar(64) NOT NULL,
 	poste_employe varchar(64) NOT NULL,
 	telephone_employe varchar(16) NOT NULL,
-	numero_civic integer,
-	numero_appartement varchar(6),
-	nom_rue varchar(64),
-	nom_ville varchar(64),
-	nom_province varchar(64),
-	code_postal varchar(6),
+	numero_civic integer NOT NULL,
+	numero_appartement varchar(6) NOT NULL,
+	nom_rue varchar(64) NOT NULL,
+	nom_ville varchar(64) NOT NULL,
+	nom_province varchar(64) NOT NULL,
+	code_postal varchar(6) NOT NULL,
 	is_archive boolean NOT NULL
 );
 

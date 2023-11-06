@@ -17,7 +17,8 @@ export const useActualyAVehiculeStore = defineStore('vehicule', {
     loadingerror: false,
     marque: null,
     modele: null,
-    annee: null
+    annee: null,
+    selectedAccessoire: null,
   }),
   actions: {
     async chargerVehicle(vin) {
@@ -36,6 +37,7 @@ export const useActualyAVehiculeStore = defineStore('vehicule', {
           this.marque = result.marque;
           this.modele = result.modele;
           this.annee = result.annee;
+          this.selectedAccessoire = result.accessoires;
 
         })
     },
@@ -53,6 +55,7 @@ export const useActualyAVehiculeStore = defineStore('vehicule', {
           this.marque = '';
           this.modele = '';
           this.annee = '';
+          this.selectedAccessoire = [];
     }
   }
 })

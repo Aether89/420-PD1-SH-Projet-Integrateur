@@ -23,9 +23,9 @@ import session from '../session';
 export default {
     data: function () {
         return {
-            oldPassword: '',
-            newPassword: '',
-            newPasswordValidation: '',
+            oldPassword: "",
+            newPassword: "",
+            newPasswordValidation: "",
             rules: {
                 required: value => !!value || "Le champ est requis",
                 passwordValid: value => (value && value.length >= 8) || "Le mot de passe doit comporter au moins 8 caractères",
@@ -35,12 +35,14 @@ export default {
     },
     methods: {
         async changePassword() {
+            console.log(this.oldPassword, "changePassword", this.newPassword, this.newPasswordValidation);
+
             try {
                 if (this.newPassword === this.newPasswordValidation) {
                     // Vous pouvez appeler une fonction de service pour changer le mot de passe
                     // Assurez-vous de gérer la logique de mise à jour du mot de passe côté serveur
                     const result = await session.changePassword(this.user, this.oldPassword, this.newPassword);
-
+                    console.log(result);
                     if (result.success) {
                         this.$router.push("login")
                     } else {

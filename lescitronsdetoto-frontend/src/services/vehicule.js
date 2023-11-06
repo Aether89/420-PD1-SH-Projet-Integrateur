@@ -21,7 +21,7 @@ export async function createVehicule(vehicule) {
 
 export async function udpateVoiture(vehicule) {
 
-    //const udpatedVoiture = convertToVehiculeUpdate(vehicule);
+    
     const response = await fetch(`/api/vehicule/${vehicule.vin}`, {
         method: "PUT",
         headers: {

@@ -84,8 +84,8 @@ export default {
         },
     },
     watch: {
-        creat() {
-            this.createAccessoireWvin(Intervention, vin);
+        selectedEventIDs() {
+            this.$emit('receiveDataFromChild', this.selectedEventIDs);
         },
 
         page(newIndex, oldIndex) {

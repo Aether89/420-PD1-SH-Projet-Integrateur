@@ -3,8 +3,10 @@ const pool = require('./DBPool');
 const crypto = require('crypto');
 
 const getLoginByUserAccountId = async (userAccountId, client) => {
+  
+  
   const result = await (client || pool).query(
-    `SELECT user_account_id, id_employe, courriel_compte_employe, password_hash, password_salt, is_active, is_admin
+    `SELECT user_account_id, id_employe, courriel_compte_employe, password_hash, password_salt, is_active, is_admin, a_change
          FROM user_account
          WHERE user_account_id = $1`,
     [userAccountId]
@@ -20,6 +22,7 @@ const getLoginByUserAccountId = async (userAccountId, client) => {
       passwordSalt: row.password_salt,
       isActive: row.is_active,
       isAdmin: row.is_admin,
+aChangePassword: row.a_change,
     };
   }
   return undefined;
@@ -79,7 +82,7 @@ const changeMDP = async (userAccountId, passwordHash, passwordSalt) => {
       [userAccountId, passwordHash, passwordSalt]
     );
 
-    const userAccount = getLoginByUserAccountId(result.userAccountId, client);
+    const userAccount = getLoginByUserAccountId(result.userAccountId);
 
     client.query('COMMIT');
 
