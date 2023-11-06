@@ -69,7 +69,7 @@
                 <div v-if="mode === 'reservation'">
 
                 </div>
-                <div v-else-if="mode !== 'vehicule'">
+                <div v-else-if="mode !== 'vehicule' && mode !== 'transaction'">
                     <v-btn type="submit">{{
                         txt.btn }}</v-btn>
                     <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
@@ -169,8 +169,11 @@ export default {
                         this.$refs.clientform.validate();
                     }
                 }
-                this.store.getClients()
-                this.store.newClient();
+
+                if (this.mode !== 'transaction') {
+                    this.store.getClients();
+                    this.store.newClient();
+                }
             }
         },
         async supprimer() {
@@ -189,7 +192,7 @@ export default {
     computed: {
 
         txt() {
-            return (this.store.isNew) ? { title: "Nouveau Client", btn: "Créer" } : { title: "Client Existant", btn: "Modifier" };
+            return (this.mode === 'transaction') ? { title: "Client", btn: "Modifier"} : (this.store.isNew) ? { title: "Nouveau Client", btn: "Créer" } : { title: "Client Existant", btn: "Modifier" };
         },
 
         watchNom() {

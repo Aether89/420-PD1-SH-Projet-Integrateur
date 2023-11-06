@@ -1,93 +1,132 @@
 <template>
-    <div class="form-container">
-      <v-form @submit.prevent="submitForm">
+  <v-toolbar dark color="lime" >
+    <v-toolbar-title @click="$emit('closeDialog')">Les citrons de Toto</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-toolbar-items> <v-btn bg-color="error" icon dark @click="$emit('closeDialog')">
+        <v-icon>mdi-close</v-icon>
+      </v-btn></v-toolbar-items>
+  </v-toolbar>
+  <v-card class="pa-16" color="blue-lighten-1" justify="center">
+  
+    <v-form @submit.prevent="submitForm">
+
+      <v-row>
         <!-- Bloc Employé -->
-        <v-card class="section-card">
-          <v-card-title class="section-title bg-orange darken-4" justify="center">Employé</v-card-title>
-          <v-card-text>
-            <v-text-field v-model="idEmploye" label="ID Employé"></v-text-field>
-          </v-card-text>
-        </v-card>
-  
+        <v-col cols="4">
+          <v-card max-width="600" class="mb-4">
+            <v-card-title class="section-title bg-orange darken-4 mb-4" justify="center">Employé</v-card-title>
+            <v-card-text>
+              <v-select v-model="idEmploye" :items="employerStore.employes" :item-props="itemProps" label="Employé" dense></v-select>
+            </v-card-text>
+          </v-card>
+          <!-- Bloc Véhicule -->
+          <v-card max-width="600">
+            <v-card-title class="section-title bg-orange darken-4 mb-4" justify="center">Véhicule</v-card-title>
+            <v-card-text>
+              <v-text-field v-model="vin" label="VIN"></v-text-field>
+              <v-text-field bg-color="white" class="no-spinner" v-model="this.prix" label="Prix de la transaction"
+                density="compact" type="number" prefix="$" step="0.01" min=0
+                required></v-text-field>
+            </v-card-text>
+          </v-card>
+        </v-col>
         <!-- Bloc Client -->
-        <v-card class="section-card">
-          <v-card-title class="section-title bg-orange darken-4" justify="center">Client</v-card-title>
-          <v-card-text>
-            <v-text-field v-model="nomClient" label="Nom Client"></v-text-field>
-            <v-text-field v-model="prenomClient" label="Prénom Client"></v-text-field>
-            <v-text-field v-model="telephoneClient" label="Téléphone Client"></v-text-field>
-            <v-text-field v-model="courrielClient" label="Courriel Client"></v-text-field>
-            <v-text-field
-              v-model="numeroCivic"
-              label="Numéro Civic"
-              type="number"
-              inputmode="numeric"
-            ></v-text-field>
-            <v-text-field
-              v-model="numeroAppartement"
-              label="Numéro Appartement"
-              type="number"
-              inputmode="numeric"
-            ></v-text-field>
-            <v-text-field v-model="nomRue" label="Nom Rue"></v-text-field>
-            <v-text-field v-model="nomVille" label="Nom Ville"></v-text-field>
-            <v-text-field v-model="nomProvince" label="Nom Province"></v-text-field>
-            <v-text-field v-model="codePostal" label="Code Postal"></v-text-field>
-          </v-card-text>
-        </v-card>
+        <v-col cols="4">
+          <clientForm @keydown.esc="$emit('closeDialog')" mode="transaction" :id="this.idClient"></clientForm>
+        </v-col>
+
+        <v-col cols="4">
+          <v-btn @keydown.esc="$emit('closeDialog')" type="submit" size="x-large" block color="primary" @click="submitForm">Soumettre</v-btn>
+
+        </v-col>
+      </v-row>
+    </v-form>
+  </v-card>
+</template>
   
-        <!-- Bloc Véhicule -->
-        <v-card class="section-card">
-          <v-card-title class="section-title bg-orange darken-4" justify="center">Véhicule</v-card-title>
-          <v-card-text>
-            <v-text-field v-model="vin" label="VIN"></v-text-field>
-          </v-card-text>
-        </v-card>
-  
-        <v-btn type="submit" color="primary">Soumettre</v-btn>
-      </v-form>
-    </div>
-  </template>
-  
-  <style scoped>
-  .form-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .section-card {
-    margin-top: 20px;
-  }
-  
-  .section-title {
-    color: white;
-  }
-  </style>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        idEmploye: '',
-        nomClient: '',
-        prenomClient: '',
-        telephoneClient: '',
-        courrielClient: '',
-        numeroCivic: null,
-        numeroAppartement: null,
-        nomRue: '',
-        nomVille: '',
-        nomProvince: '',
-        codePostal: '',
-        vin: '',
-      };
+<script>
+import session from '@/session';
+import { useClientStore } from '@/store/client';
+import ClientForm from '@/components/clientComponent/Client.vue';
+import { useEmployeStore } from '@/store/employe';
+import { getEmployeID } from '@/services/EmployeService';
+import { useVehiclesStore } from '@/store/vehicles';
+import rules from '@/regles';
+
+export default {
+  components: {
+    clientForm: ClientForm,
+  },
+  props: {
+    id_evenement: Number,
+    strPrix: String,
+    idClient: Number,
+    user_account_id: String,
+    mode: String,
+  },
+  data() {
+    return {
+      vin: '',
+      idEmploye: '',
+      prix: '',
+      sessions: session,
+      clientStore: useClientStore(),
+      employerStore: useEmployeStore(),
+      vehicleStore: useVehiclesStore(),
+      rules: rules,
+    };
+  },
+  methods: {
+    submitForm() {
+      // Traitement du formulaire ici
+      // Vous pouvez accéder aux données du formulaire à partir de this.idEmploye, this.nomClient, etc.
     },
-    methods: {
-      submitForm() {
-        // Traitement du formulaire ici
-        // Vous pouvez accéder aux données du formulaire à partir de this.idEmploye, this.nomClient, etc.
+    async init() {
+    
+      this.prix = this.strPrix.replace(/[$,]/g, '');
+
+      this.clientStore.chargerClient(this.idClient);
+      this.employerStore.getEmployes();
+      this.idEmploye = await getEmployeID(this.user_account_id);
+      this.vin = await this.getVinEvenement();
+      this.vehicleStore.getVehicle(this.vin);
+      console.log(JSON.stringify(this.vehicleStore.vehicles,null,2));
+    },
+    itemProps (item) {
+        return {
+          value: item.idEmploye,
+          title: item.prenomEmploye + ' ' + item.nomEmploye,
+          subtitle: item.posteEmploye,
+        }
       },
+      async getVinEvenement() {
+        const result = await fetch(`/api/transaction/${this.id_evenement}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        ...session.getAuthHeaders()
+      }
+    });
+  
+    if (result.status === 200) {
+      const data = await result.json();
+      return data.vin;
+    } else {
+      console.error(`Error: Status code ${result.status} lors de la récupération de l'employe`);
+    }
+          },
+closeDialog() {
+      this.$emit('closeDialog');
     },
-  };
-  </script>
+  },
+  watch: {
+    vin(newVal,oldVal){
+      newVal !== oldVal ? this.vehicleStore.getVehicle(newVal) : null;
+    },
+  },
+  mounted() {
+    this.init();
+  },
+};
+</script>
   

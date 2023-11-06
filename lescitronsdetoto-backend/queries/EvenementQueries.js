@@ -60,6 +60,17 @@ const getEvenementById = async (id_evenement) => {
     );
 
     const row = result.rows[0];
+    const resultVin = await pool.query(
+        `SELECT
+        vin 
+        FROM
+        vehicule_evenement
+        Where id_evenement = $1`,
+        [id_evenement]
+    );
+
+    const vin = resultVin.rows[0];
+
     if (row) {
         return {
             id_evenement: row.id_evenement,
@@ -68,7 +79,8 @@ const getEvenementById = async (id_evenement) => {
             user_account_id: row.user_account_id,
             prix_evenement: row.prix_evenement,
             date_heure_evenement: row.date_heure_evenement,
-            etat_vue_evenement: row.etat_vue_evenement
+            etat_vue_evenement: row.etat_vue_evenement,
+            vin: vin ? vin.vin : null 
         };
     }
     return undefined;

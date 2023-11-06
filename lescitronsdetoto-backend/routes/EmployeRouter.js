@@ -78,6 +78,27 @@ function validateEmploye(employe) {
     }
 }
 
+router.get("/account/:userAccountID", passport.authenticate('basic', { session: false }),
+async (req, res, next) => {
+    const user = req.user;
+    const userAccountID = req.params.userAccountID;
+        if (!user) {
+        return next(new HttpError(403, "Authentification requise"));
+    }
+    userAccountQueries.getidEmploye(userAccountID).then((idEmploye) => {
+        if (idEmploye) {
+            res.json(idEmploye);
+        } else {
+            return next(new HttpError(404, `Employe ${id} introuvable`));
+        }
+}).catch((err) => { 
+return next(err);
+}
+);
+}
+
+);
+
 router.get("/:id", (req, res, next) => {
     const id = req.params.id;
     EmployeQueries.getEmploye(id).then((employe) => {
