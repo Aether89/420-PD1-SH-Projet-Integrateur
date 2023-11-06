@@ -40,7 +40,7 @@ export default {
                     this.$router.push("/changepassword");
                 } else {
                     // L'utilisateur n'a pas besoin de changer de mot de passe, redirigez-le vers une page d'accueil
-                    this.$router.go(-1);
+                    this.$router.push("/");
                 }
             } catch (error) {
                 // Gérez les erreurs d'authentification ici

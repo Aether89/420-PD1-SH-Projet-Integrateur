@@ -80,10 +80,14 @@ const changeMDP = async (userAccountId, passwordHash, passwordSalt) => {
              WHERE user_account_id=$1`,
       [userAccountId, passwordHash, passwordSalt]
     );
-
-    const userAccount = getLoginByUserAccountId(result.userAccountId);
-
+    if (!result) {
+      throw new HttpError(500, `Impossible de changer le mot de passe du compte ${userAccountId}`);
+    }
     client.query('COMMIT');
+    const userAccount = await getLoginByUserAccountId(userAccountId, client);
+    if(!userAccount){
+      throw new HttpError(500, `Impossible de changer le mot de passe du compte ${userAccountId}`);
+    }
 
     return userAccount;
   } catch (err) {

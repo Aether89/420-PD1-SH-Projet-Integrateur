@@ -5,7 +5,7 @@
         </v-toolbar>
         <v-spacer></v-spacer>
         <v-form @submit.prevent="changePassword" validate-on="submit lazy" ref="changePasswordForm">
-            <v-text-field v-model="oldPassword" label="Ancien mot de passe" :rules="[rules.required]"
+            <v-text-field v-model="oldPassword" label="Ancien mot de passe" type="password" :rules="[rules.required]"
                 density="compact"></v-text-field>
             <v-text-field v-model="newPassword" label="Nouveau mot de passe" type="password"
                 :rules="[rules.required, rules.passwordValid]" density="compact"></v-text-field>
@@ -44,7 +44,7 @@ export default {
                     const result = await session.changePassword(this.user, this.oldPassword, this.newPassword);
                     console.log(result);
                     if (result.success) {
-                        this.$router.push("login")
+                        this.$router.push("/");
                     } else {
                         // Gérez les erreurs de changement de mot de passe
                         console.error(result.error);

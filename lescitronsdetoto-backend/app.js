@@ -161,8 +161,7 @@ app.put('/api/changepassword',
       if (!user) {
         return next(new HttpError(404, 'Utilisateur introuvable'));
       }
-console.log("oldPassword: ", oldPassword);  
-      console.log("user: ", user); 
+
       
       const iterations = 100000;
     const keylen = 64;
