@@ -27,11 +27,36 @@
                             density="compact" maxlength="512"></v-textarea>
                         <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"
                             class="mb-4 flex-wrap" />
-                        <interventionForm :vin="this.storeVehicule.vin" v-if="!nouveauvehicule" />
-                        <div v-for=" intervention  in  interventions ">
-                            {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
-                                v-model="this.storeIntervention.etatIntervention" label="Fait" dense></v-checkbox>
-                        </div>
+                        <interventionForm :vin="this.storeVehicule.vin" class="mb-4" v-if="!nouveauvehicule"
+                            @refresh-list="refreshList" />
+                        <v-card v-if="session.user && interventions.length > 0" class="ma-8" color="brown-lighten-4"
+                            rounded="t-lg">
+                            <v-col cols="12" sm="12">
+                                <v-table class="mb-8 bg-brown-lighten-3">
+                                    <thead>
+                                        <tr>
+                                            <th class="start">
+                                                Intervention
+                                            </th>
+                                            <th class="end">
+                                                Prix
+                                            </th>
+                                            <th>Fait</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-brown-lighten-4">
+                                        <tr v-for="intervention in interventions" :key="intervention.id">
+                                            <td class="start">{{ intervention.typeIntervention }}</td>
+                                            <td class="end">{{ intervention.valeurIntervention }}</td>
+                                            <td>
+                                                <v-checkbox v-model="intervention.etatIntervention" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+                            </v-col>
+                        </v-card>
+
                     </v-col>
                 </v-row>
 
@@ -82,7 +107,7 @@
 <script>
 import session from '../session';
 import { useInterventionStore } from '@/store/intervention';
-import { fetchInterventionByVIN } from '@/services/InterventionService';
+import { fetchInterventionByVIN, updateIntervention } from '@/services/InterventionService';
 import { useVehiclesStore } from '@/store/vehicles';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 import { createVehicule, udpateVoiture } from '../services/vehicule';
@@ -139,7 +164,6 @@ export default {
         };
     },
     methods: {
-
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
                 this.errorMessagesPromotion = ['Le prix de la promotion ne doit pas être supérieur ou égale au prix annoncé'];
@@ -297,19 +321,20 @@ export default {
             }
         },
         async rafraichirIntervention() {
+            console.log('rafraichirIntervention', this.interventions);
             return this.interventions = await fetchInterventionByVIN(this.vehiculeVin);
         },
         async receiveEmit(data) {
             this.selectedAccessoire = data;
         },
+        refreshList() {
+            console.log('refreshList');
+            this.rafraichirIntervention();
+        }
+
 
     },
     computed: {
-        async interventions() {
-            const interventionsload = await fetchInterventionByVIN(this.vehiculeVin);
-            return interventionsload;
-
-        },
 
         nouveauvehicule() {
             return this.mode === 'vehicule';
@@ -334,6 +359,11 @@ export default {
         this.storeVehicule.newVehicule();
     },
     watch: {
+        'interventions.etatIntervention': function (newVal, oldVal) {
+            this.intervention.etatIntervention = newVal;
+            updateIntervention(this.intervention);
+            console.log('Nouvelle valeur de etatIntervention : ', newVal);
+        },
 
         selectedAccessoire() {
             this.$emit('receiveDataFromChild', this.selectedAccessoire);

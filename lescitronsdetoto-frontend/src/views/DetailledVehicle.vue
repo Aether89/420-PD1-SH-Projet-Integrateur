@@ -134,10 +134,10 @@
                             </div>
                         </v-card>
                         <v-card v-if="(this.session.user && (this.interventions.length > 0))" class=" mb-8"
-                            color="transparent" rounded="t-lg">
+                            color="brown-lighten-4" rounded="t-lg">
                             <v-col cols="12" sm="12">
-                                <v-table class="mb-8 bg-transparent">
-                                    <thead color="transparent">
+                                <v-table class="mb-8 bg-brown-lighten-3">
+                                    <thead>
                                         <tr>
                                             <th class="start">
                                                 Intervention
@@ -147,10 +147,14 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="bg-brown-lighten-4">
                                         <tr v-for="intervention in  this.interventions">
                                             <td class="start">{{ intervention.typeIntervention }}</td>
                                             <td class="end">{{ intervention.valeurIntervention }}</td>
+                                            <td>
+                                                <v-checkbox class="my-n10" v-model="intervention.etatIntervention"
+                                                    :key="intervention.idIntervention" :label="Fait" />
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </v-table>

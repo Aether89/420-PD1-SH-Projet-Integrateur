@@ -53,7 +53,6 @@ export default {
       this.title = "vente";
     },
     refreshList() {
-      console.log("EMIT REFRESH LIST");
       if (this.title === "vente") {
         this.afficherListeVente();
       } else {
@@ -61,15 +60,15 @@ export default {
       }
     }
   },
-  
+
   computed: {
-     listColour() {
+    listColour() {
       return (this.title === "vente") ? "light-green-lighten-4" : "deep-orange-lighten-4";
+    },
+    bgColour() {
+      return (this.title === "vente") ? "light-green-lighten-5" : "deep-orange-lighten-5";
+    }
   },
-  bgColour() { 
-   return (this.title === "vente") ? "light-green-lighten-5" : "deep-orange-lighten-5"; 
-  }
-},
   mounted() {
     fetchTransactionVente().then(transactions => {
       this.transactions = transactions;
