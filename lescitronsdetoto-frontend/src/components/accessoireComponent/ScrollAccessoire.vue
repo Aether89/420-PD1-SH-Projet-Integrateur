@@ -1,5 +1,5 @@
 <template>
-    <v-card max-width="400" min-width="400" height="650">
+    <v-card class="ma-2" max-width="400" min-width="400" height="650">
         <v-card-item class="bg-orange-darken-4">
             <v-card-title>
                 Liste des accessoires

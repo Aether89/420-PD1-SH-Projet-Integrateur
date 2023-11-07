@@ -1,9 +1,18 @@
 <template  v-if="this.session.user">
-    <v-container class="d-flex block" justify="center">
+    <v-container color="transparent" class="ma-8" v-if="session.user" justify="center">
 
+        <v-row>
+        <v-cols cols="6">
         <ScrollAccessoire />
-        <AccessoireVue />
+        </v-cols>
 
+        <v-cols cols="6">
+        <AccessoireVue />
+        </v-cols>
+        </v-row>
+    </v-container>
+    <v-container v-else>
+        Vous n'avez pas accés à cette page
     </v-container>
 </template>
 <script>

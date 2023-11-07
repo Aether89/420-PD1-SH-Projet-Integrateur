@@ -43,8 +43,8 @@
                                 aria-label="Éditer" @click="sell">Vendre</v-btn>
                             <v-btn class="ma-2" type="button" prepend-icon="mdi-file-edit-outline" color="amber-lighten-3"
                                 aria-label="Éditer" :to="editionURL" router-link>Éditer</v-btn>
-                            <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression"
-                                aria-label="Supprimer" color="red-lighten-3">Supprimer</v-btn>
+                            <!-- <v-btn class="ma-2" type="button" prepend-icon="mdi-delete" @click="suppression"
+                                aria-label="Supprimer" color="red-lighten-3">Supprimer</v-btn> -->
                         </v-card>
 
                         <v-card :color="this.colourSecondary" class="pb-6 text-center mt-4">
@@ -134,10 +134,10 @@
                             </div>
                         </v-card>
                         <v-card v-if="(this.session.user && (this.interventions.length > 0))" class=" mb-8"
-                            color="transparent" rounded="t-lg">
+                            color="brown-lighten-4" rounded="t-lg">
                             <v-col cols="12" sm="12">
-                                <v-table class="mb-8 bg-transparent">
-                                    <thead color="transparent">
+                                <v-table class="mb-8 bg-brown-lighten-3">
+                                    <thead>
                                         <tr>
                                             <th class="start">
                                                 Intervention
@@ -147,7 +147,7 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="bg-brown-lighten-4">
                                         <tr v-for="intervention in  this.interventions">
                                             <td class="start">{{ intervention.typeIntervention }}</td>
                                             <td class="end">{{ intervention.valeurIntervention }}</td>
@@ -246,7 +246,6 @@ export default {
     methods: {
 
         sell() {
-            console.log("this.local.vin", this.id)
             this.AVehicule.vin = this.id;
             this.$router.push("/vente/vehicule");
         },

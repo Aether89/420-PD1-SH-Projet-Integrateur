@@ -23,10 +23,12 @@
                     <v-col cols="6">
                         <v-text-field v-model="this.storeVehicule.description_courte" label="Description courte du véhicule"
                             density="compact" maxlength="64"></v-text-field>
+                            
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
-                        <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"
-                            class="mb-4 flex-wrap" />
+
+                        <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"/>
+
                         <interventionForm :vin="this.storeVehicule.vin" v-if="!nouveauvehicule" />
                         <div v-for=" intervention  in  interventions ">
                             {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox

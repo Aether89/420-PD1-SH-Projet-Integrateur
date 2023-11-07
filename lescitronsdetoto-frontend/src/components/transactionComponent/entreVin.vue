@@ -14,7 +14,7 @@
 
         <v-virtual-scroll :items="this.allVehicles.unfiltredVehicles" height="300">
   <template v-slot="{ item }">
-    <v-row class="ma-2">
+    <v-row v-if="item.etat !== 3" class="ma-2">
         <v-col cols="2">
     {{ item.vin }}
         </v-col>

@@ -289,6 +289,7 @@ const convertToVehiculeList = jsonVehicules => {
     year: jsonVehicules.annee,
     price: jsonVehicules.prix_annonce,
     promo: jsonVehicules.promotion,
+    etat: jsonVehicules.etat,
     selectedAccessoire:jsonVehicules.selectedAccessoire
   }
 };

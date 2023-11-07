@@ -19,7 +19,7 @@
             </v-col>
             <v-col cols="2">
                 <v-btn v-bind="$props" @click="dialog = !dialog">Éditer</v-btn>
-                <v-dialog v-model="dialog" scrollable transition="dialog-bottom-transition" fullscreen>
+                <v-dialog v-model="dialog" persistent scrollable transition="dialog-bottom-transition" fullscreen>
                     <EditionTransaction :id_evenement="item.id_evenement" :strPrix="item.prix_evenement"
                         :idClient="item.id_client" :user_account_id="item.user_account_id"
                         @close-Dialog="closeDialog" />

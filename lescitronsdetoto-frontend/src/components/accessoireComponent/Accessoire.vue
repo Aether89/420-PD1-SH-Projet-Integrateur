@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mx-auto" maxHeight="650" max-width="600">
+    <v-card class="ma-4" maxHeight="650" max-width="600">
         <v-toolbar class="bg-orange-darken-4">
             <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
         </v-toolbar>
@@ -7,7 +7,7 @@
         <v-card-text>
             <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="accessoireform">
                 <v-row>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12">
                         <v-text-field v-model="this.store.nomAccessoire" label="Nom" :rules="[rules.nom]"
                             dense></v-text-field>
                     </v-col>

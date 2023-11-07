@@ -1,7 +1,6 @@
 <template>
-    <v-row justify="center">
-        <v-col cols="12" sm="7" md="6" lg="5">
-            <v-sheet class="mx-auto" elevation="10" rounded="xl" maxHeight="650" max-width="600">
+    <v-container justify="center">
+            <v-sheet elevation="10" rounded="xl" maxHeight="650" >
                 <v-sheet class="pa-3 bg-primary text-center" rounded="t-xl">
                     Listes des accessoires
                     <v-pagination :total-visible="1" :length="this.pagination" v-model="page"></v-pagination>
@@ -17,8 +16,7 @@
                     </v-chip-group>
                 </div>
             </v-sheet>
-        </v-col>
-    </v-row>
+        </v-container>
 </template>
 
 <script>
