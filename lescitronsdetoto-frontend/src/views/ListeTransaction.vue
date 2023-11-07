@@ -53,7 +53,6 @@ export default {
       this.title = "vente";
     },
     refreshList() {
-      console.log("EMIT REFRESH LIST");
       if (this.title === "vente") {
         this.afficherListeVente();
       } else {

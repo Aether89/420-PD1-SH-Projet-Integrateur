@@ -1,5 +1,5 @@
-<template  v-if="this.session.user">
-    <v-container class="d-flex block" justify="center">
+<template  >
+    <v-container  v-if="this.session.user && this.session.user.isAdmin"  class="d-flex block" justify="center">
 
         <listeClient />
 

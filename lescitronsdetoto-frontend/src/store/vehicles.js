@@ -27,15 +27,15 @@ export const useVehiclesStore = defineStore('vehicles', {
     },
 
     minPrice: 0,
-    maxPrice: 500000,
-    priceIncrement: 1000,
+    maxPrice: 50000,
+    priceIncrement: 250,
 
     selected: {
       make: null,
       year: null,
       yearSign: ">=",
       model: null,
-      priceRange: [0, 500000]
+      priceRange: [0, 50000]
     },
     vehicles: [],
     unfiltredVehicles: [],

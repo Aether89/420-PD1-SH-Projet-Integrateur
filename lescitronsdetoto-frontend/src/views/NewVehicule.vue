@@ -133,7 +133,6 @@ export default {
             rules: {
                 required: value => !!value || "Le champ est requis",
                 vinIdUnique: () => this.vinIdUnique || "Ce véhicule existe déjà dans le systeme",
-                //validateNumer: value => !!value || "Le champs doit être supérieur de 0"
             },
             vinIdUnique: true,
 
@@ -167,6 +166,9 @@ export default {
             if (!this.nouveauvehicule) {
 
                 const formatter = new Intl.NumberFormat('en-US');
+                this.storeVehicule.prix_annonce = formatter.format(this.storeVehicule.prix_annonce);
+                this.storeVehicule.promotion = formatter.format(this.storeVehicule.promotion);
+                console.log("prix_annonce ", this.storeVehicule.prix_annonce, " promotion ", this.storeVehicule.promotion);
 
 
             } else {
@@ -196,10 +198,13 @@ export default {
 
                 this.donneesApi = await fetchVIN(this.vehiculeVin);
 
-                this.storeVehicule.marque = this.donneesApi.Make
-                this.storeVehicule.modele = this.donneesApi.Model
-                this.storeVehicule.annee = this.donneesApi.ModelYear
-                await this.storeVehicule.chargerVehicle(this.vehiculeVin)
+                this.storeVehicule.marque = this.donneesApi.Make;
+                this.storeVehicule.modele = this.donneesApi.Model;
+                this.storeVehicule.annee = this.donneesApi.ModelYear;
+                await this.storeVehicule.chargerVehicle(this.vehiculeVin);
+                
+
+                console.log("prix_annonce ", this.storeVehicule.prix_annonce, " promotion ", this.storeVehicule.promotion);
 
             }
         },
@@ -329,10 +334,8 @@ export default {
     mounted() {
         this.autoVin();
         this.rafraichirIntervention();
-        this.rafraichirIntervention();
     },
     created() {
-        console.log('Mode reçu en props :', this.mode);
         this.storeVehicule.newVehicule();
     },
     watch: {

@@ -90,7 +90,6 @@ export default {
       this.idEmploye = await getEmployeID(this.user_account_id);
       this.vin = await this.getVinEvenement();
       this.vehicleStore.getVehicle(this.vin);
-      console.log(JSON.stringify(this.vehicleStore.vehicles,null,2));
     },
     itemProps (item) {
         return {

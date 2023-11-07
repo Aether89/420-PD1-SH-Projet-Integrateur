@@ -67,7 +67,6 @@ export default {
 },
 computed: {
     classItem() {
-        console.log(this.colour);
         return "ma-2 bg-" + this.colour;
 },
 },
