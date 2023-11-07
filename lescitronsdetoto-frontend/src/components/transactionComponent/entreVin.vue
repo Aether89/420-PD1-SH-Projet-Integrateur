@@ -1,4 +1,5 @@
 <template>
+    <v-card class="bg-white mx-auto pa-6">
     <h3>Vin du véhicule</h3>
     <v-row>
         <v-col cols="10">
@@ -14,7 +15,7 @@
 
         <v-virtual-scroll :items="this.allVehicles.unfiltredVehicles" height="300">
   <template v-slot="{ item }">
-    <v-row class="ma-2">
+    <v-row v-if="item.etat !== 3" class="ma-2">
         <v-col cols="2">
     {{ item.vin }}
         </v-col>
@@ -31,7 +32,7 @@
 </v-virtual-scroll>
 <div class="ma-6">
 </div>
-
+    </v-card>
 </template>
 
 <script>

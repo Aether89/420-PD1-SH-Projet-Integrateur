@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-sheet v-if="session.user" class="ma-2">
+        <v-sheet v-if="session.user" class="ma-2 rounded-lg pa-4">
             <v-form @submit.prevent validate-on="submit lazy" ref="vehiculform">
                 <v-row>
                     <v-col cols="6">
@@ -156,7 +156,6 @@ export default {
             rules: {
                 required: value => !!value || "Le champ est requis",
                 vinIdUnique: () => this.vinIdUnique || "Ce véhicule existe déjà dans le systeme",
-                //validateNumer: value => !!value || "Le champs doit être supérieur de 0"
             },
             vinIdUnique: true,
 
@@ -189,6 +188,9 @@ export default {
             if (!this.nouveauvehicule) {
 
                 const formatter = new Intl.NumberFormat('en-US');
+                this.storeVehicule.prix_annonce = formatter.format(this.storeVehicule.prix_annonce);
+                this.storeVehicule.promotion = formatter.format(this.storeVehicule.promotion);
+                console.log("prix_annonce ", this.storeVehicule.prix_annonce, " promotion ", this.storeVehicule.promotion);
 
 
             } else {
@@ -352,10 +354,8 @@ export default {
     mounted() {
         this.autoVin();
         this.rafraichirIntervention();
-        this.rafraichirIntervention();
     },
     created() {
-        console.log('Mode reçu en props :', this.mode);
         this.storeVehicule.newVehicule();
     },
     watch: {

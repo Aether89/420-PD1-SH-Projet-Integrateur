@@ -27,15 +27,15 @@ export const useVehiclesStore = defineStore('vehicles', {
     },
 
     minPrice: 0,
-    maxPrice: 500000,
-    priceIncrement: 1000,
+    maxPrice: 50000,
+    priceIncrement: 250,
 
     selected: {
       make: null,
       year: null,
       yearSign: ">=",
       model: null,
-      priceRange: [0, 500000]
+      priceRange: [0, 50000]
     },
     vehicles: [],
     unfiltredVehicles: [],
@@ -126,7 +126,7 @@ export const useVehiclesStore = defineStore('vehicles', {
     async getVehicle(id) {   
       this.vehicle.local = await fetchVehicle(id);
       this.vehicle.api = await fetchVIN(id);
-      (this.vehicle.local.promo === "0,00 $")? this.vehicle.local.promo = null : this.vehicle.local.promo;
+      (this.vehicle.local.promo === "$0.00")? this.vehicle.local.promo = null : this.vehicle.local.promo;
     },
     async reset() {
   this.loading.models = true;

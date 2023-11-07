@@ -1,8 +1,13 @@
 <template>
-    <v-container class="d-flex block" justify="center" v-if="this.session.user">
+    <v-container v-if="this.session.user">
+        <v-row>
+            <v-col cols="6">
         <listeInterventions />
-
+            </v-col>
+        <v-col cols="6">
         <InterventionsVue />
+        </v-col>
+        </v-row>
     </v-container>
         <v-container v-else class="d-flex block" justify="center">
         vous n'avez pas les droits pour acceder à cette page

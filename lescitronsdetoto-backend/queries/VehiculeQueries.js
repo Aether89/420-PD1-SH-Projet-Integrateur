@@ -12,7 +12,8 @@ const getAllVehicule = async () => {
         prix_annonce, 
         promotion,
         description_courte,
-        description_longue
+        description_longue,
+        id_etat
         FROM
         vehicule`
     );
@@ -25,7 +26,8 @@ const getAllVehicule = async () => {
                 modele: row.modele,
                 annee: row.annee,
                 prix_annonce: row.prix_annonce,
-                promotion: row.promotion
+                promotion: row.promotion,
+                etat: row.id_etat
             };
             return vehicule;
         });

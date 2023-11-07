@@ -16,15 +16,15 @@
           <v-card max-width="600" class="mb-4">
             <v-card-title class="section-title bg-orange darken-4 mb-4" justify="center">Employé</v-card-title>
             <v-card-text>
-              <v-select v-model="idEmploye" :items="employerStore.employes" :item-props="itemProps" label="Employé" dense></v-select>
+              <v-select @keydown.esc="$emit('closeDialog')" v-model="idEmploye" :items="employerStore.employes" :item-props="itemProps" label="Employé" dense></v-select>
             </v-card-text>
           </v-card>
           <!-- Bloc Véhicule -->
           <v-card max-width="600">
             <v-card-title class="section-title bg-orange darken-4 mb-4" justify="center">Véhicule</v-card-title>
             <v-card-text>
-              <v-text-field v-model="vin" label="VIN"></v-text-field>
-              <v-text-field bg-color="white" class="no-spinner" v-model="this.prix" label="Prix de la transaction"
+              <v-text-field @keydown.esc="$emit('closeDialog')" v-model="vin" label="VIN"></v-text-field>
+              <v-text-field  @keydown.esc="$emit('closeDialog')" bg-color="white" class="no-spinner" v-model="this.prix" label="Prix de la transaction"
                 density="compact" type="number" prefix="$" step="0.01" min=0
                 required></v-text-field>
             </v-card-text>
@@ -90,7 +90,6 @@ export default {
       this.idEmploye = await getEmployeID(this.user_account_id);
       this.vin = await this.getVinEvenement();
       this.vehicleStore.getVehicle(this.vin);
-      console.log(JSON.stringify(this.vehicleStore.vehicles,null,2));
     },
     itemProps (item) {
         return {

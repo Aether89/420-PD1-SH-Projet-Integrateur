@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-sheet v-if="session.user" class="ma-2">
+        <v-sheet v-if="session.user" class="ma-2 rounded-xl pa-6">
             <v-form @submit.prevent validate-on="submit lazy" ref="vehiculform">
                 <v-row>
                     <v-col cols="6">
@@ -31,17 +31,17 @@
                                 <td>Année</td>
                                 <td>{{this.storeVehicule.annee}}</td>
                             </tr>
-                            <tr>
+                            <tr v-if="this.storeVehicule.couleur">
                                 <td>Couleur</td>
                                 <td>{{ this.storeVehicule.couleur }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if="this.storeVehicule.nombre_kilometre > 0">
                                 <td>Nombre de kilomètre</td>
                                 <td>{{ this.storeVehicule.nombre_kilometre }}</td>
                             </tr>
                             <tr>
                                 <td>Estimation prix de vente</td>
-                                <td>{{ formatAmount(this.storeVehicule.prix_annonce) }} $</td>
+                                <td>{{ this.storeVehicule.prix_annonce }}</td>
                             </tr>
                             
                             </thead>
@@ -166,21 +166,14 @@ export default {
         },
 
     },
-   
-    created() {
-        console.log("this.session.user.idEmploye : ",this.session.user.idEmploye)
-        console.log("prenom : ", this.storeEmploye.prenomEmploye)
-        console.log("nom vendeur", this.storeEmploye.nomEmploye)
-        
-    },
     mounted() {
         this.storeEmploye.chargerEmploye(this.session.user.idEmploye);
         console.log("mode confirmation : ", this.mode);
         //console.log("storeVehicule", this.storeVehicule.marque)
-        
+        this.storeVehicule.chargerVehicle(this.storeVehicule.vin);
+
     },
     watch() {
-        this.storeVehicule.fetchVehiculeDetail();
     },
 }
 </script>

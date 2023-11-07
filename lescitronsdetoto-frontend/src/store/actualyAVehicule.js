@@ -25,13 +25,14 @@ export const useActualyAVehiculeStore = defineStore('vehicule', {
       this.vin = vin;
       getVehiculefr(vin)
         .then((result) => {
+          console.log("COLOUR", result.couleur, "prix", result.prix_annonce, "promo", result.promotion, "kilometre", result.nombre_kilometre, "description", result.description_courte, "description longue", result.description_longue, "marque", result.marque, "modele", result.modele, "annee", result.annee, "accessoire", result.accessoires);
           this.isNew = false;
           this.vin = result.vin;
           this.id_etat = result.id_etat;
           this.couleur = result.couleur;
           this.nombre_kilometre = result.nombre_kilometre;
-          this.prix_annonce = parseFloat(result.prix_annonce.replace(/\s+/g, '').replace(',', '.')).toFixed(2);
-          this.promotion = parseFloat(result.promotion.replace(/\s+/g, '').replace(',', '.')).toFixed(2);
+          this.prix_annonce = parseFloat(result.prix_annonce.replace(/[\s$,]+/g, '').replace('.', ',')).toFixed(2);
+          this.promotion = parseFloat(result.promotion.replace(/[\s$,]+/g, '').replace('.', ',')).toFixed(2);
           this.description_courte = result.description_courte;
           this.description_longue = result.description_longue;
           this.marque = result.marque;
