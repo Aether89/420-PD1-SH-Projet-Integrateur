@@ -238,6 +238,7 @@ export default {
                 return;
             } else {
                 this.storeVehicule.isValidate2 = true;
+                this.storeVehicule.selectedAccessoire = this.selectedAccessoire;
             }
         },
         async validateVehicule() {
