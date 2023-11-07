@@ -1,8 +1,8 @@
 <template>
-    <v-container width="100%" color="amber">
+    <v-sheet class="mx-16 my-4" color="transparent">
         <mobileSearchBar v-if="!isSM"></mobileSearchBar>
         <desktopSearchBar v-else></desktopSearchBar>
-    </v-container>
+    </v-sheet>
 </template>
 
 <script>
@@ -18,7 +18,7 @@ export default {
     },
     computed: {
         isSM() {
-            return this.$vuetify.display.smAndUp;
+            return this.$vuetify.display.mdAndUp;
         },
 
     },

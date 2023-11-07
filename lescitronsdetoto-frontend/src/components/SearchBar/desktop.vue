@@ -1,12 +1,12 @@
 <template>
-    <v-card :color="colourAccent" class="pt-2">
+    <v-card :color="colourAccent" class="pt-2 rounded">
         <v-row no-gutters class="mx-2">
             <v-col cols="4">
             <v-select :loading="loadingMakes" bg-color="grey-lighten-3" label="Marque" v-model="this.store.selected.make" :items="this.store.makes"
                 density="compact" clearable></v-select>
             </v-col>
             <v-col cols="3">
-            <v-select  :disabled="!this.store.selected.make" bg-color="grey-lighten-3" label="Modéle" v-model="this.store.selected.model" :items="this.store.models"
+            <v-select  nav :disabled="!this.store.selected.make" bg-color="grey-lighten-3" label="Modéle" v-model="this.store.selected.model" :items="this.store.models"
                 density="compact" clearable></v-select>
             </v-col>
             <v-col cols="3">

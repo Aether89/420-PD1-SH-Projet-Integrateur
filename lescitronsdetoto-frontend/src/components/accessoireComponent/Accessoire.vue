@@ -1,5 +1,5 @@
 <template>
-    <v-card class="ma-4" maxHeight="650" max-width="600">
+    <v-card class="mx-4" maxHeight="650" max-width="600">
         <v-toolbar class="bg-orange-darken-4">
             <v-toolbar-title class="text-h5">{{ txt.title }}</v-toolbar-title>
         </v-toolbar>

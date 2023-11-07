@@ -1,19 +1,18 @@
-<template  v-if="this.session.user">
-    <v-container color="transparent" class="ma-8" v-if="session.user" justify="center">
-
+<template>
+    <v-container v-if="this.session.user">
         <v-row>
-        <v-cols cols="6">
+            <v-col cols="6">
         <ScrollAccessoire />
-        </v-cols>
-
-        <v-cols cols="6">
+            </v-col>
+        <v-col cols="6">
         <AccessoireVue />
-        </v-cols>
+        </v-col>
         </v-row>
     </v-container>
-    <v-container v-else>
-        Vous n'avez pas accés à cette page
+        <v-container v-else class="d-flex block" justify="center">
+        vous n'avez pas les droits pour acceder à cette page
     </v-container>
+
 </template>
 <script>
 import ScrollAccessoire from '@/components/accessoireComponent/ScrollAccessoire.vue';
