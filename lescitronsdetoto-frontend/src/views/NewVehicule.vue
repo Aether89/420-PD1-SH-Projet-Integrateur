@@ -26,10 +26,10 @@
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
                         <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"
-                            class="mb-4 flex-wrap" />{{ selectedAccessoire }}
+                            class="mb-4 flex-wrap" />
                         <interventionForm :vin="this.storeVehicule.vin" class="mb-4" v-if="!nouveauvehicule"
                             @refresh-list="refreshList" />
-                        <v-card v-if="session.user && interventions" class="ma-8" color="brown-lighten-4" rounded="t-lg">
+                        <v-card v-if="session.user && interventions && !nouveauvehicule" class="ma-8" color="brown-lighten-4" rounded="t-lg">
                             <v-col cols="12" sm="12">
                                 <v-table class="mb-8 bg-brown-lighten-3">
                                     <thead>
