@@ -17,18 +17,18 @@
       <v-window v-model="step">
         <v-window-item :value="1">
         <v-card-text>
-            <entreVin :step="step" :mode="mode" :id="id "/>
+            <entreVin class="mx-auto" :mode="mode" :id="id "/>
         </v-card-text>
       </v-window-item>
 
         <v-window-item :value="2">
             <v-card-text>
-                <NewClient :step="step" :mode="mode" :id="id"/>
+                <NewClient class="mx-auto" :step="step" :mode="mode" :id="id"/>
             </v-card-text>
         </v-window-item>
   
         <v-window-item :value="3">
-          <Confirmation :step="step" :mode="mode" :id="id"/>
+          <Confirmation class="mx-auto" :step="step" :mode="mode" :id="id"/>
         </v-window-item>
       </v-window>
   

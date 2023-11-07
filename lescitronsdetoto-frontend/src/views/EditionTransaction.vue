@@ -24,7 +24,7 @@
             <v-card-title class="section-title bg-orange darken-4 mb-4" justify="center">Véhicule</v-card-title>
             <v-card-text>
               <v-text-field @keydown.esc="$emit('closeDialog')" v-model="vin" label="VIN"></v-text-field>
-              <v-text-field bg-color="white" class="no-spinner" v-model="this.prix" label="Prix de la transaction"
+              <v-text-field  @keydown.esc="$emit('closeDialog')" bg-color="white" class="no-spinner" v-model="this.prix" label="Prix de la transaction"
                 density="compact" type="number" prefix="$" step="0.01" min=0
                 required></v-text-field>
             </v-card-text>
