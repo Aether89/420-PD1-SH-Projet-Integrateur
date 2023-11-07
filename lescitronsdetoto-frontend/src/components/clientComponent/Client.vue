@@ -231,9 +231,10 @@ export default {
     },
     mounted() {
         this.store.newClient();
+        this.store.nomProvince = "Québec";
+
     },
     created() {
-        this.store.nomProvince[7]
     },
 }
 

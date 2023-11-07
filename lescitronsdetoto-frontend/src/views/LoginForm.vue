@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="ma-2" max-width="40rem">
+    <v-sheet class="ma-2 mx-auto mt-8 pa-4 rounded-xl" max-width="40rem">
         <v-form @submit.prevent="login" validate-on="submit lazy" ref="loginform">
             <v-text-field v-model="userAccountId" label="Identifiant utilisateur"
                 :rules="[rules.required, rules.passwordValid]" density="compact"></v-text-field>
@@ -7,9 +7,6 @@
                 :rules="[rules.required, rules.passwordValid]" density="compact"></v-text-field>
             <v-btn type="submit" :disabled="!userAccountId || !password">Se connecter</v-btn>
         </v-form>
-        <div class="text-body ma-3">Vous n'avez pas de compte utilisateur ?&nbsp;
-            <router-link to="/login/new" replace>Créez-en un !</router-link>
-        </div>
     </v-sheet>
 </template>
 
