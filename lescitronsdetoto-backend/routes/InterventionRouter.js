@@ -63,11 +63,11 @@ router.get("/:id", (req, res, next) => {
         });
 });
 
-router.post(`/wvin/:vin`,
+router.post(`/wvin`,
     passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         const user = req.user;
-        const vin = req.params.vin;
+        const vin = req.body.vin;
 
         if (!user || !user) {
             return next(new HttpError(403, "Doit etre authentifié pour ajouter une intervention"));
@@ -139,7 +139,7 @@ router.put('/:id',
             return next(new HttpError(400, 'Le paramètre id est requis'));
         }
 
-        if (id !== req.body.idIntervention) {
+        if (id != req.body.idIntervention) {
             return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que l'utilisateur fourni a l'id ${req.body.idIntervention}`));
         }
 
@@ -166,7 +166,7 @@ router.put('/:id',
     }
 );
 
-router.put('/wvin/:id/:vin',
+router.put('/wvin/:id',
    
     passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
@@ -182,7 +182,7 @@ router.put('/wvin/:id/:vin',
             return next(new HttpError(400, 'Le paramètre id est requis'));
         }
 
-        if (id !== req.body.idIntervention) {
+        if (id != req.body.idIntervention) {
             return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que l'utilisateur fourni a l'id ${req.body.idIntervention}`));
         }
 
@@ -195,10 +195,7 @@ router.put('/wvin/:id/:vin',
                 valeurIntervention: parseFloat(req.body.valeurIntervention.replace(/\s+/g, '').replace(',', '.')),
                 etatIntervention: req.body.etatIntervention,
             }
-            const ifExist = await InterventionQueries.getInterventionByVin(vin);
-            if (!ifExist) {
-               return trhow (new HttpError(404, `Intervention introuvable`));
-            }
+          
             const updatedIntervention = await InterventionQueries.updateIntervention(intervention);
 
             if (!updatedIntervention) {

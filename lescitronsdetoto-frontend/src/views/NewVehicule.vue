@@ -26,11 +26,10 @@
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
                         <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"
-                            class="mb-4 flex-wrap" />
+                            class="mb-4 flex-wrap" />{{ selectedAccessoire }}
                         <interventionForm :vin="this.storeVehicule.vin" class="mb-4" v-if="!nouveauvehicule"
                             @refresh-list="refreshList" />
-                        <v-card v-if="session.user && interventions.length > 0" class="ma-8" color="brown-lighten-4"
-                            rounded="t-lg">
+                        <v-card v-if="session.user && interventions" class="ma-8" color="brown-lighten-4" rounded="t-lg">
                             <v-col cols="12" sm="12">
                                 <v-table class="mb-8 bg-brown-lighten-3">
                                     <thead>
@@ -49,7 +48,9 @@
                                             <td class="start">{{ intervention.typeIntervention }}</td>
                                             <td class="end">{{ intervention.valeurIntervention }}</td>
                                             <td>
-                                                <v-checkbox v-model="intervention.etatIntervention" />
+                                                <input type="checkbox" @click="check(intervention)"
+                                                    v-model="intervention.etatIntervention">
+
                                             </td>
                                         </tr>
                                     </tbody>
@@ -107,7 +108,7 @@
 <script>
 import session from '../session';
 import { useInterventionStore } from '@/store/intervention';
-import { fetchInterventionByVIN, updateIntervention } from '@/services/InterventionService';
+import { fetchInterventionByVIN, updateInterventionWvin } from '@/services/InterventionService';
 import { useVehiclesStore } from '@/store/vehicles';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 import { createVehicule, udpateVoiture } from '../services/vehicule';
@@ -163,6 +164,9 @@ export default {
         };
     },
     methods: {
+        check(intervention) {
+            updateInterventionWvin(intervention, this.vin);
+        },
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
                 this.errorMessagesPromotion = ['Le prix de la promotion ne doit pas être supérieur ou égale au prix annoncé'];
@@ -208,7 +212,7 @@ export default {
                     promotion: 0,
                     description_courte: null,
                     description_longue: null,
-                    selectedAccessoire: []
+                    selectedAccessoire: this.selectedAccessoire
                 }
                 this.rafraichirIntervention();
 
@@ -359,9 +363,10 @@ export default {
         this.storeVehicule.newVehicule();
     },
     watch: {
-        'interventions.etatIntervention': function (newVal, oldVal) {
+        check(newVal) {
+            console.log('Nouvelle valeur de etatIntervention : ', newVal);
             this.intervention.etatIntervention = newVal;
-            updateIntervention(this.intervention);
+            updateIntervention(intervention);
             console.log('Nouvelle valeur de etatIntervention : ', newVal);
         },
 

@@ -21,7 +21,7 @@
                 <v-btn type="submit" :disabled="!this.store.typeIntervention">{{
                     txt.btn }}</v-btn>
                 <v-btn type="button" @click="(this.store.chargerIntervention(this.store.idIntervention))">Annuler</v-btn>
-                <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+                <v-btn v-if="session.user.isAdmin && !vin" type="button" @click="supprimer">Supprimer</v-btn>
             </v-form>
         </v-card-text>
     </v-card>

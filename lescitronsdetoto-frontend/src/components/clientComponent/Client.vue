@@ -9,12 +9,13 @@
             <v-form @submit.prevent="submit" validate-on="submit lazy && blur" ref="clientform">
                 <v-row>
                     <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="this.store.prenomClient" label="Prénom" :rules="[rules.prenom]"
-                            dense maxlength="64"></v-text-field>
+                        <v-text-field v-model="this.store.prenomClient" label="Prénom" :rules="[rules.prenom]" dense
+                            maxlength="64"></v-text-field>
                     </v-col>
 
                     <v-col cols="12" sm="6" md="6">
-                        <v-text-field v-model="this.store.nomClient" label="Nom" :rules="[rules.nom]" dense maxlength="64"></v-text-field>
+                        <v-text-field v-model="this.store.nomClient" label="Nom" :rules="[rules.nom]" dense
+                            maxlength="64"></v-text-field>
                     </v-col>
 
                     <v-row v-if="mode === 'reservation'">
@@ -24,19 +25,19 @@
                             <v-radio label="Courriel" :value="1"></v-radio>
                         </v-radio-group>
                         <v-col v-if="inline === 1" cols="12">
-                            <v-text-field v-model="this.store.courriel" label="courriel" :rules="[rules.courriel]"
-                                dense maxlength="64"></v-text-field>
+                            <v-text-field v-model="this.store.courriel" label="courriel" :rules="[rules.courriel]" dense
+                                maxlength="64"></v-text-field>
                         </v-col>
                         <v-col v-else-if="inline === 0" cols="12">
-                            <v-text-field v-model="this.store.telephoneClient" label="Téléphone"
-                                :rules="[rules.telephone]" class="no-spinner" dense maxlength="16"></v-text-field>
+                            <v-text-field v-model="this.store.telephoneClient" label="Téléphone" :rules="[rules.telephone]"
+                                class="no-spinner" dense maxlength="16"></v-text-field>
                         </v-col>
 
                     </v-row>
                     <v-row v-else>
                         <v-col cols="12">
-                            <v-text-field v-model="this.store.telephoneClient" label="Téléphone"
-                                :rules="[rules.telephone]" class="no-spinner" dense maxlength="16"></v-text-field>
+                            <v-text-field v-model="this.store.telephoneClient" label="Téléphone" :rules="[rules.telephone]"
+                                class="no-spinner" dense maxlength="16"></v-text-field>
                         </v-col>
 
                         <v-col cols="12" md="3">
@@ -48,20 +49,21 @@
                                 :rules="[rules.numeroAppartement]" dense maxlength="6"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-text-field v-model="this.store.nomRue" label="Nom de la rue" :rules="[rules.nomRue]"
-                                dense maxlength="64"></v-text-field>
+                            <v-text-field v-model="this.store.nomRue" label="Nom de la rue" :rules="[rules.nomRue]" dense
+                                maxlength="64"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-text-field v-model="this.store.nomVille" label="Ville" :rules="[rules.nomVille]"
-                                dense maxlength="64"></v-text-field>
+                            <v-text-field v-model="this.store.nomVille" label="Ville" :rules="[rules.nomVille]" dense
+                                maxlength="64"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-select v-model="this.store.nomProvince" :items="this.province" maxlength="64" label="Province"
-                                dense></v-select>
+                            <v-select v-model="this.store.nomProvince" :items="this.province" maxlength="64"
+                                label="Province" dense></v-select>
                         </v-col>
                         <v-col cols="12">
                             <v-text-field class="mb-10" v-model="this.store.codePostal" label="Code postal du client"
-                                :rules="[rules.codePostal]" dense maxlength="6" hint="Inscrire sous le format H0H0H0"></v-text-field>
+                                :rules="[rules.codePostal]" dense maxlength="6"
+                                hint="Inscrire sous le format H0H0H0"></v-text-field>
                         </v-col>
                     </v-row>
 
@@ -107,20 +109,20 @@ export default {
             rules: rules,
             inline: 0,
             province: [
-  "Alberta",
-  "Colombie-Britannique",
-  "Île-du-Prince-Édouard",
-  "Manitoba",
-  "Nouveau-Brunswick",
-  "Nouvelle-Écosse",
-  "Ontario",
-  "Québec",
-  "Saskatchewan",
-  "Terre-Neuve-et-Labrador",
-  "Territoires du Nord-Ouest", 
-  "Nunavut", 
-  "Yukon"
-],
+                "Alberta",
+                "Colombie-Britannique",
+                "Île-du-Prince-Édouard",
+                "Manitoba",
+                "Nouveau-Brunswick",
+                "Nouvelle-Écosse",
+                "Ontario",
+                "Québec",
+                "Saskatchewan",
+                "Terre-Neuve-et-Labrador",
+                "Territoires du Nord-Ouest",
+                "Nunavut",
+                "Yukon"
+            ],
         };
     },
     methods: {
@@ -192,7 +194,7 @@ export default {
     computed: {
 
         txt() {
-            return (this.mode === 'transaction') ? { title: "Client", btn: "Modifier"} : (this.store.isNew) ? { title: "Nouveau Client", btn: "Créer" } : { title: "Client Existant", btn: "Modifier" };
+            return (this.mode === 'transaction') ? { title: "Client", btn: "Modifier" } : (this.store.isNew) ? { title: "Nouveau Client", btn: "Créer" } : { title: "Client Existant", btn: "Modifier" };
         },
 
         watchNom() {

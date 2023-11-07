@@ -152,8 +152,9 @@
                                             <td class="start">{{ intervention.typeIntervention }}</td>
                                             <td class="end">{{ intervention.valeurIntervention }}</td>
                                             <td>
-                                                <v-checkbox class="my-n10" v-model="intervention.etatIntervention"
-                                                    :key="intervention.idIntervention" :label="Fait" />
+                                                <input type="checkbox" @click="check(intervention)"
+                                                    v-model="intervention.etatIntervention">
+
                                             </td>
                                         </tr>
                                     </tbody>
@@ -179,7 +180,7 @@ import { useAppStore } from '@/store/app';
 import { deleteVehicule } from '@/services/vehicule';
 import { useAccessoireStore } from '@/store/accessoire';
 import { fetchAccessoireById } from '@/services/AccessoireService';
-import { fetchInterventionByVIN } from '@/services/InterventionService';
+import { fetchInterventionByVIN, updateInterventionWvin } from '@/services/InterventionService';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 
 
@@ -248,6 +249,9 @@ export default {
         },
     },
     methods: {
+        check(intervention) {
+            updateInterventionWvin(intervention, this.vin);
+        },
 
         sell() {
             this.AVehicule.vin = this.id;

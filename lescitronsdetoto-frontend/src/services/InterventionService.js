@@ -124,13 +124,13 @@ export async function updateIntervention(Intervention) {
 }
 
 export async function updateInterventionWvin(Intervention,vin) {
-    const response = await fetch(`/api/interventions/wvin/${Intervention.idIntervention}/${vin}`, {
+    const response = await fetch(`/api/interventions/wvin/${Intervention.idIntervention}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             ...session.getAuthHeaders()
         },
-        body: JSON.stringify(Intervention)
+        body: JSON.stringify(Intervention,vin)
     });
 
     if (response.ok) {
