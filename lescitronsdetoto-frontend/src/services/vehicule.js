@@ -59,7 +59,6 @@ export async function getVehiculefr(vin) {
 
         const response = await fetch(`/api/vehicule/${vin}`);
   
-        console.log("respone un vehicule", response);
         if (response.ok) {
           return convertToVehiculefr(await response.json());
         } else {

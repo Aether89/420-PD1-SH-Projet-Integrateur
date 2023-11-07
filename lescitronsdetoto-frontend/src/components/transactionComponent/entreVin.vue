@@ -1,4 +1,5 @@
 <template>
+    <v-card class="bg-white mx-auto pa-6">
     <h3>Vin du véhicule</h3>
     <v-row>
         <v-col cols="10">
@@ -31,7 +32,7 @@
 </v-virtual-scroll>
 <div class="ma-6">
 </div>
-
+    </v-card>
 </template>
 
 <script>

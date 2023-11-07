@@ -1,6 +1,6 @@
 <template>
     <v-card
-      class="mx-auto"
+      class=" bg-grey-lighten-3 mt-4 mx-auto"
       max-width="80%"
     ><v-toolbar class="bg-orange-darken-4">
       <v-card-title class="text-h6 font-weight-regular justify-space-between">
@@ -135,7 +135,6 @@
         }
       },
       goToPreviousStep() {
-        console.log("step", this.step)
         if(this.step === 3) {
           this.storeVehicule.isValidate2 = false;
          
@@ -143,7 +142,6 @@
           this.storeClient.isValidate = false;
          
         }
-        console.log("step ", this.step)
       },
       jouter() {
         const transAchat = {
@@ -177,7 +175,6 @@
           },
           body: JSON.stringify(transAchat)
         }).then((response) => {
-          console.log("response : ", response)
           if (response.ok) {
             this.$router.push(`/vehicle/${transAchat.vin}`);
           } else {
@@ -196,11 +193,6 @@
       }
     },
     created() {
-      console.log('Mode reçu en props :', this.mode);
-      console.log('Session :', this.session.user)
-      //console.log('Admin :', session.user.isAdmin);
-      console.log("step", this.step)
-      console.log("Validate", this.storeClient.isValidate)
       this.storeVehicule.newVehicule();
       this.storeTrans.newTrans();
     },

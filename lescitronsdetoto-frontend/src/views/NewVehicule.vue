@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-sheet v-if="session.user" class="ma-2">
+        <v-sheet v-if="session.user" class="ma-2 rounded-lg pa-4">
             <v-form @submit.prevent validate-on="submit lazy" ref="vehiculform">
                 <v-row>
                     <v-col cols="6">
