@@ -1,5 +1,5 @@
 <template>
-    <v-container v-if="this.session.user">
+    <v-container class="d-flex block" v-if="this.session.user">
         <v-row>
             <v-col cols="6">
         <listeInterventions />
