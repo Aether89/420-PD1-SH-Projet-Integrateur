@@ -21,7 +21,7 @@
                 <v-btn type="submit" :disabled="!this.store.typeIntervention">{{
                     txt.btn }}</v-btn>
                 <v-btn type="button" @click="(this.store.chargerIntervention(this.store.idIntervention))">Annuler</v-btn>
-                <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
+                <v-btn v-if="session.user.isAdmin && !vin" type="button" @click="supprimer">Supprimer</v-btn>
             </v-form>
         </v-card-text>
     </v-card>
@@ -76,6 +76,7 @@ export default {
                 if (vin) { await fetchInterventionByVIN(vin); } else { await this.store.getInterventions(); }
 
                 this.store.newIntervention();
+                this.$emit('refresh-list')
             } catch (err) {
                 console.error(err);
                 alert(err.message);
@@ -103,6 +104,7 @@ export default {
 
 
     },
+
     computed: {
         txt() {
             return (this.store.isNew) ? { title: "Nouvel Intervention", btn: "Créer" } : { title: "Intervention Existant", btn: "Modifier" };

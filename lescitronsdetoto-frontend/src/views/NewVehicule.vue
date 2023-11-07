@@ -23,17 +23,41 @@
                     <v-col cols="6">
                         <v-text-field v-model="this.storeVehicule.description_courte" label="Description courte du véhicule"
                             density="compact" maxlength="64"></v-text-field>
-                            
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
+                        <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"
+                            class="mb-4 flex-wrap" />{{ selectedAccessoire }}
+                        <interventionForm :vin="this.storeVehicule.vin" class="mb-4" v-if="!nouveauvehicule"
+                            @refresh-list="refreshList" />
+                        <v-card v-if="session.user && interventions" class="ma-8" color="brown-lighten-4" rounded="t-lg">
+                            <v-col cols="12" sm="12">
+                                <v-table class="mb-8 bg-brown-lighten-3">
+                                    <thead>
+                                        <tr>
+                                            <th class="start">
+                                                Intervention
+                                            </th>
+                                            <th class="end">
+                                                Prix
+                                            </th>
+                                            <th>Fait</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-brown-lighten-4">
+                                        <tr v-for="intervention in interventions" :key="intervention.id">
+                                            <td class="start">{{ intervention.typeIntervention }}</td>
+                                            <td class="end">{{ intervention.valeurIntervention }}</td>
+                                            <td>
+                                                <input type="checkbox" @click="check(intervention)"
+                                                    v-model="intervention.etatIntervention">
 
-                        <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+                            </v-col>
+                        </v-card>
 
-                        <interventionForm :vin="this.storeVehicule.vin" v-if="!nouveauvehicule" />
-                        <div v-for=" intervention  in  interventions ">
-                            {{ intervention.nomIntervention }}{{ intervention.prixIntervention }} <v-checkbox
-                                v-model="this.storeIntervention.etatIntervention" label="Fait" dense></v-checkbox>
-                        </div>
                     </v-col>
                 </v-row>
 
@@ -84,7 +108,7 @@
 <script>
 import session from '../session';
 import { useInterventionStore } from '@/store/intervention';
-import { fetchInterventionByVIN } from '@/services/InterventionService';
+import { fetchInterventionByVIN, updateInterventionWvin } from '@/services/InterventionService';
 import { useVehiclesStore } from '@/store/vehicles';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 import { createVehicule, udpateVoiture } from '../services/vehicule';
@@ -140,7 +164,9 @@ export default {
         };
     },
     methods: {
-
+        check(intervention) {
+            updateInterventionWvin(intervention, this.vin);
+        },
         validatePromotion() {
             if (this.storeVehicule.promotion >= this.storeVehicule.prix_annonce) {
                 this.errorMessagesPromotion = ['Le prix de la promotion ne doit pas être supérieur ou égale au prix annoncé'];
@@ -186,7 +212,7 @@ export default {
                     promotion: 0,
                     description_courte: null,
                     description_longue: null,
-                    selectedAccessoire: []
+                    selectedAccessoire: this.selectedAccessoire
                 }
                 this.rafraichirIntervention();
 
@@ -198,13 +224,10 @@ export default {
 
                 this.donneesApi = await fetchVIN(this.vehiculeVin);
 
-                this.storeVehicule.marque = this.donneesApi.Make;
-                this.storeVehicule.modele = this.donneesApi.Model;
-                this.storeVehicule.annee = this.donneesApi.ModelYear;
-                await this.storeVehicule.chargerVehicle(this.vehiculeVin);
-                
-
-                console.log("prix_annonce ", this.storeVehicule.prix_annonce, " promotion ", this.storeVehicule.promotion);
+                this.storeVehicule.marque = this.donneesApi.Make
+                this.storeVehicule.modele = this.donneesApi.Model
+                this.storeVehicule.annee = this.donneesApi.ModelYear
+                await this.storeVehicule.chargerVehicle(this.vehiculeVin)
 
             }
         },
@@ -304,19 +327,20 @@ export default {
             }
         },
         async rafraichirIntervention() {
+            console.log('rafraichirIntervention', this.interventions);
             return this.interventions = await fetchInterventionByVIN(this.vehiculeVin);
         },
         async receiveEmit(data) {
             this.selectedAccessoire = data;
         },
+        refreshList() {
+            console.log('refreshList');
+            this.rafraichirIntervention();
+        }
+
 
     },
     computed: {
-        async interventions() {
-            const interventionsload = await fetchInterventionByVIN(this.vehiculeVin);
-            return interventionsload;
-
-        },
 
         nouveauvehicule() {
             return this.mode === 'vehicule';
@@ -339,6 +363,12 @@ export default {
         this.storeVehicule.newVehicule();
     },
     watch: {
+        check(newVal) {
+            console.log('Nouvelle valeur de etatIntervention : ', newVal);
+            this.intervention.etatIntervention = newVal;
+            updateIntervention(intervention);
+            console.log('Nouvelle valeur de etatIntervention : ', newVal);
+        },
 
         selectedAccessoire() {
             this.$emit('receiveDataFromChild', this.selectedAccessoire);
