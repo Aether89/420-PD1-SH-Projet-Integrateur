@@ -178,7 +178,7 @@ const createInterventionWvin = async (intervention, vin) => {
     }
 
     await client.query('COMMIT');
-
+console.log(result2.rows[0].id_intervention);
     return result2.rows[0].id_intervention;
   } catch (err) {
     await client.query('ROLLBACK');

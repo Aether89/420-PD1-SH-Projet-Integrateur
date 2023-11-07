@@ -29,7 +29,8 @@
                             class="mb-4 flex-wrap" />
                         <interventionForm :vin="this.storeVehicule.vin" class="mb-4" v-if="!nouveauvehicule"
                             @refresh-list="refreshList" />
-                        <v-card v-if="session.user && interventions && !nouveauvehicule" class="ma-8" color="brown-lighten-4" rounded="t-lg">
+                        <v-card v-if="session.user && interventions && !nouveauvehicule" class="ma-8"
+                            color="brown-lighten-4" rounded="t-lg">
                             <v-col cols="12" sm="12">
                                 <v-table class="mb-8 bg-brown-lighten-3">
                                     <thead>
@@ -329,7 +330,9 @@ export default {
         },
         async rafraichirIntervention() {
             console.log('rafraichirIntervention', this.interventions);
-            return this.interventions = await fetchInterventionByVIN(this.vehiculeVin);
+            this.interventions = await fetchInterventionByVIN(this.id);
+
+
         },
         async receiveEmit(data) {
             this.selectedAccessoire = data;
@@ -337,11 +340,13 @@ export default {
         refreshList() {
             console.log('refreshList');
             this.rafraichirIntervention();
+
         }
 
 
     },
     computed: {
+
 
         nouveauvehicule() {
             return this.mode === 'vehicule';

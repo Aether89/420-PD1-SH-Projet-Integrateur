@@ -262,7 +262,7 @@ export default {
 
         },
         async getAccessoires() {
-            this.selectedAccessoire = await this.Accessoires.fetchAccessoireByVIN();
+            this.selectedAccessoire = await this.Accessoires.fetchAccessoireByVIN(this.id);
         },
         async nomAccessoire() {
             const names = [];
@@ -280,8 +280,8 @@ export default {
         async loadData() {
             this.load = true;
             await this.store.getVehicle(this.id);
-            this.Accessoires.getAccessoires();
-            await this.getInterventions();
+            this.getAccessoires();
+            this.getInterventions();
             this.names = await this.nomAccessoire();
 
 

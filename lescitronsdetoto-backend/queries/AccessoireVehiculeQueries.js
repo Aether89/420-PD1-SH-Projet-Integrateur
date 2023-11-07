@@ -6,9 +6,7 @@ const addAccessoireVehicule = async (idAccessoire, vin) => {
    
     let resultat = [];
     let i=0;
-      while (i < idAccessoire.length) {
-    if (isNaN(idAccessoire[i])) { i++;}       
-            if (isNaN(idAccessoire[i])) { i++; }
+     for(let i=0; i<idAccessoire.length; i++){
 
             const result = await pool.query(
                 `INSERT INTO vehicule_accessoire (vin, id_accessoire) 
@@ -19,7 +17,7 @@ const addAccessoireVehicule = async (idAccessoire, vin) => {
           if (result.rows.length === 0) {
               throw new HttpError(`Impossible de trouver le véhicule avec id_accessoire ${idAccessoire}`, 404);
             }
-          resultat.push(result.rows[0].id_accessoire );
+          
             i++;
         }
 
@@ -29,9 +27,8 @@ const addAccessoireVehicule = async (idAccessoire, vin) => {
     // Déclarez newAccessoire en dehors de la boucle for
     let newAccessoire = [];
 
-    for (let i = 0; i < resultat.length; i++) {
-        const row = resultat[i];
-        const accessoire = await accessoireQuerie.getAccessoire(row);
+    for (let i = 0; i < idAccessoire.length; i++) {
+                const accessoire = await accessoireQuerie.getAccessoire(idAccessoire[i]);
         newAccessoire.push(accessoire);
     }
 
@@ -74,7 +71,7 @@ exports.getAccessoireVehicule = getAccessoireVehicule;
 const updateAccessoireVehicule = async (vin,idAccessoire) => {
  
         const result = await pool.query(
-            `UPDATE accessoireVehicule SET  id_accessoire = $2
+            `UPDATE accessoire_vehicule SET  id_accessoire = $2
             WHERE vin = $1`,
             [idAccessoire, vin]
         );

@@ -63,11 +63,11 @@ router.get("/:id", (req, res, next) => {
         });
 });
 
-router.post(`/wvin`,
+router.post(`/wvin/:vin`,
     passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
         const user = req.user;
-        const vin = req.body.vin;
+        const vin = req.params.vin;
 
         if (!user || !user) {
             return next(new HttpError(403, "Doit etre authentifié pour ajouter une intervention"));
@@ -166,7 +166,7 @@ router.put('/:id',
     }
 );
 
-router.put('/wvin/:id',
+router.put('/wvin/:id/:vin',
    
     passport.authenticate('basic', { session: false }),
     async (req, res, next) => {
