@@ -61,10 +61,10 @@ export default {
       return priceFormatting(this.price);
     },
     formatedPromo() {
-      return (this.promo === "$0.00") ? null : this.promo;
+      return (this.promo === "0,00$" ||this.promo === "$0.00") ? null : this.promo;
     },
     hasPromo() {
-      return (this.promo === "$0.00" || this.promo === null) ? false : true;
+      return (this.promo === "0,00$" ||this.promo === "$0.00" || this.promo === null) ? false : true;
     },
     colourPrimary() {
       return (!this.promo) ? appStore.colourPrimary : appStore.colourTernary;
