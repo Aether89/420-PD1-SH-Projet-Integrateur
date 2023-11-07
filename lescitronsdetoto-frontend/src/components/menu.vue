@@ -20,12 +20,11 @@
         title="Gestion des Interventions" />
     <v-list-item prepend-icon="mdi-car-cog" density="compact" to="/listeAccessoires"
         title="Gestion des Accessoires" />
-        <v-divider/>
-
+        <v-divider thickness="1"/>
         <v-list-item prepend-icon="mdi-chart-line" density="compact" to="/transaction" title="Gestion des Transactions" />
 </div>
 <div v-if="session.user && session.user.isAdmin">
-  <v-divider/>
+  <v-divider thickness="3"/>
   <v-list-item type="subheader" density="compact" title="Administration" />
 
     <v-list-item prepend-icon="mdi-badge-account-horizontal-outline" density="compact" to="/listeEmployes" title="Gestion Employés" />
