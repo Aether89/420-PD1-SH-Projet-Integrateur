@@ -93,7 +93,7 @@ router.post('/', passport.authenticate('basic', { session: false }), async (req,
             promotion: req.body.promotion,
             description_courte: "" + req.body.description_courte,
             description_longue: "" + req.body.description_longue,
-            selectedAccessoire:"" + req.body.selectedAccessoire,
+            selectedAccessoire: req.body.selectedAccessoire,
             
         };
         const newClient = {
