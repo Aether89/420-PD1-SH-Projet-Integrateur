@@ -41,7 +41,7 @@
                             </tr>
                             <tr>
                                 <td>Estimation prix de vente</td>
-                                <td>{{ this.storeVehicule.prix_annonce }}</td>
+                                <td>{{ formatAmount(this.storeVehicule.prix_annonce) }} $</td>
                             </tr>
                             
                             </thead>

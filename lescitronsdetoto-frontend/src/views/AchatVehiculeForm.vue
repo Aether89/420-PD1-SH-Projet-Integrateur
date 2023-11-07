@@ -165,7 +165,8 @@
           nomVille: this.storeClient.nomVille,
           nomProvince: this.storeClient.nomProvince,
           codePostal: this.storeClient.codePostal
-          }
+          },
+          selectedAccessoire: this.storeVehicule.selectedAccessoire
         }
         fetch("/api/vehicule",{
           method: "POST",

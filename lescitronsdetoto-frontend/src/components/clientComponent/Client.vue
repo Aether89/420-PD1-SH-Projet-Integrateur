@@ -75,7 +75,6 @@
                     <v-btn type="submit">{{
                         txt.btn }}</v-btn>
                     <v-btn type="button" @click="(this.store.chargerClient(this.store.idClient))">Annuler</v-btn>
-                    <v-btn v-if="session.user.isAdmin" type="button" @click="supprimer">Supprimer</v-btn>
                 </div>
                 <div v-else>
                     <v-btn type="submit">Valider</v-btn>
