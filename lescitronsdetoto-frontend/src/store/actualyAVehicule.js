@@ -25,7 +25,6 @@ export const useActualyAVehiculeStore = defineStore('vehicule', {
       this.vin = vin;
       getVehiculefr(vin)
         .then((result) => {
-          console.log("COLOUR", result.couleur, "prix", result.prix_annonce, "promo", result.promotion, "kilometre", result.nombre_kilometre, "description", result.description_courte, "description longue", result.description_longue, "marque", result.marque, "modele", result.modele, "annee", result.annee, "accessoire", result.accessoires);
           this.isNew = false;
           this.vin = result.vin;
           this.id_etat = result.id_etat;

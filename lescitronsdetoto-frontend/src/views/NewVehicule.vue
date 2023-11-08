@@ -25,9 +25,7 @@
                             density="compact" maxlength="64"></v-text-field>
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
-                        <SelectAccessoire :vin="this.id" @receiveDataFromChild="receiveEmit"
-                            class="mb-4 flex-wrap" />
-                            {{ this.selectedAccessoire }}
+                        <SelectAccessoire :vin="this.id" @receiveDataFromChild="receiveEmit" class="mb-4 flex-wrap" />
                         <interventionForm :vin="this.storeVehicule.vin" class="mb-4" v-if="!nouveauvehicule"
                             @refresh-list="refreshList" />
                         <v-card v-if="session.user && interventions && !nouveauvehicule" class="ma-8"
@@ -46,7 +44,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="bg-brown-lighten-4">
-                                        <tr v-for="intervention in interventions" :key="intervention.id">
+                                        <tr v-for="intervention in interventionsCom" :key="intervention.id">
                                             <td class="start">{{ intervention.typeIntervention }}</td>
                                             <td class="end">{{ intervention.valeurIntervention }}</td>
                                             <td>
@@ -111,7 +109,6 @@
 import session from '../session';
 import { useInterventionStore } from '@/store/intervention';
 import { fetchInterventionByVIN, updateInterventionWvin } from '@/services/InterventionService';
-import { useVehiclesStore } from '@/store/vehicles';
 import { useActualyAVehiculeStore } from '@/store/actualyAVehicule';
 import { createVehicule, udpateVoiture } from '../services/vehicule';
 import { fetchVIN } from '../services/VINAPI';
@@ -119,11 +116,6 @@ import interventionForm from '@/components/interventionComponent/Intervention.vu
 import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.vue';
 import { useAccessoireStore } from '@/store/accessoire';
 
-
-
-
-
-const store = useVehiclesStore();
 export default {
     components: {
         SelectAccessoire: SelectAccessoire,
@@ -330,26 +322,22 @@ export default {
                 alert(err.message);
             }
         },
-        async rafraichirIntervention() {
-            console.log('rafraichirIntervention', this.interventions);
+        rafraichirIntervention: async function () {
             this.interventions = await fetchInterventionByVIN(this.id);
-
-
         },
         async receiveEmit(data) {
             this.selectedAccessoire = data;
         },
         refreshList() {
-            console.log('refreshList');
-            this.rafraichirIntervention();
-
+             this.rafraichirIntervention();
         }
 
 
     },
     computed: {
-
-
+        interventionsCom() {
+            return this.interventions;
+        },
         nouveauvehicule() {
             return this.mode === 'vehicule';
         },
@@ -372,10 +360,7 @@ export default {
     },
     watch: {
         check(newVal) {
-            console.log('Nouvelle valeur de etatIntervention : ', newVal);
             this.intervention.etatIntervention = newVal;
-            updateIntervention(intervention);
-            console.log('Nouvelle valeur de etatIntervention : ', newVal);
         },
 
         selectedAccessoire() {
