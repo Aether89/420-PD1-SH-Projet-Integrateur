@@ -1,7 +1,6 @@
 <template>
     <v-container>
         <v-sheet v-if="session.user" class="ma-2 rounded-xl pa-6">
-            <v-form @submit.prevent validate-on="submit lazy" ref="vehiculform">
                 <v-row>
                     <v-col cols="6">
                         <h3 align="center">Informations véhicule</h3>
@@ -88,6 +87,8 @@
                         </v-table>
                     </v-col>
                 </v-row>
+                <v-form @submit.prevent validate-on="submit lazy" ref="vehiculform">
+
                 <v-row>
                     <v-col><h3 align="center">Finalisation de la transaction</h3></v-col>         
                 </v-row>
@@ -101,6 +102,7 @@
                             </tr>
                     </v-col>
                     <v-col md="4">
+                        
                     <v-text-field class="no-spinner" v-model="this.storeTrans.prix_evenement" label="Prix $" density="compact" type="number" step="1" min = "0" :rules="[rules.required]"
                         ></v-text-field>
                     </v-col>

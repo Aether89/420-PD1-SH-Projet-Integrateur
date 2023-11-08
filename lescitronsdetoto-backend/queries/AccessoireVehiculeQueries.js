@@ -16,11 +16,8 @@ const addAccessoireVehicule = async (idAccessoire, vin) => {
           );
           if (result.rows.length === 0) {
               throw new HttpError(`Impossible de trouver le véhicule avec id_accessoire ${idAccessoire}`, 404);
-            }
-          
-            i++;
+            }          
         }
-
     console.log("resultat", resultat);
     
 

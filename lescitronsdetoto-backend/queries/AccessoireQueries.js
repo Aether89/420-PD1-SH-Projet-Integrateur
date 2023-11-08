@@ -24,7 +24,6 @@ exports.getAllAccessoires = getAllAccessoires;
 
 
 const getAccessoire = async (idAccessoire) => {
-
         const result = await pool.query(
             `SELECT id_accessoire, nom_accessoire
          FROM accessoire

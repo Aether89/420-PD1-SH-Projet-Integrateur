@@ -25,8 +25,9 @@
                             density="compact" maxlength="64"></v-text-field>
                         <v-textarea v-model="this.storeVehicule.description_longue" label="Description longue du véhicule"
                             density="compact" maxlength="512"></v-textarea>
-                        <SelectAccessoire :vin="this.storeVehicule.vin" @receiveDataFromChild="receiveEmit"
+                        <SelectAccessoire :vin="this.id" @receiveDataFromChild="receiveEmit"
                             class="mb-4 flex-wrap" />
+                            {{ this.selectedAccessoire }}
                         <interventionForm :vin="this.storeVehicule.vin" class="mb-4" v-if="!nouveauvehicule"
                             @refresh-list="refreshList" />
                         <v-card v-if="session.user && interventions && !nouveauvehicule" class="ma-8"
@@ -116,6 +117,7 @@ import { createVehicule, udpateVoiture } from '../services/vehicule';
 import { fetchVIN } from '../services/VINAPI';
 import interventionForm from '@/components/interventionComponent/Intervention.vue';
 import SelectAccessoire from '@/components/accessoireComponent/SelectAccessoire.vue';
+import { useAccessoireStore } from '@/store/accessoire';
 
 
 
@@ -148,7 +150,7 @@ export default {
                 annee: ''
             },
             Item: [],
-            selectedAccessoire: [],
+            selectedAccessoire: useAccessoireStore().selectedAccessoire,
             couleur: '',
             nombre_kilometre: 0,
             prix_annonce: 0,
@@ -173,7 +175,7 @@ export default {
                 this.errorMessagesPromotion = ['Le prix de la promotion ne doit pas être supérieur ou égale au prix annoncé'];
                 return false;
             }
-            this.errorMessagesPromotion = [];
+            this.errorMessagesPromotion = '';
             return true;
         },
         validateNumer(value) {

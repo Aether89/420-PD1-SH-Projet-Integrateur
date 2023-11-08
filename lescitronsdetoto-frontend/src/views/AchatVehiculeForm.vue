@@ -27,7 +27,7 @@
       </v-window-item>
   
         <v-window-item :value="3">
-          <Confirmation class="mx-auto" :step="step" :mode="mode" :id="id"/>
+          <Confirmation class="mx-auto" :step="step" :mode="achat" :id="id"/>
         </v-window-item>
       </v-window>
   

@@ -184,7 +184,7 @@ passport.authenticate('basic', { session: false }),
                     : req.body.promotion,
                 description_courte: "" + req.body.description_courte,
                 description_longue: "" + req.body.description_longue,
-                selectedAccessoire:[] + req.body.selectedAccessoire,
+                selectedAccessoire: req.body.selectedAccessoire,
             };
             console.log("updated Vehicule : ", updateVehicule);
 
@@ -218,6 +218,7 @@ passport.authenticate('basic', { session: false }),
             if (accessoire!== undefined && accessoire.length > 0) {
                 accessoireVehiculeQuerie.deleteAccessoireAllVehicule(vin);
             }
+            
             accessoireVehiculeQuerie.addAccessoireVehicule(updateVehicule.selectedAccessoire, vin);
             res.json(vehiculeUpdated);
         } catch (error) {

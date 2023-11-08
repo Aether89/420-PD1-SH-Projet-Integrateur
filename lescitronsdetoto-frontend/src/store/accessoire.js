@@ -6,10 +6,11 @@ export const useAccessoireStore = defineStore('accessoire', {
   state: () => ({
     accessoires: [],
     isNew: false,
-    idAccessoire: "",
+    idAccessoire: null,
     nomAccessoire: "",
     loading: false,
     loadingerror: false,
+    selectedEventIDs: [],
   }),
   actions: {
     chargerAccessoire(idAccessoire) {

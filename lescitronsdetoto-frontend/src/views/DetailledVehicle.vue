@@ -280,7 +280,6 @@ export default {
         async loadData() {
             this.load = true;
             await this.store.getVehicle(this.id);
-            this.getAccessoires();
             this.getInterventions();
             this.names = await this.nomAccessoire();
 
