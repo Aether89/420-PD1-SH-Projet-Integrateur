@@ -1,5 +1,4 @@
 import session from '../session';
-import axios from 'axios';
 
 class ServiceError extends Error {
     constructor(status, message) {
@@ -21,22 +20,6 @@ async function createServiceError(response) {
     return new ServiceError(response.status, await getResponseMessage(response));
 }
 
-export async function createEmploye(Employe) {
-    const response = await fetch(`/api/employes`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            ...session.getAuthHeaders()
-        },
-        body: JSON.stringify(Employe)
-    });
-
-    if (response.ok) {
-        return response.json();
-    } else {
-        throw await createServiceError(response);
-    }
-};
 
 async function convertToEmploye(jsonEmploye) {
     return {
@@ -45,7 +28,13 @@ async function convertToEmploye(jsonEmploye) {
         prenomEmploye: jsonEmploye.prenomEmploye,
         posteEmploye: jsonEmploye.posteEmploye,
         telephoneEmploye: jsonEmploye.telephoneEmploye,
-        codePostalEmploye: jsonEmploye.codePostalEmploye,
+        numeroCivic: jsonEmploye.numeroCivic,
+        numeroAppartement: jsonEmploye.numeroAppartement,
+        nomRue: jsonEmploye.nomRue,
+        nomVille: jsonEmploye.nomVille,
+        nomProvince: jsonEmploye.nomProvince,
+        codePostal: jsonEmploye.codePostal,
+        isArchive: jsonEmploye.isArchive
     };
 };
 
@@ -66,9 +55,27 @@ export async function fetchEmploye() {
 
 
 export async function fetchemploye(idEmploye) {
-    const response = await axios(`/api/employes/${idEmploye}`);
+    const response = await fetch(`/api/employes/${idEmploye}`);
     if (response.status === 200) {
-        return convertToEmploye(response.data);
+        const data = await response.json();
+        return convertToEmploye(data);
+    } else {
+        throw await createServiceError(response);
+    }
+};
+
+export async function createEmploye(Employe) {
+    const response = await fetch(`/api/employes`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(Employe)
+    });
+
+    if (response.ok) {
+        return response.json();
     } else {
         throw await createServiceError(response);
     }
@@ -124,3 +131,21 @@ export async function deleteEmploye(idEmploye) {
         throw await createServiceError(response);
     }
 }
+
+export async function getEmployeID(userAccountID) {
+    const result = await fetch(`/api/employes/account/${userAccountID}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        ...session.getAuthHeaders()
+      }
+    });
+  
+    if (result.status === 200) {
+      const data = await result.json();
+      return data.idEmploye;
+    } else {
+      console.error(`Error: Status code ${result.status} lors de la récupération de l'employe`);
+    }
+  }
+  

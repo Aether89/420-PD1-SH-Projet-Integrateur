@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="ma-2" max-width="40rem">
+    <v-sheet class="ma-2 mx-auto mt-8 pa-4 rounded-xl" max-width="40rem">
         <div class="text-h5">Nouveau compte utilisateur</div>
         <v-form @submit.prevent="createNewAccount" validate-on="submit lazy" ref="accountform">
             <v-text-field v-model="userAccountId" label="Identifiant utilisateur"

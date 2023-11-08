@@ -1,5 +1,5 @@
 <template>
-    <v-sheet class="ma-2" max-width="40rem">
+    <v-sheet class="ma-2 mx-auto mt-8 pa-4 rounded-xl" max-width="40rem">
         <v-form @submit.prevent="login" validate-on="submit lazy" ref="loginform">
             <v-text-field v-model="userAccountId" label="Identifiant utilisateur"
                 :rules="[rules.required, rules.passwordValid]" density="compact"></v-text-field>
@@ -7,9 +7,6 @@
                 :rules="[rules.required, rules.passwordValid]" density="compact"></v-text-field>
             <v-btn type="submit" :disabled="!userAccountId || !password">Se connecter</v-btn>
         </v-form>
-        <div class="text-body ma-3">Vous n'avez pas de compte utilisateur ?&nbsp;
-            <router-link to="/login/new" replace>Créez-en un !</router-link>
-        </div>
     </v-sheet>
 </template>
 
@@ -24,21 +21,28 @@ export default {
             passwordValid: true,
             rules: {
                 required: value => !!value || "Le champ est requis",
-                passwordValid: () => this.passwordValid || "Nom d'utilisateur ou mot de passe incorrect"
+
             }
         };
     },
     methods: {
-        login() {
-            session.login(this.userAccountId, this.password).then(() => {
-                this.passwordValid = true;
+
+        async login() {
+            try {
+                const user = await session.login(this.userAccountId, this.password);
                 this.$refs.loginform.validate();
-                this.$router.go(-1);
-            }).catch(authError => {
-                this.passwordValid = false;
-                this.$refs.loginform.validate();
-                alert(authError.message);
-            });
+
+                if (user.mustChangePassword) {
+                    // Redirigez l'utilisateur vers une page de changement de mot de passe
+                    this.$router.push("/changepassword");
+                } else {
+                    // L'utilisateur n'a pas besoin de changer de mot de passe, redirigez-le vers une page d'accueil
+                    this.$router.push("/");
+                }
+            } catch (error) {
+                // Gérez les erreurs d'authentification ici
+                console.error(error);
+            }
         }
     }
 }

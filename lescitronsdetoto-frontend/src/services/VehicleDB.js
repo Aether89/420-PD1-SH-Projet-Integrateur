@@ -227,7 +227,25 @@ export const convertToVehicule = jsonVehicule => {
     price: jsonVehicule.prix_annonce,
     promo: jsonVehicule.promotion,
     km: jsonVehicule.nombre_kilometre,
-    colour: jsonVehicule.couleur
+    colour: jsonVehicule.couleur,
+    selectedAccessoire:jsonVehicule.selectedAccessoire
+  }
+};
+
+export const convertToVehiculefr = jsonVehicule => {
+  return {
+    vin: jsonVehicule.vin,
+    img: [ "../src/assets/lemon.png", "../src/assets/race-car.png", "../src/assets/city-car.png"],
+    description_courte: jsonVehicule.description_courte,
+    description_longue: jsonVehicule.description_longue,
+    prix_annonce: jsonVehicule.prix_annonce,
+    promotion: jsonVehicule.promotion,
+    marque: jsonVehicule.marque,
+    modele: jsonVehicule.modele,
+    annee: jsonVehicule.annee,
+    nombre_kilometre: jsonVehicule.nombre_kilometre,
+    couleur: jsonVehicule.couleur,
+    selectedAccessoire:jsonVehicule.selectedAccessoire
   }
 };
 
@@ -239,7 +257,8 @@ export const convertToVehiculeUpdate = jsonVehicule => {
     prix_annonce: jsonVehicule.prix_annonce,
     promotion: jsonVehicule.promotion,
     description_courte: jsonVehicule.description_courte,
-    description_longue: jsonVehicule.description_longue
+    description_longue: jsonVehicule.description_longue,
+    selectedAccessoire:jsonVehicule.selectedAccessoire
   };
 };
 
@@ -253,7 +272,6 @@ export async function fetchVehicle(vehiculeID) {
   //     });
       const response = await fetch(`/api/vehicule/${vehiculeID}`);
 
-      console.log("respone un vehicule", response);
       if (response.ok) {
         return convertToVehicule(await response.json());
       } else {
@@ -270,7 +288,9 @@ const convertToVehiculeList = jsonVehicules => {
     model: jsonVehicules.modele,
     year: jsonVehicules.annee,
     price: jsonVehicules.prix_annonce,
-    promo: jsonVehicules.promotion
+    promo: jsonVehicules.promotion,
+    etat: jsonVehicules.etat,
+    selectedAccessoire:jsonVehicules.selectedAccessoire
   }
 };
 
@@ -288,7 +308,6 @@ export async function fetchVehicles() {
         if (response.ok) {
           
           const respJson = await response.json();
-          console.log("respone", respJson.map(p => convertToVehiculeList(p)));
           return respJson.map(p => convertToVehiculeList(p));
         } else {
           throw new Error("Failed to fetch vehicles data");

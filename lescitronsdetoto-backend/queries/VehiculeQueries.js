@@ -12,7 +12,8 @@ const getAllVehicule = async () => {
         prix_annonce, 
         promotion,
         description_courte,
-        description_longue
+        description_longue,
+        id_etat
         FROM
         vehicule`
     );
@@ -25,7 +26,8 @@ const getAllVehicule = async () => {
                 modele: row.modele,
                 annee: row.annee,
                 prix_annonce: row.prix_annonce,
-                promotion: row.promotion
+                promotion: row.promotion,
+                etat: row.id_etat
             };
             return vehicule;
         });
@@ -39,9 +41,18 @@ const getVehiculeByVin = async (vin) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
+        const accessoireResult = await pool.query(
+                `SELECT id_accessoire
+                FROM vehicule_accessoire
+                where vin = $1`,
+                [vin]
+                
+        );
+       
         const vehiculeResult = await pool.query(
         `SELECT 
         vin,
+        id_etat,
         marque,
         modele,
         annee,
@@ -50,7 +61,7 @@ const getVehiculeByVin = async (vin) => {
         prix_annonce, 
         promotion,
         description_courte,
-        description_longue
+        description_longue        
         FROM
         vehicule
         WHERE
@@ -62,8 +73,9 @@ const getVehiculeByVin = async (vin) => {
         await client.query("COMMIT");
         const row = vehiculeResult.rows[0];
         if (row) {
-            return {
+           return{
                 vin: row.vin,
+                id_etat: row.id_etat,
                 marque: row.marque,
                 modele: row.modele,
                 annee: row.annee,
@@ -72,9 +84,11 @@ const getVehiculeByVin = async (vin) => {
                 prix_annonce: row.prix_annonce,
                 promotion: row.promotion,
                 description_courte: row.description_courte,
-                description_longue: row.description_longue
+                description_longue: row.description_longue,
+                selectedAccessoire: accessoireResult.rows.map((row) => row.id_accessoire)
             };
         }
+            
         return undefined;
     } catch (err) {
         await client.query("ROLLBACK");

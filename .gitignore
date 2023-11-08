@@ -2,10 +2,11 @@
 .DS_Store
 node_modules
 /dist
-*/db_config.js
+*/db_config*
 # local env files
 .env.local
 .env.*.local
+/lescitronsdetoto-frontend/dist
 
 # Log files
 npm-debug.log*
@@ -22,3 +23,4 @@ pnpm-debug.log*
 *.sln
 *.sw?
 *.code-workspace
+lescitronsdetoto-backend/db_config copy.js

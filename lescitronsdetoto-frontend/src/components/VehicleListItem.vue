@@ -24,7 +24,7 @@
             Voir plus
           </v-btn>
         </template>
-        <detailled-vehicle class="mb-8" :id="this.vin" :isDialog="true" @close-dialog="this.dialog = !this.dialog"></detailled-vehicle>
+        <detailled-vehicle @keydown.esc="refreshList" class="mb-8" :id="this.vin" :isDialog="true" @close-dialog="this.dialog = !this.dialog"></detailled-vehicle>
       </v-dialog>
       
   </v-card>
@@ -61,10 +61,10 @@ export default {
       return priceFormatting(this.price);
     },
     formatedPromo() {
-      return (this.promo === "$0.00") ? null : this.promo;
+      return (this.promo === "0,00$" ||this.promo === "$0.00") ? null : this.promo;
     },
     hasPromo() {
-      return (this.promo === "$0.00") ? false : true;
+      return (this.promo === "0,00$" ||this.promo === "$0.00" || this.promo === null) ? false : true;
     },
     colourPrimary() {
       return (!this.promo) ? appStore.colourPrimary : appStore.colourTernary;
@@ -73,7 +73,6 @@ export default {
       return appStore.colourSecondary;
     },
     imgSize() {
-      console.log($(document).width());
       return this.$vuetify.display
     }
   }
